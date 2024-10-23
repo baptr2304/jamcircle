@@ -1,0 +1,7 @@
+{
+  "name": "jam-circle",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
