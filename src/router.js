@@ -8,9 +8,18 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.length === 0) {
+    return next('/notfound')
+  }
+  return next()
+})
+
 router.beforeEach((to, from, next) => {
-  if(to.meta.title)
-    document.title = 'JamCircle - ' + to.meta.title
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
   next()
 })
+
 export default router

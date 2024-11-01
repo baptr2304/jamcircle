@@ -1,4 +1,4 @@
-import { $post } from './axios.js'
+import { $post } from './axios'
 
 export function apiLogin(data) {
   return $post('/auth/login', data)

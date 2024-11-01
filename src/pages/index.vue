@@ -15,4 +15,6 @@ import {
       Some popover content
     </PopoverContent>
   </Popover>
+  <br>
+  <RouterLink to="/auth/login">Login</RouterLink>
 </template>

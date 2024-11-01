@@ -15,9 +15,6 @@
 <script setup>
 import { onMounted } from 'vue';
 
-onMounted(() => {
-    console.log('Default layout mounted');
-});
 </script>
 
 <style scoped>
