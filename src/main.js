@@ -4,13 +4,14 @@ import App from './App.vue'
 import router from './router'
 import './assets/index.css'
 import './utils/zodLocale'
-
-
+import BaseIcon from '@/components/Base/Icon.vue'
 const app = createApp(App)
 
 app
   .use(createPinia())
   .use(router)
+
+app.component('Icon', BaseIcon)
 
 router.isReady().then(() => {
   app.mount('#app')

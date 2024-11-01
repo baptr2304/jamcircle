@@ -16,5 +16,8 @@ import {
     </PopoverContent>
   </Popover>
   <br>
+  <Icon name="IconLogo" class="text-blue-500 w-8 h-8" />
+  <Icon name="IconPlus" class="text-rose-600 w-10 h-10"/>
+  <Icon name="IconBack" />
   <RouterLink to="/auth/login">Login</RouterLink>
 </template>
