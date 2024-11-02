@@ -110,8 +110,8 @@ const isOpen = ref(false);
 			<SidebarMenu>
 				<SidebarMenuItem>
 					<div class="flex pl-6 py-7 gap-2">
-						<Icon name="IconLogo" class="w-9 text-white" />
-						<span class="text-white text-3xl font-mono">JamCirle</span>
+						<Icon name="IconLogo" class="w-9 text-foreground" />
+						<span class="text-secondary-foreground text-3xl font-mono">JamCirle</span>
 					</div>
 				</SidebarMenuItem>
 			</SidebarMenu>
