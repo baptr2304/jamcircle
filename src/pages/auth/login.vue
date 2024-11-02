@@ -37,7 +37,8 @@ const onSubmit = form.handleSubmit((values) => {
 });
 </script>
 <template>
-  <div class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem]">
+  <div class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2">
+    <h1 class="text-2xl flex justify-center font-semibold">ĐĂNG NHẬP</h1>
     <form @submit="onSubmit" class="mt-[2.25rem]">
       <FormField v-slot="{ componentField }" name="email" class="gap-2.5">
         <FormItem>
@@ -78,6 +79,7 @@ const onSubmit = form.handleSubmit((values) => {
       Bạn đã đăng ký tài khoản chưa?
     </div>
     <Button
+      @click="$router.push('/auth/register')"
       type="submit"
       class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2 h-[2.875rem] rounded-full bg-white text-black duration-300 hover:text-white shadow-inherit border-2 hover:border-0"
     >
