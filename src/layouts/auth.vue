@@ -31,7 +31,6 @@ const isAuthenticated = ref(false);
 
 header,
 footer {
-  background-color: #f8f9fa;
   padding: 1rem;
   text-align: center;
 }
@@ -48,7 +47,10 @@ main {
 }
 .image-logo{
   display: flex;
-  
+  align-items: center;
+}
+.image-logo h1{
+  margin-left: 0.5rem;
 }
 .logo h1 {
   font-size: 2rem;
