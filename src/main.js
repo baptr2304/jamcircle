@@ -4,7 +4,7 @@ import App from './App.vue'
 import router from './router'
 import './assets/index.css'
 import './utils/zodLocale'
-import BaseIcon from '@/components/Base/Icon.vue'
+import BaseIcon from '@/components/base/Icon.vue'
 const app = createApp(App)
 
 app
