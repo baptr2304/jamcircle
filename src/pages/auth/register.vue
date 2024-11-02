@@ -2,7 +2,7 @@
     {
         meta: {
             layout: "auth",
-            title: "Login",
+            title: "Register",
         }
     }
 </route>
@@ -22,10 +22,17 @@ import { Input } from "@/components/ui/input";
 import { emailSchema, passwordSchema } from "@/utils/validation";
 
 const formSchema = toTypedSchema(
-  z.object({
-    email: emailSchema,
-    password: passwordSchema,
-  })
+  z
+    .object({
+      username: z.string().nonempty("Tên người dùng không được để trống"),
+      email: emailSchema,
+      password: passwordSchema,
+      confirm: z.string(),
+    })
+    .refine((data) => data.password === data.confirm, {
+      message: "Mật khẩu xác nhận không khớp",
+      path: ["confirm"],
+    })
 );
 
 const form = useForm({
@@ -38,14 +45,29 @@ const onSubmit = form.handleSubmit((values) => {
 </script>
 <template>
   <div class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem]">
-    <form @submit="onSubmit" class="mt-[2.25rem]">
-      <FormField v-slot="{ componentField }" name="email" class="gap-2.5">
+    <h1 class="text-2xl flex justify-center font-semibold">ĐĂNG KÝ</h1>
+    <form @submit="onSubmit" class="mt-[1rem]">
+      <FormField v-slot="{ componentField }" name="username" class="gap-2.5">
         <FormItem>
-          <Label class="font-semibold">Địa chỉ Email</Label>
+          <Label class="font-semibold">Tên người dùng </Label>
           <FormControl>
             <Input
               type="text"
-              placeholder="Email address"
+              placeholder="nguyenvana"
+              class="rounded-[0.25rem] h-[2.875rem]"
+              v-bind="componentField"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+      <FormField v-slot="{ componentField }" name="email" class="gap-2.5">
+        <FormItem>
+          <Label class="font-semibold">Địa chỉ email</Label>
+          <FormControl>
+            <Input
+              type="text"
+              placeholder="nguyenvana@gmail.com"
               class="rounded-[0.25rem] h-[2.875rem]"
               v-bind="componentField"
             />
@@ -59,7 +81,21 @@ const onSubmit = form.handleSubmit((values) => {
           <FormControl>
             <Input
               type="password"
-              placeholder="Password"
+              placeholder="******"
+              class="rounded-[0.25rem] h-[2.875rem]"
+              v-bind="componentField"
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+      <FormField v-slot="{ componentField }" name="confirm">
+        <FormItem class="mt-4">
+          <Label class="font-semibold">Xác nhận mật khẩu</Label>
+          <FormControl>
+            <Input
+              type="password"
+              placeholder="******"
               class="rounded-[0.25rem] h-[2.875rem]"
               v-bind="componentField"
             />
@@ -71,17 +107,16 @@ const onSubmit = form.handleSubmit((values) => {
         type="submit"
         class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-6 h-[2.875rem] rounded-full"
       >
-        ĐĂNG NHẬP
+        ĐĂNG KÝ
       </Button>
     </form>
-    <div class="text-center mt-4 font-medium">
-      Bạn đã đăng ký tài khoản chưa?
-    </div>
+    <div class="text-center mt-4 font-medium">Nếu bạn đã có tài khoản</div>
     <Button
       type="submit"
+      @click="$router.push('/auth/login')"
       class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2 h-[2.875rem] rounded-full bg-white text-black duration-300 hover:text-white shadow-inherit border-2 hover:border-0"
     >
-      ĐĂNG KÝ
+      ĐĂNG NHẬP
     </Button>
   </div>
 </template>
