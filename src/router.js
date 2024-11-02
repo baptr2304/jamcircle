@@ -9,6 +9,9 @@ const router = createRouter({
   routes,
 })
 router.beforeEach(async (to, from, next) => {
+  if (to.fullPath === '/') {
+    return next('/home')
+  }
   if (to.matched.length === 0) {
     return next('/notfound')
   }
