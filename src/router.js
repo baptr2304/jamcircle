@@ -20,7 +20,7 @@ router.beforeEach(async (to, from, next) => {
 
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
-    document.title = to.meta.title
+    document.title = "JamCircle - " + to.meta.title
   }
   next()
 })

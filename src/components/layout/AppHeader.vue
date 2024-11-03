@@ -1,14 +1,5 @@
 <script setup>
-import {
-	DropdownMenu,
-	DropdownMenuTrigger,
-	DropdownMenuContent,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import UserDropdown from "@/components/common/UserDropdown.vue";
 const data = {
 	user: {
 		name: "shadcn",
@@ -16,72 +7,41 @@ const data = {
 		avatar: "/avatars/shadcn.jpg",
 	},
 };
+const searchValue = ref("");
+const router = useRouter();
+const route = useRoute();
+const inputSearch = useTemplateRef("input-search");
+const handleNavigate = () => {
+	if (route.name === "Search") return;
+	router.push({ name: "Search", query: { q: searchValue.value } });
+};
+function handleUpdateQuery() {
+	router.push({ query: { q: searchValue.value } });
+}
+onMounted(() => {
+	if (route.query.q) {
+		searchValue.value = route.query.q;
+	}
+	if (Object.keys(route.query).includes("q")) inputSearch.value.focus();
+});
 </script>
 <template>
-	<div class="flex items-end">
-		<DropdownMenu>
-			<DropdownMenuTrigger as-child>
-				<div
-					size="lg"
-					class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
-				>
-					<Avatar class="h-8 w-8 rounded-lg">
-						<AvatarImage :src="data.user.avatar" :alt="data.user.name" />
-						<AvatarFallback class="rounded-lg"> CN </AvatarFallback>
-					</Avatar>
-					<div class="grid flex-1 text-left text-sm leading-tight">
-						<span class="truncate font-semibold">{{ data.user.name }}</span>
-						<span class="truncate text-xs">{{ data.user.email }}</span>
-					</div>
-					<ChevronsUpDown class="ml-auto size-4" />
-				</div>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent
-				class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-				side="bottom"
-				align="end"
-				:side-offset="4"
-			>
-				<DropdownMenuLabel class="p-0 font-normal">
-					<div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-						<Avatar class="h-8 w-8 rounded-lg">
-							<AvatarImage :src="data.user.avatar" :alt="data.user.name" />
-							<AvatarFallback class="rounded-lg"> CN </AvatarFallback>
-						</Avatar>
-						<div class="grid flex-1 text-left text-sm leading-tight">
-							<span class="truncate font-semibold">{{ data.user.name }}</span>
-							<span class="truncate text-xs">{{ data.user.email }}</span>
-						</div>
-					</div>
-				</DropdownMenuLabel>
-				<DropdownMenuSeparator />
-				<DropdownMenuGroup>
-					<DropdownMenuItem>
-						<Sparkles />
-						Upgrade to Pro
-					</DropdownMenuItem>
-				</DropdownMenuGroup>
-				<DropdownMenuSeparator />
-				<DropdownMenuGroup>
-					<DropdownMenuItem>
-						<BadgeCheck />
-						Account
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<CreditCard />
-						Billing
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<Bell />
-						Notifications
-					</DropdownMenuItem>
-				</DropdownMenuGroup>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem>
-					<LogOut />
-					Log out
-				</DropdownMenuItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
+	<div class="flex items-center justify-between w-full h-full p-2">
+		<div class="relative w-full max-w-sm items-center ml-8">
+			<input
+				ref="input-search"
+				v-model="searchValue"
+				@focus="handleNavigate"
+				@change="handleUpdateQuery"
+				id="search"
+				type="text"
+				placeholder="Search..."
+				class="flex h-10 w-full border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10 text-background rounded-full bg-foreground"
+			/>
+			<span class="absolute start-0 inset-y-0 flex items-center justify-center h-10 left-4">
+				<Icon name="IconSearch" class="w-4 text-background" />
+			</span>
+		</div>
+		<UserDropdown />
 	</div>
 </template>
