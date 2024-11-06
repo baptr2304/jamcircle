@@ -3,6 +3,10 @@ import AppSideBar from "@/components/layout/AppSideBar.vue";
 import AppHeader from "@/components/layout/AppHeader.vue";
 import AppFooter from "@/components/layout/AppFooter.vue";
 import ScrollArea from "@/components/ui/scroll-area/ScrollArea.vue";
+
+onMounted(() => {
+	console.log('mounted')
+})
 </script>
 
 <template>
