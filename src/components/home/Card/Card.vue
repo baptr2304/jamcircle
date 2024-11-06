@@ -19,7 +19,7 @@ const props = defineProps({
       <img
         :src="image"
         :alt="title"
-        class="w-[9rem] h-[9rem] sm:w-[12rem] sm:h-[12rem] rounded-xs mt-[14px] object-cover"
+        class="w-[9rem] h-[9rem] sm:w-[12rem] sm:h-[12rem] rounded-[1.2rem] p-4 object-cover"
       />
       <div class="p-1 w-[9rem] sm:w-[12rem]">
         <h2 class="text-sm font-bold text-center">{{ title }}</h2>
