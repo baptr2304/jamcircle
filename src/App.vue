@@ -1,9 +1,7 @@
 <template>
 	<router-view v-slot="{ Component, route }">
 		<transition name="slide">
-			<div :key="route.name">
-				<component :is="Component"></component>
-			</div>
+			<component :is="Component" :key="route.name"></component>
 		</transition>
 	</router-view>
 </template>
