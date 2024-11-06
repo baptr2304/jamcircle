@@ -9,11 +9,21 @@ import {
 	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Switch } from "@/components/ui/switch";
 import { useAuthStore } from "@/stores/auth";
 import { useUserStore } from "@/stores/user";
 const authStore = useAuthStore();
 const userStore = useUserStore();
 import Button from "@/components/ui/button/Button.vue";
+
+const isDarkMode = ref(localStorage.getItem("dark") === "true");
+function handleChange(value) {
+	isDarkMode.value = value;
+	localStorage.setItem("dark", value);
+}
+watch(isDarkMode, (value) => {
+	document.body.classList.toggle("dark", value);
+},{ immediate: true });
 </script>
 <template>
 	<DropdownMenu v-if="userStore?.user">
@@ -31,6 +41,10 @@ import Button from "@/components/ui/button/Button.vue";
 			</Button>
 		</DropdownMenuTrigger>
 		<DropdownMenuContent class="w-52 rounded-lg" side="bottom" align="end" :side-offset="4">
+			<DropdownMenuItem>
+				<div class="flex justify-between item-centers w-full"><span>Dark mode</span><Switch :checked="isDarkMode" @update:checked="handleChange"/></div>
+			</DropdownMenuItem>
+			<DropdownMenuSeparator />
 			<DropdownMenuItem> Profile </DropdownMenuItem>
 			<DropdownMenuSeparator />
 			<DropdownMenuItem @click="authStore.logout()"> Log out </DropdownMenuItem>

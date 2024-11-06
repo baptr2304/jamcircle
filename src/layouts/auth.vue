@@ -20,6 +20,9 @@ import IconLogo from "@/components/icons/IconLogo.vue";
 import IconBack from "@/components/icons/IconBack.vue";
 const isAuthenticated = ref(false);
 
+onMounted(() => {
+	console.log('mounted auth layout')
+})
 // You can add more logic here as needed
 </script>
 
