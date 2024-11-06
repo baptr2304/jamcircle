@@ -24,13 +24,13 @@ const data = ref({
 			id: 3,
 			icon: "IconAdd",
 			title: "Create Playlist",
-			url: "/create-playlist",
+			url: "/playlist/create",
 		},
 		{
 			id: 4,
 			icon: "IconMusic",
 			title: "Create Song",
-			url: "/create-song",
+			url: "/song/create",
 		},
 		{
 			id: 5,

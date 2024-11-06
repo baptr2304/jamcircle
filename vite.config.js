@@ -21,12 +21,7 @@ export default defineConfig({
         'vue-router',
       ]
     }),
-    Pages({
-      extendRoute(route) {
-        route.path = `/${route.name.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase()}`
-        return route
-      }
-    }),
+    Pages(),
     Layouts()
   ],
   resolve: {
