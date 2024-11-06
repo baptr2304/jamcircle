@@ -1,6 +1,7 @@
 import generatedRoutes from '~pages'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router'
+import { middlewareLayout,middlewareAuth } from '@/middlewares/index'
 
 const routes = setupLayouts(generatedRoutes)
 
@@ -24,5 +25,7 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+router.beforeEach(middlewareAuth)
+router.beforeEach(middlewareLayout)
 
 export default router
