@@ -28,12 +28,12 @@ watch(isDarkMode, (value) => {
 <template>
 	<DropdownMenu v-if="userStore?.user">
 		<DropdownMenuTrigger as-child>
-			<Button variant="ghost" class="relative p-6 w-60">
+			<Button variant="ghost" class="relative lg:px-6 py-6 lg:w-60">
 				<Avatar class="h-8 w-8 rounded-lg">
 					<AvatarImage :src="userStore.user.avatar" :alt="userStore.user.name" />
 					<AvatarFallback class="rounded-lg"> CN </AvatarFallback>
 				</Avatar>
-				<div class="grid flex-1 text-left text-sm leading-tight">
+				<div class="max-lg:hidden  grid flex-1 text-left text-sm leading-tight">
 					<span class="truncate font-semibold">{{ userStore.user.name }}</span>
 					<span class="truncate text-xs">{{ userStore.user.email }}</span>
 				</div>

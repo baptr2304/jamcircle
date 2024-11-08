@@ -1,9 +1,11 @@
 <script setup>
 import { Progress } from "@/components/ui/progress";
 import VolumeControl from "@/components/song/VolumeControl.vue";
+import BottomNavigationBar from "@/components/layout/BottomNavigationBar.vue";
 import { useUserStore } from "@/stores/user";
 import { formatTime } from "@/utils/format";
 import { useSongStore } from "@/stores/song";
+import Button from "../ui/button/Button.vue";
 const userStore = useUserStore();
 const songStore = useSongStore();
 
@@ -92,7 +94,9 @@ function changeCurrentTime(time, type) {
 	updateTime();
 }
 onMounted(() => {
-	setInterval(updateTime, 1000);
+	if (audio.value) {
+		setInterval(updateTime, 1000);
+	}
 });
 onUnmounted(() => {
 	clearInterval(updateTime);
@@ -120,19 +124,19 @@ function toggleMuted() {
 </script>
 
 <template>
-	<div class="grid w-full h-full bg-muted-foreground select-none">
+	<div class="grid w-full h-full lg:bg-muted-foreground select-none relative">
 		<div
 			v-if="!userStore.isAuthenticated"
-			class="flex justify-between items-center p-4 well-come-bar"
+			class="well-come-bar"
 		>
-			<div class="flex flex-col">
-				<div class="title text-sm">REVIEW FOR JAMCIRCLE</div>
-				<div class="descritption">
+			<div class="flex flex-col h-full justify-center">
+				<div class="title text-sm font-medium max-lg:hidden">REVIEW FOR JAMCIRCLE</div>
+				<div class="description text-sm max-lg:line-clamp-2">
 					Sign up to get unlimited songs and podcasts with occasional ads. No credit card needed.
 				</div>
 			</div>
 			<RouterLink to="auth/login">
-				<button class="flex py-4 px-8">Sign up free</button>
+				<Button class="flex h-12 py-4 lg:px-8 px-4 bg-foreground rounded-full">Sign up free</Button>
 			</RouterLink>
 		</div>
 		<div class="song-controller" v-else>
@@ -146,68 +150,103 @@ function toggleMuted() {
 				</div>
 			</div>
 			<div class="control-bar">
-				<div class="flex items-center gap-4">
+				<div class="flex items-center gap-4 max-lg:hidden">
 					<Icon
 						name="IconBackward"
 						class="icon-button"
 						@click="changeCurrentTime(15, 'backward')"
 					/>
 					<Icon name="IconPrevious" class="icon-button" @click="prevSong" />
-					<button class="cursor-pointer flex p-2 rounded-full w-8 h-8" @click="handlePlay">
+					<button
+						class="button-play"
+						@click="handlePlay"
+					>
 						<Icon v-if="isPlaying" name="IconPlay" class="cursor-pointer w-4 h-4" />
 						<Icon v-else name="IconPause" class="cursor-pointer w-4 h-4" />
 					</button>
 					<Icon name="IconNext" class="icon-button" @click="nextSong" />
 					<Icon name="IconForward" class="icon-button" @click="changeCurrentTime(15, 'forward')" />
 				</div>
-				<div class="flex gap-4 justify-center">
-					<span class="w-14 text-center">{{ formatTime(songCurrentTime) }}</span>
+				<div class="flex gap-4 justify-center w-full">
+					<span class="w-14 text-center max-lg:hidden">{{ formatTime(songCurrentTime) }}</span>
 					<div
 						ref="progressBar"
-						class="flex items-center justify-center gap-2 w-96 cursor-pointer"
+						class="flex items-center justify-center gap-2 w-full lg:w-96 cursor-pointer"
 						@mousedown="handleMouseDown"
 					>
 						<Progress v-model="progress" class="w-full" />
 					</div>
-					<span class="w-14 text-center">{{ formatTime(songDuration) }}</span>
+					<span class="w-14 text-center max-lg:hidden">{{ formatTime(songDuration) }}</span>
+				</div>
+
+
+				<!-- Màn hình điện thoại -->
+				<div class="lg:hidden flex items-center h-10 gap-2.5 absolute left-4 top-2">
+					<img
+						:src="songStore.currentSong.thumbnail"
+						alt=""
+						class="w-10 h-10 rounded-lg object-cover"
+					/>
+					<div class="song-meta w-full max-w-32">
+						<p class="title text-sm truncate font-semibold">{{ songStore.currentSong.name }}</p>
+						<p class="artist text-xs truncate text-secondary-foreground">
+							{{ songStore.currentSong.singer }}
+						</p>
+					</div>
+				</div>
+				
+
+				<div class="flex items-center gap-4 absolute right-8 top-4 lg:hidden">
+					
+					<Icon name="IconPrevious" class="icon-button" @click="prevSong" />
+					<button
+						class="button-play"
+						@click="handlePlay"
+					>
+						<Icon v-if="isPlaying" name="IconPlay" class="cursor-pointer w-4 h-4" />
+						<Icon v-else name="IconPause" class="cursor-pointer w-4 h-4" />
+					</button>
+					<Icon name="IconNext" class="icon-button" @click="nextSong" />
 				</div>
 			</div>
 			<VolumeControl
 				v-model="volume"
 				:muted="isMuted"
-				class="absolute right-8"
+				class="absolute right-8 max-lg:hidden"
 				@toggle-muted="toggleMuted"
 			/>
 			<audio ref="audio" controls class="hidden">
 				<source :src="songStore.currentSong.source" type="audio/mpeg" />
 			</audio>
 		</div>
+		<BottomNavigationBar class="lg:hidden absolute bottom-0 left-4 w-[calc(100%-2rem)]"/>
 	</div>
 </template>
 
 <style scoped>
 .well-come-bar {
+	@apply flex justify-between items-center lg:p-4 p-2 gap-4 max-lg:h-[4.25rem] ;
 	background: linear-gradient(90deg, #af2896 0%, #509bf5 100%);
 }
-button {
-	@apply text-center text-sm font-bold rounded-full bg-[#f2f2f2] bg-secondary-foreground text-background hover:opacity-100 opacity-75;
+.button-play {
+	@apply text-center text-sm font-bold bg-[#f2f2f2] bg-secondary-foreground text-background hover:opacity-100 opacity-75 cursor-pointer flex p-2 rounded-full w-8 h-8;
 	font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
 		"Segoe UI Symbol", "Noto Color Emoji";
 	border-radius: 500px;
 }
 .song-controller {
-	@apply bg-secondary flex p-4 items-center justify-center gap-14 relative;
+	@apply bg-secondary flex lg:p-4 lg:items-center justify-center gap-14 relative max-lg:bg-muted max-lg:px-4;
 	.icon-button {
 		@apply cursor-pointer w-4 h-4 hover:opacity-100 opacity-75;
 	}
 }
 .control-bar {
-	@apply flex flex-col justify-start items-center gap-2 w-[35rem] h-16;
+	@apply flex flex-col relative lg:justify-start justify-end items-center gap-2 px-4 h-[4.25rem] lg:p-0 w-full lg:w-[35rem] max-lg:bg-chart3 lg:h-16 max-lg:rounded-md;
 }
 .thumbnail {
 	@apply w-14 h-14 rounded-lg object-cover;
 }
 .song {
-	@apply flex gap-2 items-center;
+	@apply max-lg:hidden flex gap-2 items-center;
 }
 </style>
