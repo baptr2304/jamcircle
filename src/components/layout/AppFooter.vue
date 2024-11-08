@@ -125,10 +125,7 @@ function toggleMuted() {
 
 <template>
 	<div class="grid w-full h-full lg:bg-muted-foreground select-none relative">
-		<div
-			v-if="!userStore.isAuthenticated"
-			class="well-come-bar"
-		>
+		<div v-if="!userStore.isAuthenticated" class="well-come-bar">
 			<div class="flex flex-col h-full justify-center">
 				<div class="title text-sm font-medium max-lg:hidden">REVIEW FOR JAMCIRCLE</div>
 				<div class="description text-sm max-lg:line-clamp-2">
@@ -157,10 +154,7 @@ function toggleMuted() {
 						@click="changeCurrentTime(15, 'backward')"
 					/>
 					<Icon name="IconPrevious" class="icon-button" @click="prevSong" />
-					<button
-						class="button-play"
-						@click="handlePlay"
-					>
+					<button class="button-play" @click="handlePlay">
 						<Icon v-if="isPlaying" name="IconPlay" class="cursor-pointer w-4 h-4" />
 						<Icon v-else name="IconPause" class="cursor-pointer w-4 h-4" />
 					</button>
@@ -179,7 +173,6 @@ function toggleMuted() {
 					<span class="w-14 text-center max-lg:hidden">{{ formatTime(songDuration) }}</span>
 				</div>
 
-
 				<!-- Màn hình điện thoại -->
 				<div class="lg:hidden flex items-center h-10 gap-2.5 absolute left-4 top-2">
 					<img
@@ -194,15 +187,10 @@ function toggleMuted() {
 						</p>
 					</div>
 				</div>
-				
 
 				<div class="flex items-center gap-4 absolute right-8 top-4 lg:hidden">
-					
 					<Icon name="IconPrevious" class="icon-button" @click="prevSong" />
-					<button
-						class="button-play"
-						@click="handlePlay"
-					>
+					<button class="button-play" @click="handlePlay">
 						<Icon v-if="isPlaying" name="IconPlay" class="cursor-pointer w-4 h-4" />
 						<Icon v-else name="IconPause" class="cursor-pointer w-4 h-4" />
 					</button>
@@ -219,13 +207,13 @@ function toggleMuted() {
 				<source :src="songStore.currentSong.source" type="audio/mpeg" />
 			</audio>
 		</div>
-		<BottomNavigationBar class="lg:hidden absolute bottom-0 left-4 w-[calc(100%-2rem)]"/>
+		<BottomNavigationBar class="lg:hidden absolute bottom-0 left-4 w-[calc(100%-2rem)]" />
 	</div>
 </template>
 
 <style scoped>
 .well-come-bar {
-	@apply flex justify-between items-center lg:p-4 p-2 gap-4 max-lg:h-[4.25rem] ;
+	@apply flex justify-between items-center lg:p-4 p-2 gap-4 max-lg:h-[4.25rem];
 	background: linear-gradient(90deg, #af2896 0%, #509bf5 100%);
 }
 .button-play {
