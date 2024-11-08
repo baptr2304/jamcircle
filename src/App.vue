@@ -1,5 +1,11 @@
 <script setup>
-import AppFooter from './components/layout/AppFooter.vue';
+
+const isDarkMode = ref(localStorage.getItem("dark") === "true");
+
+watch(isDarkMode, (value) => {
+	document.body.classList.toggle("dark", value);
+},{ immediate: true });
+
 </script>
 <template>
 	<router-view v-slot="{ Component }">

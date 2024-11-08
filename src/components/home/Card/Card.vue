@@ -12,14 +12,14 @@ const props = defineProps({
 });
 </script>
 <template>
-  <div class="w-full flex justify-center items-center">
+  <div class="flex justify-center items-center">
     <div
-      class="w-[11rem] h-[13rem] sm:w-[14rem] sm:h-[16rem] rounded-xs flex items-center flex-col hover:bg-[#1f1f1f] cursor-pointer"
+      class="2xl:w-[16rem] lg:w-52 md:w-44 w-[15rem] h-[13rem] sm:h-[16rem] rounded-xs flex items-center flex-col gap-2 hover:bg-secondary cursor-pointer p-4 "
     >
       <img
         :src="image"
         :alt="title"
-        class="w-[9rem] h-[9rem] sm:w-[12rem] sm:h-[12rem] rounded-[1.2rem] p-4 object-cover"
+        class="xl:w-[11rem] lg:w-40 md:w-36 w-[10rem] xl:h-[10.5rem] lg:h-40 md:h-36 rounded-md object-cover"
       />
       <div class="p-1 w-[9rem] sm:w-[12rem]">
         <h2 class="text-sm font-bold text-center">{{ title }}</h2>
