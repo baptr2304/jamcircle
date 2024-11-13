@@ -19,7 +19,7 @@ const addToPlaylist = async (song) => {
       throw new Error("Failed to create playlist - no ID returned");
     }
 
-    const playlistPath = `/playlist/playlistDetail/${data.id}`;
+    const playlistPath = `/playlist/${data.id}`;
     router.push(playlistPath);
     playlistStore.addSong(data.id, song).catch((error) => {
       console.error("Error in addSong:", error);
