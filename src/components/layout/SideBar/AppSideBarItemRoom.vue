@@ -56,7 +56,7 @@ watch(isOpen, (value) => {
 <template>
 	<Collapsible v-model:open="isOpen" class="space-y-2">
 		<CollapsibleTrigger as-child>
-			<div class="flex items-center justify-between space-x-4 px-4 cursor-pointer">
+			<div class="flex items-center justify-between space-x-4 pr-4 cursor-pointer">
 				<AppSideBarItem v-bind="data" style="padding-left: 0" />
 				<Icon name="IconArrowDown" :class="classAnimate" />
 			</div>

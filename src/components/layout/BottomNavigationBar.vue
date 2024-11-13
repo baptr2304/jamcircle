@@ -12,8 +12,10 @@ const data = ref([
 	{
 		id: 1,
 		icon: "IconLibrary",
-		title: "Your Playlist",
+		title: "Playlist",
 		url: "/playlist",
+		content: "Login to view your playlist",
+		requiredAuthen: true,
 	},
 	{
 		id: 2,
@@ -25,21 +27,33 @@ const data = ref([
 		id: 3,
 		icon: "IconJam",
 		title: "Jam",
+		type: "button",
+		content: "Login to start a jam",
+		requiredAuthen: true,
 	},
 	{
 		id: 4,
 		icon: "IconJoin",
 		title: "Join room",
+		type: "button",
+		content: "Login to join room",
+		requiredAuthen: true,
 	},
 ]);
 </script>
 <template>
-	<div class="flex justify-around h-20 ">
-		<AppSideBarItem v-for="item in data" :key="item.id" v-bind="item" text-style="text-xs text-center font-normal" class="flex-col item" />
+	<div class="flex justify-around h-20">
+		<AppSideBarItem
+			v-for="item in data"
+			:key="item.id"
+			v-bind="item"
+			text-style="text-xs text-center font-normal"
+			class="flex-col item"
+		/>
 	</div>
 </template>
 <style scoped>
 .item {
-    padding: 0.25rem 0.5rem;
+	padding: 0.25rem 0.5rem;
 }
 </style>
