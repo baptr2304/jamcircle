@@ -9,34 +9,29 @@ const playlistStore = usePlaylistStore();
 const songStore = useSongStore();
 
 onMounted(async () => {
-    await songStore.fetchSongs();
+  await songStore.fetchSongs();
 });
 
 const addToPlaylist = async (song) => {
-    try {
-        // 1. Tạo playlist mới và lưu response
-        const data = await playlistStore.createNewPlaylist("My playlist");
-        if (!data || !data.id) {
-            throw new Error("Failed to create playlist - no ID returned");
-        }
-
-        // 2. Thêm bài hát vào playlist
-        await playlistStore.addSong(data.id, song);
-
-        // // 4. Chuyển hướng đến trang chi tiết playlist
-        const playlistPath = `/playlist/playlistDetail/${data.id}`;
-        console.log("Redirecting to:", playlistPath); // Debug log
-        await router.push(playlistPath);
-    } catch (error) {
-        console.error("Error in addToPlaylist:", error);
+  try {
+    const data = await playlistStore.createNewPlaylist("My playlist");
+    if (!data || !data.id) {
+      throw new Error("Failed to create playlist - no ID returned");
     }
+
+    const playlistPath = `/playlist/playlistDetail/${data.id}`;
+    router.push(playlistPath);
+    playlistStore.addSong(data.id, song).catch((error) => {
+      console.error("Error in addSong:", error);
+    });
+  } catch (error) {
+    console.error("Error in addToPlaylist:", error);
+  }
 };
 </script>
 
 <template>
-    <div>
-    
-        <PlaylistSearch :songs="songStore.songs" @add-song="addToPlaylist" />
-    
-    </div>
+  <div>
+    <PlaylistSearch :songs="songStore.songs" @add-song="addToPlaylist" />
+  </div>
 </template>

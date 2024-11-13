@@ -17,13 +17,24 @@ const props = defineProps({
   },
 });
 const playlistStore = usePlaylistStore();
-const removeSong = (songId) => {
-  playlistStore.removeSongFromPlaylist(props.playlistId, songId);
+const playlistLocal = ref(props.songs);
+const removeSong = async (songId) => {
+  try {
+    await playlistStore.removeSong(props.playlistId, songId);
+    const index = playlistLocal.value.findIndex(
+      (song) => song.songId === songId
+    );
+    if (index !== -1) {
+      playlistLocal.value.splice(index, 1);
+    }
+  } catch (error) {
+    console.error("Error in removeSong:", error);
+  }
 };
 </script>
 
 <template>
-  <div v-if="songs.length > 0">
+  <div v-if="playlistLocal.length > 0">
     <table class="w-full text-left ml-10">
       <thead>
         <tr>
@@ -33,7 +44,7 @@ const removeSong = (songId) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="song in songs" :key="song.id">
+        <tr v-for="song in playlistLocal" :key="song.id">
           <td class="flex items-center gap-4 my-2">
             <img
               :src="song.imageUrl"
@@ -50,10 +61,10 @@ const removeSong = (songId) => {
           <td>
             <Popover>
               <PopoverTrigger>
-                <IconEllipsis class="w-10 h-6 text-white cursor-pointer" />
+                <IconEllipsis class="w-10 h-6 text-foreground cursor-pointer" />
               </PopoverTrigger>
               <PopoverContent class="w-25">
-                <button @click="removeSong(song.id)">Remove</button>
+                <button @click="removeSong(song.songId)">Remove</button>
               </PopoverContent>
             </Popover>
           </td>

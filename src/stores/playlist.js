@@ -25,15 +25,16 @@ export const usePlaylistStore = defineStore('playlist', () => {
   async function fetchDetailPlaylist(playlistId) {
     try {
       const { data } = await getPlaylistById(playlistId);
-      // currentPlaylist.value = data;
       return data;
     } catch (error) {
       console.error('Error in fetchDetailPlaylist:', error);
       throw error;
     }
+
   }
   async function addSong(playlistId, song) {
     try {
+
       const { data } = await addSongToPlaylist(playlistId, song.id);
       return data;
     } catch (error) {
@@ -45,14 +46,21 @@ export const usePlaylistStore = defineStore('playlist', () => {
   async function removeSong(playlistId, songId) {
     try {
       const { data } = await removeSongFromPlaylist(playlistId, songId);
-      const index = currentPlaylist.value.songs.findIndex((song) => song.id === songId);
-      if (index !== -1)
-        currentPlaylist.value.songs.splice(index, 1);
+
+      if (currentPlaylist.value && currentPlaylist.value.id === playlistId) {
+        const index = currentPlaylist.value.songs.findIndex(
+          (song) => song.songId === songId // 
+        );
+        if (index !== -1) {
+          currentPlaylist.value.songs.splice(index, 1);
+        }
+      }
     } catch (error) {
-      console.error('Error in removeSongFromPlaylist:', error);
+      console.error("Error in removeSongFromPlaylist:", error);
       throw error;
     }
   }
+
 
   async function updatePlaylist(playlistId, newName) {
     try {
