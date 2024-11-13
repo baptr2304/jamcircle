@@ -16,8 +16,6 @@ const props = defineProps({
 		type: String,
 		default: "text-sm",
 	},
-	content: String,
-	requiredAuthen: Boolean,
 });
 const userStore = useUserStore();
 const route = useRoute();

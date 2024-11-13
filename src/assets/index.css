@@ -16,7 +16,9 @@
 body {
   overflow: hidden;
 }
-html, body {
+
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -76,6 +78,7 @@ html, body {
     --chart-3: 197 37% 24%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
   }
 }
 
@@ -85,6 +88,7 @@ html, body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }

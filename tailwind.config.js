@@ -100,6 +100,9 @@ module.exports = {
         "rotate-up": "rotate-up 0.3s ease-in-out forwards",
         "rotate-down": "rotate-down 0.3s ease-in-out forwards",
       },
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(to bottom, #464646, #303030)'
+      }
     },
   },
   plugins: [animate],

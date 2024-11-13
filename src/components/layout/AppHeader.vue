@@ -4,28 +4,28 @@ import Button from "@/components/ui/button/Button.vue";
 import { useUserStore } from "@/stores/user";
 const userStore = useUserStore();
 const data = {
-	user: {
-		name: "shadcn",
-		email: "m@example.com",
-		avatar: "/avatars/shadcn.jpg",
-	},
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
 };
 const searchValue = ref("");
 const router = useRouter();
 const route = useRoute();
 const inputSearch = useTemplateRef("input-search");
 const handleNavigate = () => {
-	if (route.name === "Search") return;
-	router.push({ name: "Search", query: { q: searchValue.value } });
+  if (route.name === "Search") return;
+  router.push({ name: "Search", query: { q: searchValue.value } });
 };
 function handleUpdateQuery() {
-	router.push({ query: { q: searchValue.value } });
+  router.push({ query: { q: searchValue.value } });
 }
 onMounted(() => {
-	if (route.query.q) {
-		searchValue.value = route.query.q;
-	}
-	if (Object.keys(route.query).includes("q")) inputSearch.value.focus();
+  if (route.query.q) {
+    searchValue.value = route.query.q;
+  }
+  if (Object.keys(route.query).includes("q")) inputSearch.value.focus();
 });
 </script>
 <template>

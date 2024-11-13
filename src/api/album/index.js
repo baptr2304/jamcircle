@@ -5,6 +5,10 @@ export function fetchAlbums() {
     return Promise.resolve({ data: albumsData });
 
 }
+export function fetchAlbumById(id) {
+    // return $get(`/albums/${id}`)
+    return Promise.resolve({ data: albumsData.find(a => a.id === id) });
+}
 export const albumsData = [
     {
         id: 1,
