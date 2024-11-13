@@ -16,7 +16,9 @@
 body {
   overflow: hidden;
 }
-html, body {
+
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -85,6 +87,7 @@ html, body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
