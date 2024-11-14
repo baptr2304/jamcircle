@@ -4,18 +4,19 @@ import PlaylistHeaderDetail from "@/components/playlist/createPlaylist/PlaylistH
 import SongTable from "@/components/playlist/createPlaylist/SongTable.vue";
 import { usePlaylistStore } from "@/stores/playlist";
 import { useSongStore } from "@/stores/songs";
-import { computed, onMounted } from "vue";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
 const playlistStore = usePlaylistStore();
 const songStores = useSongStore();
 const playlistId = computed(() => route.params.id);
 const playlistLocal = ref(null);
-onMounted(async () => {
+watchEffect(async () => {
   try {
     const result = await playlistStore.fetchDetailPlaylist(playlistId.value);
     if (result) {
       playlistLocal.value = result;
+      console.log("playlistLocal", playlistLocal.value);
     } else {
       console.error("Failed to fetch playlist: No data returned");
     }

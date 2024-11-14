@@ -10,7 +10,7 @@ import { defineStore } from 'pinia';
 
 export const usePlaylistStore = defineStore('playlist', () => {
 
-  const playlists = ref([])
+  const playlists = ref(null)
   const currentPlaylist = ref(null)
 
   async function createNewPlaylist(name) {
@@ -26,6 +26,7 @@ export const usePlaylistStore = defineStore('playlist', () => {
     try {
       const { data } = await getPlaylistById(playlistId);
       return data;
+
     } catch (error) {
       console.error('Error in fetchDetailPlaylist:', error);
       throw error;
@@ -79,8 +80,9 @@ export const usePlaylistStore = defineStore('playlist', () => {
   async function fetchAllPlaylists() {
     try {
       const { data } = await getAllPlaylists();
-      playlists.data = data;
-      return playlists.data;
+      playlists.value = data || [];
+
+
     } catch (error) {
       console.error('Error in fetchAllPlaylists:', error);
       throw error;
