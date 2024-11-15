@@ -1,11 +1,15 @@
+import { data } from 'autoprefixer';
 import { songsData } from '../mock/songs';
-export function fetchSongs() {
+export function getAllSongs() {
     // return $get('/songs')
     return Promise.resolve({ data: songsData });
 
 }
-export function fetchSongById(id) {
+export function addSongById(id) {
     // return $get(`/songs/${id}`)
-    return Promise.resolve({ data: songsData.find(s => s.id === id) });
+    console.log(data);
+    return Promise.resolve({ data: songsData.find(song => song.id === id) });
+
+
 }
 
