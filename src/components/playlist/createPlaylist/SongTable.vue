@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/popover";
 import { usePlaylistStore } from "@/stores/playlist";
 import IconEllipsis from "../../icons/IconEllipsis.vue";
+
 const props = defineProps({
   songs: {
     type: Array,
@@ -16,35 +17,38 @@ const props = defineProps({
     required: true,
   },
 });
+
 const playlistStore = usePlaylistStore();
-const playlistLocal = ref(props.songs);
-const removeSong = async (songId) => {
+
+const emit = defineEmits(["update:songs"]);
+
+const removeSong = async (uniqueKey) => {
   try {
-    await playlistStore.removeSong(props.playlistId, songId);
-    const index = playlistLocal.value.findIndex(
-      (song) => song.songId === songId
+    const updatedSongs = props.songs.filter(
+      (song) => song.uniqueKey !== uniqueKey
     );
-    if (index !== -1) {
-      playlistLocal.value.splice(index, 1);
-    }
+    emit("update:songs", updatedSongs);
+
+    await playlistStore.removeSong(props.playlistId, uniqueKey);
   } catch (error) {
-    console.error("Error in removeSong:", error);
+    console.error("Error removing song from playlist:", error);
   }
 };
 </script>
 
 <template>
-  <div v-if="playlistLocal.length > 0">
-    <table class="w-full text-left ml-10">
+  <div v-if="songs && songs.length > 0">
+    <table class="w-full text-left">
       <thead>
         <tr>
           <th>Title</th>
           <th>Album</th>
           <th>Duration</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="song in playlistLocal" :key="song.id">
+        <tr v-for="song in songs" :key="song.uniqueKey">
           <td class="flex items-center gap-4 my-2">
             <img
               :src="song.imageUrl"
@@ -64,7 +68,7 @@ const removeSong = async (songId) => {
                 <IconEllipsis class="w-10 h-6 text-foreground cursor-pointer" />
               </PopoverTrigger>
               <PopoverContent class="w-25">
-                <button @click="removeSong(song.songId)">Remove</button>
+                <button @click="removeSong(song.uniqueKey)">Remove</button>
               </PopoverContent>
             </Popover>
           </td>
@@ -73,6 +77,6 @@ const removeSong = async (songId) => {
     </table>
   </div>
   <div v-else>
-    <p>No songs available.</p>
+    <p>No songs available in this playlist.</p>
   </div>
 </template>

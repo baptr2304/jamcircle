@@ -25,6 +25,12 @@ onMounted(async () => {
 
   await songStores.fetchSongs();
 });
+const handleSongsUpdate = (updatedSongs) => {
+  if (playlistLocal.value) {
+    playlistLocal.value.songs = updatedSongs;
+  }
+};
+
 const addToPlaylist = async (song) => {
   try {
     const updatedPlaylist = await playlistStore.addSong(playlistId.value, song);
@@ -46,21 +52,28 @@ const updatePlaylistName = async (newName) => {
 </script>
 
 <template>
-  <PlaylistHeaderDetail
-    v-if="playlistLocal"
-    :playlist-data="playlistLocal"
-    @update-name="updatePlaylistName"
-  />
-  <div v-if="playlistLocal" class="ml-10">
-    <SongTable
-      :playlistId="playlistId"
-      v-if="playlistLocal.songs && playlistLocal.songs.length"
-      :songs="playlistLocal.songs"
+  <div :id="playlistId">
+    <PlaylistHeaderDetail
+      v-if="playlistLocal"
+      :playlist-data="playlistLocal"
+      @update-name="updatePlaylistName"
     />
-    <p v-else>No songs available in this playlist.</p>
+    <div v-if="playlistLocal" class="ml-10">
+      <SongTable
+        :playlistId="playlistId"
+        v-if="playlistLocal.songs && playlistLocal.songs.length"
+        :songs="playlistLocal.songs"
+        @update:songs="handleSongsUpdate"
+      />
+      <p v-else>No songs available in this playlist.</p>
+    </div>
+    <div v-else class="ml-10">
+      <p>Playlist not found. Please try again.</p>
+    </div>
+    <PlaylistSearch
+      :songs="songStores.songs"
+      @add-song="addToPlaylist"
+      :playlist-songs="playlistLocal?.songs || []"
+    />
   </div>
-  <div v-else class="ml-10">
-    <p>Playlist not found. Please try again.</p>
-  </div>
-  <PlaylistSearch :songs="songStores.songs" @add-song="addToPlaylist" />
 </template>

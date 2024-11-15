@@ -44,16 +44,15 @@ export const usePlaylistStore = defineStore('playlist', () => {
     }
   }
 
-  async function removeSong(playlistId, songId) {
+  async function removeSong(playlistId, uniqueKey) {
     try {
-      const { data } = await removeSongFromPlaylist(playlistId, songId);
-
+      const { data } = await removeSongFromPlaylist(playlistId, uniqueKey);
       if (currentPlaylist.value && currentPlaylist.value.id === playlistId) {
         const index = currentPlaylist.value.songs.findIndex(
-          (song) => song.songId === songId // 
+          (song) => song.uniqueKey === uniqueKey
         );
         if (index !== -1) {
-          currentPlaylist.value.songs.splice(index, 1);
+          currentPlaylist.value.songs.splice(index, 1); 
         }
       }
     } catch (error) {
@@ -61,6 +60,7 @@ export const usePlaylistStore = defineStore('playlist', () => {
       throw error;
     }
   }
+
 
 
   async function updatePlaylist(playlistId, newName) {
