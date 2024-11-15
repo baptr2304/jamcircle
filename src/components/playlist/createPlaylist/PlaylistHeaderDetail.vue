@@ -29,7 +29,6 @@ const savePlaylistName = () => {
   }
   isEditingPlaylistName.value = false;
 };
-
 </script>
 
 <template>
