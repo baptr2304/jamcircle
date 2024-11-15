@@ -7,7 +7,7 @@ export function getAllSongs() {
 }
 export function addSongById(id) {
     // return $get(`/songs/${id}`)
-    console.log(data);
+
     return Promise.resolve({ data: songsData.find(song => song.id === id) });
 
 

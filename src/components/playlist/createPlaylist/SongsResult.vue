@@ -3,10 +3,12 @@ const props = defineProps({
   songs: {
     type: Array,
     required: true,
-  },
+  }
 });
+
 const emit = defineEmits(["add-song"]);
-const addSong = (song) => {
+
+const handleAddSong = (song) => {
   emit("add-song", song);
 };
 </script>
@@ -32,7 +34,7 @@ const addSong = (song) => {
         <div>{{ song.albumName }}</div>
         <div class="w-[20%]">
           <div
-            @click="addSong(song)"
+            @click="handleAddSong(song)"
             class="w-16 h-8 border-2 border-foreground rounded-[10rem] text-xs flex items-center justify-center cursor-pointer"
           >
             ADD

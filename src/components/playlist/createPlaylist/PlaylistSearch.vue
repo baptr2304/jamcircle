@@ -1,15 +1,32 @@
 <script setup>
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import ScrollArea from "../../ui/scroll-area/ScrollArea.vue";
 import SongsResult from "./SongsResult.vue";
+
 const props = defineProps({
   songs: {
     type: Array,
     required: true,
   },
+  playlistSongs: {
+    type: Array,
+    default: () => [],
+  },
 });
 const emit = defineEmits(["add-song"]);
 const searchQuery = ref("");
 const searchResults = ref([]);
+const showDuplicateDialog = ref(false);
+const selectedSong = ref(null);
 const handleSearch = () => {
   searchResults.value = props.songs.filter(
     (song) =>
@@ -17,8 +34,25 @@ const handleSearch = () => {
       song.artist.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 };
-const addSong = (song) => {
-  emit("add-song", song);
+const handleDuplicateSong = (song) => {
+  selectedSong.value = song;
+  showDuplicateDialog.value = true;
+};
+
+const handleAddSong = (song) => {
+  const isDuplicate = props.playlistSongs.some((s) => s.songId === song.id);
+  if (isDuplicate) {
+    handleDuplicateSong(song);
+  } else {
+    emit("add-song", song);
+  }
+};
+const handleConfirmAdd = () => {
+  emit("add-song", selectedSong.value);
+  showDuplicateDialog.value = false;
+};
+const handleClose = () => {
+  showDuplicateDialog.value = false;
 };
 </script>
 <template>
@@ -40,11 +74,27 @@ const addSong = (song) => {
         <Icon name="IconSearch" class="w-4 text-muted-foreground" />
       </span>
     </div>
+    <AlertDialog :open="showDuplicateDialog" @update:open="handleClose">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Already added</AlertDialogTitle>
+          <AlertDialogDescription>
+            This song is already in your playlist.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel @click="handleClose">Don't add</AlertDialogCancel>
+          <AlertDialogAction @click="handleConfirmAdd"
+            >Add anyway</AlertDialogAction
+          >
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
     <ScrollArea class="mt-4 w-full h-80">
       <SongsResult
         v-if="searchResults.length > 0"
         :songs="searchResults"
-        @add-song="addSong"
+        @add-song="handleAddSong"
       />
       <div
         v-else-if="searchQuery.trim() !== ''"

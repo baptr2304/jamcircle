@@ -1,7 +1,7 @@
 // playlist.js
 // import { $delete, $get, $patch } from "@/api/axios";
 import { songsData } from "../mock/songs";
-
+import { v4 as uuidv4 } from "uuid";
 let playlistsData = [
     {
         id: "1",
@@ -74,6 +74,7 @@ export function addSongToPlaylist(playlistId, songId) {
         }
 
         const formattedSong = {
+            uniqueKey: uuidv4(),
             songId: song.id,
             title: song.title,
             artist: song.artist?.name || "Unknown Artist",

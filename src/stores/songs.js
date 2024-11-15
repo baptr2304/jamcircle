@@ -16,7 +16,6 @@ export const useSongStore = defineStore("song", () => {
         try {
             const response = await addSongById(id);
             songs.value = response.data;
-            console.log('store', songs.value);
             return response.data;
         } catch (error) {
             console.error("Error fetching songs:", error.message);
