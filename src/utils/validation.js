@@ -1,6 +1,13 @@
 import { z } from 'zod'
 
 export const emailSchema = z.string().email()
+export const genderSchema = z.enum(['Male', 'Female'], {
+  required_error: 'Vui lòng chọn giới tính',
+})
+export const nameSchema = z
+  .string()
+  .min(2, { message: 'Tên phải có ít nhất 2 ký tự' })
+  .max(50, { message: 'Tên không được vượt quá 50 ký tự' })
 
 export const passwordSchema = z
   .string()
@@ -13,6 +20,9 @@ export const userSchema = z.object({
   password: passwordSchema,
   age: z.number().min(18, { message: 'Bạn phải trên 18 tuổi' }),
 })
+
+
+
 export function validateUser(data) {
   return userSchema.safeParse(data)
 }
