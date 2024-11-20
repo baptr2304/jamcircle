@@ -1,4 +1,7 @@
 <script setup>
+import ErrorBoundary from './components/ErrorBoundary.vue';
+import Toaster from './components/ui/toast/Toaster.vue';
+
 
 const isDarkMode = ref(localStorage.getItem("dark") === "true");
 
@@ -10,7 +13,10 @@ watch(isDarkMode, (value) => {
 <template>
 	<router-view v-slot="{ Component }">
 		<transition name="slide">
-			<component :is="Component"></component>
+			<ErrorBoundary>
+				<component :is="Component"></component>
+			</ErrorBoundary>
 		</transition>
 	</router-view>
+	<Toaster/>
 </template>

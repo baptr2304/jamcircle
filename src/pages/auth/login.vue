@@ -8,9 +8,9 @@
 </route>
 <script setup>
 import { useForm } from "vee-validate";
+import {useAuthStore} from '@/stores/auth'
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { emailSchema, passwordSchema } from "@/utils/validation";
 
+const authStore = useAuthStore()
 const formSchema = toTypedSchema(
   z.object({
     email: emailSchema,
@@ -32,8 +33,8 @@ const form = useForm({
   validationSchema: formSchema,
 });
 
-const onSubmit = form.handleSubmit((values) => {
-  console.log("Form submitted!", values);
+const onSubmit = form.handleSubmit(async (values) => {
+  await authStore.login(values)
 });
 </script>
 <template>
