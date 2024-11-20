@@ -5,13 +5,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 const props = defineProps({
 	title: String,
 	content: String,
-	isRequired: Boolean,
+	requiredAuthen: Boolean,
 });
 </script>
 
 <template>
 	<Popover class="bg-foreground">
-		<PopoverTrigger v-if="isRequired" as-child>
+		<PopoverTrigger v-if="props.requiredAuthen" as-child>
 			<slot>
 				<Button variant="primary">Button trigger</Button>
 			</slot>

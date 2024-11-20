@@ -38,64 +38,43 @@ axiosInstance.interceptors.response.use(
 
           // Retry the original request
           return axiosInstance(originalRequest)
-        }
-        catch (refreshError) {
+        } catch (refreshError) {
           localStorage.removeItem('accesstoken')
           localStorage.removeItem('refreshtoken')
-          window.location.href = '/login'
+          window.location.href = '/auth/login'
           return Promise.reject(refreshError)
         }
-      }
-      else {
-        window.location.href = '/login'
+      } else if (!window.location.pathname.includes('/auth/')) {
+        window.location.href = '/auth/login'
       }
     }
     return Promise.reject(error)
   },
 )
 
-function $get(url, config = {}) {
-  try {
-    return axiosInstance.get(url, config)
-  }
-  catch (error) {
-    return Promise.reject(error)
-  }
+async function $get(url, config = {}) {
+  const response = await axiosInstance.get(url, config)
+  return response.data
 }
 
-function $post(url, data, config = {}) {
-  try {
-    return axiosInstance.post(url, data, config)
-  }
-  catch (error) {
-    return Promise.reject(error)
-  }
+async function $post(url, data, config = {}) {
+  const response = await axiosInstance.post(url, data, config)
+  return response.data
 }
 
-function $put(url, data, config = {}) {
-  try {
-    return axiosInstance.put(url, data, config)
-  }
-  catch (error) {
-    return Promise.reject(error)
-  }
-}
-function $patch(url, data, config = {}) {
-  try {
-    return axiosInstance.patch(url, data, config)
-  }
-  catch (error) {
-    return Promise.reject(error)
-  }
+async function $put(url, data, config = {}) {
+  const response = await axiosInstance.put(url, data, config)
+  return response.data
 }
 
-function $delete(url, config = {}) {
-  try {
-    return axiosInstance.delete(url, config)
-  }
-  catch (error) {
-    return Promise.reject(error)
-  }
+async function $patch(url, data, config = {}) {
+  const response = await axiosInstance.patch(url, data, config)
+  return response.data
+}
+
+async function $delete(url, config = {}) {
+  const response = await axiosInstance.delete(url, config)
+  return response.data
 }
 
 export { $delete, $get, $patch, $post, $put }

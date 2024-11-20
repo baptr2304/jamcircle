@@ -5,5 +5,6 @@ export function apiLogin(data) {
 }
 
 export function apiRegister(data) {
-  return $post('/auth/register', data)
+  const { email, mat_khau, ten_nguoi_dung } = data
+  return $post('/auth/register', { email, mat_khau, ten_nguoi_dung })
 }
