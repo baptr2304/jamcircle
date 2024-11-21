@@ -138,11 +138,11 @@ function toggleMuted() {
 		</div>
 		<div class="song-controller" v-else>
 			<div class="song absolute left-8 max-w-80">
-				<img :src="songStore.currentSong.thumbnail" alt="" class="thumbnail" />
+				<img :src="songStore.currentSong.imageUrl" alt="" class="thumbnail" />
 				<div class="song-meta w-full">
-					<div class="title truncate font-semibold">{{ songStore.currentSong.name }}</div>
+					<div class="title truncate font-semibold">{{ songStore.currentSong.title }}</div>
 					<div class="artist truncate text-secondary-foreground">
-						{{ songStore.currentSong.singer }}
+						{{ songStore.currentSong.artist.name }}
 					</div>
 				</div>
 			</div>
@@ -176,14 +176,14 @@ function toggleMuted() {
 				<!-- Màn hình điện thoại -->
 				<div class="lg:hidden flex items-center h-10 gap-2.5 absolute left-4 top-2">
 					<img
-						:src="songStore.currentSong.thumbnail"
+						:src="songStore.currentSong.imageUrl" 
 						alt=""
 						class="w-10 h-10 rounded-lg object-cover"
 					/>
 					<div class="song-meta w-full max-w-32">
-						<p class="title text-sm truncate font-semibold">{{ songStore.currentSong.name }}</p>
+						<p class="title text-sm truncate font-semibold">{{ songStore.currentSong.title }}</p>
 						<p class="artist text-xs truncate text-secondary-foreground">
-							{{ songStore.currentSong.singer }}
+							{{songStore.currentSong.artist.name}}
 						</p>
 					</div>
 				</div>
