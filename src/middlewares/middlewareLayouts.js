@@ -7,7 +7,8 @@ export async function middlewareLayout(to, from, next) {
   const isAuthenticated = userStore.isAuthenticated
   const layout = to.meta.layout
 
-  const authenPage = ['Playlist','playlist-create','song-create','Favorite']
+  const authenPage = ['Playlist','playlist-create','song-create','Favorite','Profile']
+  console.log(to)
   if (isAuthenticated && layout === 'auth') {
     return next('/')
   }

@@ -13,7 +13,7 @@ export async function middlewareAuth(to, from, next) {
   //   return isAuthOrErrorLayout ? next() : next('/auth/login')
   // }
 
-  if (accessToken && !userStore.isAuthenticated) {
+  if (!userStore.isAuthenticated) {
     try {
       const response = await fetchUserData()
       userStore.setUser(response.data)

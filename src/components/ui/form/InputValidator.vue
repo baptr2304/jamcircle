@@ -10,6 +10,8 @@ const props = defineProps({
   label: 'Text',
   name: 'text',
   placeholder: 'Text',
+  disabled: Boolean,
+  custom: ""
 })
 
 // State hiển thị mật khẩu
@@ -27,32 +29,34 @@ const typeInputComputed = computed(() => {
 </script>
 
 <template>
-	<FormField v-slot="{ componentField }" :name="props.name" :validate-on-blur="false">
-		<div class="space-y-2">
-			<Label :for="props.id">{{ props.label }}</Label>
-			<div class="relative">
-				<FormControl>
-					<Input
-						:id="props.id"
-						:type="typeInputComputed"
-						:placeholder="props.placeholder"
-						v-bind="componentField"
-						class="pr-9 rounded-[0.25rem]"
-						autocomplete="off"
-					/>
-					<div
-						v-if="props.type === 'password'"
-						class="w-10 h-10 absolute right-0 top-0 cursor-pointer flex items-center justify-center"
-						@click="toggleShowIcon"
-					>
-						<Icon v-if="!isShowPassword" name="IconEyeOff" class="w-6 h-6" />
-						<Icon v-else name="IconEyeOn" class="w-6 h-6" />
-					</div>
-					<FormMessage class="error-message" />
-				</FormControl>
-			</div>
-		</div>
-	</FormField>
+  <FormField v-slot="{ componentField }" :name="props.name" :validate-on-blur="false">
+    <div class="space-y-2">
+      <Label :for="props.id">{{ props.label }}</Label>
+      <FormItem class="relative">
+        <FormControl>
+          <Input
+            :id="props.id"
+            :type="typeInputComputed"
+            :placeholder="props.placeholder"
+            :disabled="props.disabled"
+            :class="props.custom"
+            v-bind="componentField"
+            class="pr-9 rounded-[0.25rem]"
+            autocomplete="off"
+          />
+          <div
+            v-if="props.type === 'password'"
+            class="w-10 h-10 absolute right-0 top-0 cursor-pointer flex items-center justify-center"
+            @click="toggleShowIcon"
+          >
+            <Icon v-if="!isShowPassword" name="IconEyeOff" class="w-6 h-6" />
+            <Icon v-else name="IconEyeOn" class="w-6 h-6" />
+          </div>
+          <FormMessage class="error-message" />
+        </FormControl>
+      </FormItem>
+    </div>
+  </FormField>
 </template>
 
 <style scoped>

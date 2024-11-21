@@ -13,8 +13,7 @@ import * as z from "zod";
 import { useAuthStore } from "@/stores/auth";
 
 import { Button } from "@/components/ui/button";
-import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+
 import { emailSchema, passwordSchema } from "@/utils/validation";
 import InputValidator from "@/components/ui/form/InputValidator.vue";
 const authStore = useAuthStore();

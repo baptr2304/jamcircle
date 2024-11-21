@@ -22,11 +22,11 @@ const props = defineProps({
 			</slot>
 		</template>
 		<PopoverContent class="w-80">
-			<div class="flex flex-col gap-2">
+			<div class="flex flex-col gap-2 bg-transparent">
 				<h4 class="title text-sm font-semibold">{{ props.title }}</h4>
 				<p class="font-light">{{ props.content }}</p>
-				<div class="flex justify-end gap-2">
-					<PopoverClose>
+				<div class="flex justify-end gap-2 bg-transparent">
+					<PopoverClose class="bg-transparent">
 						<Button variant="outline" class="rounded-full">Not now</Button>
 					</PopoverClose>
 					<RouterLink to="/auth/login">

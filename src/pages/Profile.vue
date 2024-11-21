@@ -1,7 +1,8 @@
 <script setup>
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import InputValidator from "@/components/ui/form/InputValidator.vue";
 import { Label } from "@/components/ui/label";
+
 import {
   Select,
   SelectContent,
@@ -22,28 +23,26 @@ import { useForm } from "vee-validate";
 import * as z from "zod";
 onMounted(async () => {
   await userStore.fetchUser();
-  gender.value = userStore.user?.gender || "";
-  name.value = userStore.user?.name || "";
-  email.value = userStore.user?.email || "";
+  form.setValues({
+    username: userStore.user?.username || "",
+    email: userStore.user?.email || "",
+    gender: userStore.user?.gender || "",
+  });
 });
 const userStore = useUserStore();
 const isEditing = ref(false);
-const password = ref("");
-const confirmPassword = ref("");
-const email = ref(userStore.user?.email);
-const name = ref(userStore.user?.name);
-const gender = ref(userStore.user?.gender);
 
 const startEdit = () => {
   isEditing.value = true;
 };
 const cancelEdit = () => {
   isEditing.value = false;
+  form.resetForm();
 };
 const profileSchema = toTypedSchema(
   z
     .object({
-      name: nameSchema,
+      username: nameSchema,
       email: emailSchema,
       password: passwordSchema.optional(),
       confirmPassword: z.string(),
@@ -51,7 +50,7 @@ const profileSchema = toTypedSchema(
     })
     .refine(
       (data) => {
-        if (data.password && data.password == data.confirmPassword)
+        if (data.password && data.password === data.confirmPassword)
           return false;
         return true;
       },
@@ -64,89 +63,83 @@ const profileSchema = toTypedSchema(
 const form = useForm({
   validationSchema: profileSchema,
   initialValues: {
-    name: userStore.user?.name || "",
+    username: userStore.user?.username || "",
     email: userStore.user?.email || "",
     gender: userStore.user?.gender || "",
-    password: "",
-    confirmPassword: "",
+    password: "*************",
+    confirmPassword: "*************",
   },
 });
-const handleSave = () => {
-  if (password.value && password.value !== confirmPassword.value) {
-    alert("Passwords don't match");
-    return;
+const onSubmit = form.handleSubmit(async (values) => {
+  try {
+    const updates = {
+      username: values.username,
+      email: values.email,
+      gender: values.gender,
+    };
+
+    if (values.password) {
+      updates.password = values.password;
+    }
+
+    await userStore.updateUser(updates);
+    isEditing.value = false;
+    form.resetForm();
+  } catch (error) {
+    console.error("Error updating profile:", error);
   }
-
-  const updates = {
-    name: name.value,
-    email: email.value,
-    gender: gender.value,
-  };
-
-  if (password.value) {
-    updates.password = password.value;
-  }
-
-  userStore.updateUser(updates);
-  console.log("User updated", updates);
-  password.value = "";
-  confirmPassword.value = "";
-  isEditing.value = false;
-};
+});
 </script>
 <template>
   <div class="w-full flex justify-center">
     <div class="flex flex-col items-center w-11/12 md:w-3/4 lg:w-1/2">
-      <h1 class="self-start text-2xl font-bold mt-4">Profile</h1>
-      <form @submit="handleSave" class="w-full">
-        <div class="mt-4">
-          <Label for="name" class="ml-1">User name</Label>
-          <Input
-            type="text"
-            placeholder=""
-            class="mb-5 mt-1 h-[3rem]"
-            :disabled="!isEditing"
-            v-model="name"
-          />
-        </div>
-        <div class="mt-4">
-          <Label for="email" class="ml-1">Email</Label>
-          <Input
-            type="email"
-            placeholder="Email"
-            class="mb-5 mt-1 h-[3rem]"
-            :disabled="!isEditing"
-            v-model="email"
-          />
-        </div>
-        <div>
-          <Label for="password" class="ml-1">Password</Label>
-          <Input
-            type="password"
-            placeholder="*********"
-            class="mb-5 mt-1 h-[3rem]"
-            :disabled="!isEditing"
-            v-model="password"
-          />
-        </div>
+      <h1 class="self-start text-2xl font-bold mt-4 mb-2">Thông tin cá nhân</h1>
+      <form @submit="onSubmit" class="w-full">
+        <InputValidator
+          type="text"
+          label="Tên người dùng"
+          name="username"
+          :disabled="!isEditing"
+          :custom="'h-[3rem] mb-5 mt-1'"
+          v-model="form.values.username"
+        />
+        <InputValidator
+          type="text"
+          label="Địa chỉ Email"
+          name="email"
+          :disabled="!isEditing"
+          :custom="'h-[3rem] mb-5 mt-1'"
+          v-model="form.values.email"
+        />
+        <InputValidator
+          type="password"
+          label="Mật khẩu"
+          name="password"
+          :disabled="!isEditing"
+          :custom="'h-[3rem] mb-5 mt-1'"
+          placeholder="*********"
+          v-model="form.values.password"
+        />
         <div v-if="isEditing">
-          <Label for="confirm" class="ml-1">Confirm Password</Label>
-          <Input
+          <InputValidator
             type="password"
+            label="Xác nhận mật khẩu"
+            name="confirmPassword"
+            :disabled="!isEditing"
+            :custom="'h-[3rem] mb-5 mt-1'"
             placeholder="*********"
-            class="mb-5 mt-1 h-[3rem]"
-            v-model="confirmPassword"
+            v-model="form.values.confirmPassword"
           />
         </div>
-        <Select v-model="gender">
-          <Label for="gender" class="ml-1">Gender</Label>
+        <Select v-model="form.values.gender">
+          <Label for="gender" class="ml-1">Giới tính</Label>
           <SelectTrigger class="h-[3rem] mt-1 mb-5" :disabled="!isEditing">
-            <SelectValue :placeholder="gender" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="Male">Male</SelectItem>
-              <SelectItem value="Female">Female</SelectItem>
+              <SelectItem value="Male">Nam</SelectItem>
+              <SelectItem value="Female">Nữ</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -156,12 +149,12 @@ const handleSave = () => {
               class="bg-foreground hover:bg-muted-foreground mr-2"
               @click="cancelEdit"
             >
-              Cancel
+              Hủy
             </Button>
-            <Button type="submit">Save</Button>
+            <Button type="submit">Lưu</Button>
           </div>
           <div v-else>
-            <Button @click="startEdit">Edit</Button>
+            <Button @click="startEdit">Chỉnh sửa</Button>
           </div>
         </div>
       </form>
