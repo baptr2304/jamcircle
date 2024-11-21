@@ -12,7 +12,9 @@ export const songsData = [
             name: "Missy Elliott",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273f1dfae21eaac0d24fb3dcf5a",
             popularity: 724
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
+
     },
     {
         id: 2,
@@ -27,7 +29,8 @@ export const songsData = [
             id: 2,
             name: "Britney Spears",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273efc6988972cb04105f002cd4",
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
     }, {
         id: 3,
         title: " Lose Control",
@@ -41,7 +44,8 @@ export const songsData = [
             name: "Missy Elliott",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273f1dfae21eaac0d24fb3dcf5a",
             popularity: 724
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
     },
     {
         id: 4,
@@ -56,7 +60,8 @@ export const songsData = [
             id: 2,
             name: "Britney Spears",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273365b3fb800c19f7ff72602da",
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
     },
     {
         id: 5,
@@ -70,7 +75,8 @@ export const songsData = [
             id: 2,
             name: "Britney Spears",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273365b3fb800c19f7ff72602da",
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
     },
     {
         id: 6,
@@ -85,7 +91,8 @@ export const songsData = [
             name: "Missy Elliott",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273f1dfae21eaac0d24fb3dcf5a",
             popularity: 724
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
     },
     {
         id: 7,
@@ -100,7 +107,8 @@ export const songsData = [
             id: 2,
             name: "Britney Spears",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273efc6988972cb04105f002cd4",
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
     }, {
         id: 8,
         title: " Lose Control",
@@ -114,7 +122,8 @@ export const songsData = [
             name: "Missy Elliott",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273f1dfae21eaac0d24fb3dcf5a",
             popularity: 724
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
     },
     {
         id: 9,
@@ -129,7 +138,8 @@ export const songsData = [
             id: 2,
             name: "Britney Spears",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273365b3fb800c19f7ff72602da",
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
     },
     {
         id: 10,
@@ -143,7 +153,8 @@ export const songsData = [
             id: 2,
             name: "Britney Spears",
             imageUrl: "https://i.scdn.co/image/ab67616d0000b273365b3fb800c19f7ff72602da",
-        }
+        },
+        source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
     },
 
 ];

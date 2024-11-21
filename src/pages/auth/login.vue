@@ -25,7 +25,7 @@ const authStore = useAuthStore()
 const formSchema = toTypedSchema(
   z.object({
     email: emailSchema,
-    password: passwordSchema,
+    mat_khau: passwordSchema,
   })
 );
 
@@ -55,7 +55,7 @@ const onSubmit = form.handleSubmit(async (values) => {
           <FormMessage />
         </FormItem>
       </FormField>
-      <FormField v-slot="{ componentField }" name="password">
+      <FormField v-slot="{ componentField }" name="mat_khau">
         <FormItem class="mt-4">
           <Label class="font-semibold">Mật khẩu</Label>
           <FormControl>
