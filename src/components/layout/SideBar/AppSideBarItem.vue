@@ -16,6 +16,7 @@ const props = defineProps({
 		type: String,
 		default: "text-sm",
 	},
+	requiredAuthen: Boolean,
 });
 const userStore = useUserStore();
 const route = useRoute();
@@ -30,14 +31,32 @@ const component = computed(() => {
 
 <template>
 	<UnauthenPopover :title="props.title" :content="props.content" :is-required="props.requiredAuthen && !userStore.isAuthenticated">
-		<component
-			:is="component"
-			v-bind="props.type === 'router-link' ? { to: props.url } : {}"
-			:class="isActive || props.type !== 'router-link' ? 'opacity-100' : 'opacity-50'"
-			class="flex py-2 lg:pl-4 gap-4 items-center cursor-pointer text-foreground max-lg:flex-col"
-		>
+	
+	
+	
+		<component :is="component" v-bind="props.type === 'router-link' ? { to: props.url } : {}" :class="
+	
+		
+	
+		        isActive || props.type !== 'router-link' ? 'opacity-100' : 'opacity-50'
+	
+		
+	
+		      " class="flex py-2 lg:pl-4 gap-4 items-center cursor-pointer text-foreground max-lg:flex-col bg-transparent">
+	
+	
+	
 			<Icon :name="props.icon" class="w-6 h-6" />
+	
+	
+	
 			<span class="font-bold" :class="props.textStyle">{{ props.title }}</span>
+	
+	
+	
 		</component>
+	
+	
+	
 	</UnauthenPopover>
 </template>

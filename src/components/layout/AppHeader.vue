@@ -26,7 +26,7 @@ onMounted(() => {
     searchValue.value = route.query.q;
   }
   if (Object.keys(route.query).includes("q")) inputSearch.value.focus();
-});
+}); 	
 </script>
 <template>
 	<div class="flex items-center justify-between w-full h-full gap-2 p-2 lg:pr-8 bg-card">
