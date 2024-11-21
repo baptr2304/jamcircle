@@ -1,8 +1,10 @@
 <script setup>
-import IconMusicSolid from "@/components/icons/IconMusicSolid.vue";
-import { useUserStore } from "@/stores/user";
-
-const userStore = useUserStore();
+const props = defineProps({
+  title: String,
+  titleTop: String,
+  titleBot: String,
+  icon: String,
+});
 </script>
 
 <template>
@@ -10,14 +12,14 @@ const userStore = useUserStore();
     <div
       class="w-[11.25rem] h-[11.25rem] bg-muted flex justify-center items-center ml-8 rounded-xs"
     >
-      <IconMusicSolid class="w-[3.125rem] h-[3.125rem]" />
+      <Icon :name="props.icon" />
     </div>
     <div class="ml-10 h-[11.25rem] flex flex-col justify-between">
-      <h5>Playlist</h5>
+      <h5>{{ props.titleTop }}</h5>
       <div>
-        <h1 class="text-[4rem] font-bold cursor-pointer">Your Playlist</h1>
+        <h1 class="text-[4rem] font-bold cursor-pointer">{{ props.title }}</h1>
       </div>
-      <h5 class="font-semibold">{{ userStore.user.username }}</h5>
+      <h5 class="font-semibold">{{ props.titleBot }}</h5>
     </div>
   </div>
 </template>
