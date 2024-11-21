@@ -1,7 +1,7 @@
 // playlist.js
 // import { $delete, $get, $patch } from "@/api/axios";
-import { songsData } from "../mock/songs";
 import { v4 as uuidv4 } from "uuid";
+import { songsData } from "../mock/songs";
 let playlistsData = [
     {
         id: "1",
@@ -9,11 +9,15 @@ let playlistsData = [
         songs: [
             {
                 songId: 1,
-                title: "Lose Control",
-                artist: "Missy Elliott",
-                albumName: "The Cookbook",
-                duration: "Unknown Duration",
-                imageUrl: "https://i.scdn.co/image/ab67616d0000b273f1dfae21eaac0d24fb3dcf5a",
+                title: "Dancing Queen",
+                imageUrl: "https://e.snmc.io/i/1200/s/ba93504b7f780c46091fab825004e562/11411333",
+                artist: {
+                    id: 1,
+                    name: "ABBA",
+                    imageUrl: "https://e.snmc.io/i/1200/s/ba93504b7f780c46091fab825004e562/11411333",
+                    popularity: 724
+                },
+                source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/03tqyYWC9Um2ZqU0ZN849H.mp3',
                 dateAdded: "2023-11-12",
             },
         ],
@@ -25,12 +29,15 @@ let playlistsData = [
         name: "My Playlist 2",
         songs: [
             {
-                songId: 1,
-                title: "Lose Control",
-                artist: "Missy Elliott",
-                albumName: "The Cookbook",
-                duration: "Unknown Duration",
-                imageUrl: "https://i.scdn.co/image/ab67616d0000b273f1dfae21eaac0d24fb3dcf5a",
+                title: "When I Was Your Man",
+                spotifySongId: "0z7pVBGOD7HCIB7S8eLkLI",
+                imageUrl: "https://upload.wikimedia.org/wikipedia/vi/6/62/Bruno-mars-when-i-was-your-man.jpg",
+                artist: {
+                    id: 2,
+                    name: "Bruno Mars",
+                    imageUrl: "https://thatgrapejuice.net/wp-content/uploads/2013/02/bruno-mars-when-i-was-your-man.jpg",
+                },
+                source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/0B7wvvmu9EISAwZnOpjhNI.mp3',
                 dateAdded: "2023-11-12",
             },
         ],

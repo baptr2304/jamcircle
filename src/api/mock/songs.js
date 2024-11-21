@@ -15,7 +15,7 @@ export const songsData = [
     },
     {
         id: 2,
-        title: ">When I Was Your Man",
+        title: "When I Was Your Man",
         spotifySongId: "0z7pVBGOD7HCIB7S8eLkLI",
         imageUrl: "https://upload.wikimedia.org/wikipedia/vi/6/62/Bruno-mars-when-i-was-your-man.jpg",
         artist: {
