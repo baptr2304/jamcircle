@@ -51,7 +51,7 @@ const handleCreatePlaylist = () => {
         @click="handlePlaylistClick(playlist.id)"
       >
         <div
-          class="w-[22.5rem] bg-secondary border h-[5rem]  flex items-center rounded-md cursor-pointer"
+          class="w-[22.5rem] bg-secondary border h-[5rem] flex items-center rounded-md cursor-pointer"
         >
           <div
             class="w-[5rem] h-[5rem] flex items-center justify-center bg-muted-foreground rounded-tl-md rounded-bl-md"

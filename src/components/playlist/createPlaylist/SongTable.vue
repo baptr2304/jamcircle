@@ -57,11 +57,11 @@ const removeSong = async (uniqueKey) => {
             />
             <div>
               <h3 class="font-medium text-foreground">{{ song.title }}</h3>
-              <p class="text-foreground opacity-50">{{ song.artist }}</p>
+              <p class="text-foreground opacity-50">{{ song.artist.name }}</p>
             </div>
           </td>
           <td>{{ song.albumName }}</td>
-          <td>{{ song.duration }}</td>
+          <td>{{ song.dateAdded }}</td>
           <td>
             <Popover>
               <PopoverTrigger>
