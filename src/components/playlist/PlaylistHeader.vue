@@ -1,14 +1,8 @@
 <script setup>
-import { fetchUserData } from "@/api/user";
 import IconMusicSolid from "@/components/icons/IconMusicSolid.vue";
-import { onMounted, ref } from "vue";
+import { useUserStore } from "@/stores/user";
 
-const userName = ref("");
-
-onMounted(async () => {
-  const userData = await fetchUserData();
-  userName.value = userData.data.name;
-});
+const userStore = useUserStore();
 </script>
 
 <template>
@@ -23,7 +17,7 @@ onMounted(async () => {
       <div>
         <h1 class="text-[4rem] font-bold cursor-pointer">Your Playlist</h1>
       </div>
-      <h5 class="font-semibold">{{ userName }}</h5>
+      <h5 class="font-semibold">{{ userStore.user.username }}</h5>
     </div>
   </div>
 </template>

@@ -9,7 +9,16 @@ export const useAuthStore = defineStore('auth', () => {
   const router = useRouter()
 
   function login(credentials) {
-    return apiLogin(credentials)
+
+    const data = apiLogin(credentials)
+    data.then((res)=>{
+        localStorage.setItem("accesstoken", res.ma_xac_thuc)
+        localStorage.setItem("refreshtoken", res.ma_lam_moi)
+        router.push("/home")
+        
+     
+    })
+    
   }
 
   function logout() {
