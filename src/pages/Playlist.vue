@@ -33,7 +33,7 @@ const handleCreatePlaylist = () => {
 
 <template>
   <div class="relative">
-    <PlaylistHeader />
+    <PlaylistHeader icon="IconMusicSolid" />
     <div
       class="absolute right-8 top-44 flex justify-center items-center px-4 py-2 rounded-full bg-primary hover:bg-ring cursor-pointer font-semibold"
     >
