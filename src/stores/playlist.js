@@ -35,7 +35,6 @@ export const usePlaylistStore = defineStore('playlist', () => {
   }
   async function addSong(playlistId, song) {
     try {
-
       const { data } = await addSongToPlaylist(playlistId, song.id);
       return data;
     } catch (error) {
@@ -52,7 +51,7 @@ export const usePlaylistStore = defineStore('playlist', () => {
           (song) => song.uniqueKey === uniqueKey
         );
         if (index !== -1) {
-          currentPlaylist.value.songs.splice(index, 1); 
+          currentPlaylist.value.songs.splice(index, 1);
         }
       }
     } catch (error) {

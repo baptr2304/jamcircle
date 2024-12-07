@@ -23,4 +23,9 @@ export function getAllSongs() {
     return Promise.resolve({ data: songsData });
 
 }
+export function getOneSong(id) {
+    // return $get(`/songs/${id}`)
+    return Promise.resolve({ data: songsData.find(song => song.id === id) });
+
+}
 

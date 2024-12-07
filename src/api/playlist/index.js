@@ -50,7 +50,6 @@ export function getPlaylistById(playlistId) {
     return Promise.resolve({
         data: playlistsData.find((playlist) => playlist.id === playlistId),
     });
-
 }
 export function createPlaylist(name = 'My playlist ' + new Date().getTime()) {
     // return $post('/playlists', { name })
@@ -63,7 +62,9 @@ export function createPlaylist(name = 'My playlist ' + new Date().getTime()) {
         };
         playlistsData.push(newPlaylist);
         resolve({ data: newPlaylist });
+        console.log('playlistsData', playlistsData);
     });
+
 }
 export function addSongToPlaylist(playlistId, songId) {
     // return $post(`/playlists/${playlistId}/songs`, { songId })
@@ -93,6 +94,7 @@ export function addSongToPlaylist(playlistId, songId) {
 
         playlist.songs.push(formattedSong);
         resolve({ data: playlist });
+        console.log('playlist', playlist);
     });
 }
 

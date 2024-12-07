@@ -5,7 +5,6 @@ import SongTable from "@/components/playlist/createPlaylist/SongTable.vue";
 import { usePlaylistStore } from "@/stores/playlist";
 import { useSongStore } from "@/stores/songs";
 import { computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
 const route = useRoute();
 const playlistStore = usePlaylistStore();
 const songStores = useSongStore();
