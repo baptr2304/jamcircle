@@ -1,5 +1,5 @@
 // stores/song.js
-import { addSongById, getAllSongs } from "@/api/song";
+import { addSongById, getAllSongs, getOneSong } from "@/api/song";
 import { defineStore } from "pinia";
 export const useSongStore = defineStore("song", () => {
     const songs = ref([]);
@@ -9,7 +9,7 @@ export const useSongStore = defineStore("song", () => {
             songs.value = response.data;
         } catch (error) {
             console.error("Error fetching songs:", error.message);
-            throw error; // Throw error để component có thể xử lý
+            throw error;
         }
     }
     async function addSong(id) {
@@ -23,10 +23,20 @@ export const useSongStore = defineStore("song", () => {
         }
 
     }
+    async function getSongById(id) {
+        try {
+            const response = await getOneSong(id);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching songs:", error.message)
+        }
+    }
+
     return {
         songs,
         fetchSongs,
         addSong,
+        getSongById
     }
 
 });
