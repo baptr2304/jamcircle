@@ -1,7 +1,7 @@
-import generatedRoutes from '~pages'
+import { middlewareAuth, middlewareLayout } from '@/middlewares/index'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { createRouter, createWebHistory } from 'vue-router'
-import { middlewareLayout,middlewareAuth } from '@/middlewares/index'
+import generatedRoutes from '~pages'
 
 const routes = setupLayouts(generatedRoutes)
 
@@ -10,13 +10,13 @@ const router = createRouter({
   routes,
 })
 router.beforeEach(async (to, from, next) => {
-  if (to.fullPath === '/') {
+  if (to.path === '/') {
     return next('/home')
   }
   if (to.matched.length === 0) {
     return next('/notfound')
   }
-  return next()
+  next()
 })
 
 router.beforeEach((to, from, next) => {

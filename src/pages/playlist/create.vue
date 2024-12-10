@@ -8,9 +8,7 @@ import { onMounted } from "vue";
 const playlistStore = usePlaylistStore();
 const songStore = useSongStore();
 
-onMounted(async () => {
-  await songStore.fetchSongs();
-});
+
 
 const addToPlaylist = async (song) => {
   try {
@@ -32,6 +30,6 @@ const addToPlaylist = async (song) => {
 
 <template>
   <div>
-    <PlaylistSearch :songs="songStore.songs" @add-song="addToPlaylist" />
+    <PlaylistSearch  @add-song="addToPlaylist" />
   </div>
 </template>

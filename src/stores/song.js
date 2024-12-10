@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia'
 import { addSongById, apiGetSongs } from "@/api/song";
+import { toast } from '@/components/ui/toast';
+import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
-import { toast } from '@/components/ui/toast'
 export const useSongStore = defineStore('queue', () => {
     const playlist = ref([
         {
@@ -52,6 +52,7 @@ export const useSongStore = defineStore('queue', () => {
             source: 'https://ongakool.s3.ap-southeast-1.amazonaws.com/mp3/0B7wvvmu9EISAwZnOpjhNI.mp3',
         }
     ])
+    const searchResults = ref([])
     const currentSong = ref(playlist.value[0])
     const currentIndex = ref(0)
     function addSong(song) {
@@ -94,13 +95,26 @@ export const useSongStore = defineStore('queue', () => {
     }
 
     async function searchSongs(title) {
-        return await apiGetSongs(title);
+        if (!title) {
+            searchResults.value = []
+            return searchResults.value
+        }
+
+        try {
+            const result = await apiGetSongs(title)
+            searchResults.value = result
+            return searchResults.value
+        } catch (error) {
+            console.error("Error searching songs:", error)
+            return []
+        }
     }
 
     return {
         playlist,
         currentSong,
         currentIndex,
+        searchResults,
         addSong,
         removeSong,
         nextSong,

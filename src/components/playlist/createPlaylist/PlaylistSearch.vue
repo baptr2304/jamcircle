@@ -9,9 +9,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useSongStore } from "@/stores/song";
 import ScrollArea from "../../ui/scroll-area/ScrollArea.vue";
 import SongsResult from "./SongsResult.vue";
-
 const props = defineProps({
   songs: {
     type: Array,
@@ -27,12 +27,11 @@ const searchQuery = ref("");
 const searchResults = ref([]);
 const showDuplicateDialog = ref(false);
 const selectedSong = ref(null);
+const songStore = useSongStore();
 const handleSearch = () => {
-  searchResults.value = props.songs.filter(
-    (song) =>
-      song.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      song.artist.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+  songStore.searchSongs(searchQuery.value).then((songs) => {
+    searchResults.value = songs;
+  });
 };
 const handleDuplicateSong = (song) => {
   selectedSong.value = song;
