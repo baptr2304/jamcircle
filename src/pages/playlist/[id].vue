@@ -22,7 +22,7 @@ onMounted(async () => {
     console.error("Error fetching playlist:", error);
   }
 
-  await songStores.fetchSongs();
+  // await songStores.fetchSongs();
 });
 const handleSongsUpdate = (updatedSongs) => {
   if (playlistLocal.value) {
@@ -32,7 +32,10 @@ const handleSongsUpdate = (updatedSongs) => {
 
 const addToPlaylist = async (song) => {
   try {
-    const updatedPlaylist = await playlistStore.addSong(playlistId.value, song);
+    const updatedPlaylist = await playlistStore.addSongToPlaylist(
+      playlistId.value,
+      song
+    );
     if (updatedPlaylist && updatedPlaylist.songs) {
       playlistLocal.value.songs = [...updatedPlaylist.songs];
     }

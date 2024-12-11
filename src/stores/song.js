@@ -1,4 +1,4 @@
-import { addSongById, apiGetSongs } from "@/api/song";
+import { apiGetSongs } from "@/api/song";
 import { toast } from '@/components/ui/toast';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
@@ -84,22 +84,11 @@ export const useSongStore = defineStore('queue', () => {
         currentSong.value = playlist.value[currentIndex.value]
     }
 
-    async function addSongToPlaylist(id) {
-        try {
-            const response = await addSongById(id);
-            songs.value = response.data;
-            return response.data;
-        } catch (error) {
-            console.error("Error fetching songs:", error.message);
-        }
-    }
-
     async function searchSongs(title) {
         if (!title) {
             searchResults.value = []
             return searchResults.value
         }
-
         try {
             const result = await apiGetSongs(title)
             searchResults.value = result
@@ -120,6 +109,5 @@ export const useSongStore = defineStore('queue', () => {
         nextSong,
         prevSong,
         searchSongs,
-        addSongToPlaylist
     }
 })

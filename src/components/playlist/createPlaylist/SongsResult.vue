@@ -22,16 +22,16 @@ const handleAddSong = (song) => {
       >
         <div class="flex items-center gap-4">
           <img
-            :src="song.imageUrl"
-            :alt="song.title"
+            :src="song.anh"
+            :alt="song.ten_bai_hat"
             class="w-10 h-10 rounded-xs object-cover"
           />
           <div>
-            <h3 class="font-medium text-foreground">{{ song.title }}</h3>
-            <p class="text-foreground opacity-50">{{ song.artist.name }}</p>
+            <h3 class="font-medium text-foreground">{{ song.ten_bai_hat }}</h3>
+            <p class="text-foreground opacity-50">{{ song.ten_ca_si }}</p>
           </div>
         </div>
-        <div>{{ song.albumName }}</div>
+        <div>{{ song.the_loai }}</div>
         <div class="w-[20%]">
           <div
             @click="handleAddSong(song)"

@@ -1,27 +1,20 @@
 <script setup>
 import PlaylistSearch from "@/components/playlist/createPlaylist/PlaylistSearch.vue";
-import router from "@/router";
 import { usePlaylistStore } from "@/stores/playlist";
-import { useSongStore } from "@/stores/songs";
-import { onMounted } from "vue";
-
+import { useRouter } from "vue-router";
 const playlistStore = usePlaylistStore();
-const songStore = useSongStore();
-
-
-
+const router = useRouter();
 const addToPlaylist = async (song) => {
   try {
-    const data = await playlistStore.createNewPlaylist("My playlist");
-    if (!data || !data.id) {
+    const defaultName = `My playlist ${new Date().toLocaleString()}`;
+    const response = await playlistStore.createNewPlaylist(defaultName);
+    const playlistId = response?.id   
+    if (!playlistId) {
       throw new Error("Failed to create playlist - no ID returned");
     }
-
-    const playlistPath = `/playlist/${data.id}`;
+    const playlistPath = `/playlist/${playlistId}`;
     router.push(playlistPath);
-    playlistStore.addSong(data.id, song).catch((error) => {
-      console.error("Error in addSong:", error);
-    });
+    await playlistStore.addSongToPlaylist(playlistId, song);
   } catch (error) {
     console.error("Error in addToPlaylist:", error);
   }
@@ -30,6 +23,6 @@ const addToPlaylist = async (song) => {
 
 <template>
   <div>
-    <PlaylistSearch  @add-song="addToPlaylist" />
+    <PlaylistSearch @add-song="addToPlaylist" />
   </div>
 </template>

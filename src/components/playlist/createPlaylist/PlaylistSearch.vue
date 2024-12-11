@@ -28,10 +28,18 @@ const searchResults = ref([]);
 const showDuplicateDialog = ref(false);
 const selectedSong = ref(null);
 const songStore = useSongStore();
-const handleSearch = () => {
-  songStore.searchSongs(searchQuery.value).then((songs) => {
+const handleSearch = async () => {
+  if (!searchQuery.value.trim()) {
+    searchResults.value = [];
+    return;
+  }
+  try {
+    const songs = await songStore.searchSongs(searchQuery.value);
     searchResults.value = songs;
-  });
+  } catch (error) {
+    console.error('Search error:', error);
+    searchResults.value = [];
+  }
 };
 const handleDuplicateSong = (song) => {
   selectedSong.value = song;
