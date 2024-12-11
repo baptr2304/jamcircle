@@ -29,7 +29,6 @@ const { state, isReady, isLoading, execute } = useAsyncState(
 const { reset } = useInfiniteScroll(
   container,
   async () => {
-    console.log('scroll')
     query.value.offset += query.value.limit;
     await execute();
   },
