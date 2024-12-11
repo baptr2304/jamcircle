@@ -1,5 +1,5 @@
 // playlist.js
-// import { $delete, $get, $patch } from "@/api/axios";
+import { $delete, $get, $patch } from "@/api/axios";
 import { v4 as uuidv4 } from "uuid";
 import { songsData } from "../mock/songs";
 let playlistsData = [
@@ -51,6 +51,7 @@ export function getPlaylistById(playlistId) {
         data: playlistsData.find((playlist) => playlist.id === playlistId),
     });
 }
+
 export function createPlaylist(name = 'My playlist ' + new Date().getTime()) {
     // return $post('/playlists', { name })
     return new Promise((resolve) => {
@@ -66,6 +67,7 @@ export function createPlaylist(name = 'My playlist ' + new Date().getTime()) {
     });
 
 }
+
 export function addSongToPlaylist(playlistId, songId) {
     // return $post(`/playlists/${playlistId}/songs`, { songId })
     return new Promise((resolve, reject) => {
@@ -128,4 +130,9 @@ export function getAllPlaylists() {
     // return $get('/playlists')
     return Promise.resolve({ data: playlistsData });
 
+}
+
+
+export function apiGetPlaylists(config) {
+    return $get('/danh_sach_phat', config)
 }
