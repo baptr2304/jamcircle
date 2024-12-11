@@ -19,9 +19,9 @@ onMounted(() => {
         <header class="flex h-16 items-center">
           <AppHeader />
         </header>
-        <ScrollArea class="flex flex-1 flex-col gap-4 bg-muted">
+        <div class="flex flex-1 flex-col gap-4 bg-muted h-[calc(100%-64px)]">
           <router-view />
-        </ScrollArea>
+        </div>
       </div>
     </div>
     <footer class="w-full h-40 lg:h-[5.75rem]">

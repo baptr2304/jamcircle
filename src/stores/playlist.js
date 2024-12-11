@@ -1,10 +1,10 @@
 import {
   addSongToPlaylist,
   createPlaylist,
-  getAllPlaylists,
   getPlaylistById,
   removeSongFromPlaylist,
-  updatePlaylistName
+  updatePlaylistName,
+  apiGetPlaylists
 } from '@/api/playlist';
 import { defineStore } from 'pinia';
 
@@ -60,8 +60,6 @@ export const usePlaylistStore = defineStore('playlist', () => {
     }
   }
 
-
-
   async function updatePlaylist(playlistId, newName) {
     try {
       const { data } = await updatePlaylistName(playlistId, { name: newName });
@@ -76,21 +74,8 @@ export const usePlaylistStore = defineStore('playlist', () => {
     }
   }
 
-  async function fetchAllPlaylists() {
-    try {
-      const { data } = await getAllPlaylists();
-      playlists.value = data || [];
-
-
-    } catch (error) {
-      console.error('Error in fetchAllPlaylists:', error);
-      throw error;
-    }
-  }
-  function loadFromLocalStorage() {
-    const id = localStorage.getItem('playlists');
-    if (id)
-      fetchDetailPlaylist(id);
+  async function getPlaylists(config) {
+    return await apiGetPlaylists(config)
   }
 
   function reset() {
@@ -105,8 +90,7 @@ export const usePlaylistStore = defineStore('playlist', () => {
     addSong,
     removeSong,
     updatePlaylist,
-    fetchAllPlaylists,
-    loadFromLocalStorage,
+    getPlaylists,
     reset
   }
 });

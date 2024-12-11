@@ -11,7 +11,7 @@ const loading = ref(true);
 const fetchPlaylists = async () => {
   try {
     loading.value = true;
-    await playlistStore.fetchAllPlaylists();
+    await playlistStore.getPlaylists();
   } catch (err) {
     console.error("Error in fetchPlaylists:", err);
   } finally {
