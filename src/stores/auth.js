@@ -8,23 +8,16 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => !!accessToken.value)
   const router = useRouter()
 
-  function login(credentials) {
-
-    const data = apiLogin(credentials)
-    data.then((res) => {
-      localStorage.setItem("accessToken", res.ma_xac_thuc)
-      localStorage.setItem("refreshToken", res.ma_lam_moi)
-      router.push("/home")
-
-
-    })
-
+  async function login(credentials) {
+    const data = await apiLogin(credentials)
+    localStorage.setItem("accessToken", data.ma_xac_thuc)
+    localStorage.setItem("refreshToken", data.ma_lam_moi)
+    router.push("/home")
   }
 
-  function logout() {
+  async function logout() {
     localStorage.removeItem('accessToken')
     userStore.removeUser()
-    // router.push('/auth/login')
     accessToken.value = ''
   }
 
