@@ -33,7 +33,7 @@ const { reset } = useInfiniteScroll(
     query.value.offset += query.value.limit;
     await execute();
   },
-  { distance: 10 },
+  { distance: 0 },
 )
 </script>
 
