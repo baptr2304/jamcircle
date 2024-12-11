@@ -1,32 +1,17 @@
 <script setup>
 import { Button } from "@/components/ui/button";
 import InputValidator from "@/components/ui/form/InputValidator.vue";
-import { Label } from "@/components/ui/label";
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useUserStore } from "@/stores/user";
-import {
-  emailSchema,
-  genderSchema,
-  nameSchema,
-  passwordSchema,
-} from "@/utils/validation";
+import { emailSchema, nameSchema, passwordSchema } from "@/utils/validation";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import * as z from "zod";
 onMounted(async () => {
-  await userStore.fetchUser();
+  await userStore.getUserAuth();
   form.setValues({
     username: userStore.user?.username || "",
     email: userStore.user?.email || "",
-    gender: userStore.user?.gender || "",
+    // gender: userStore.user?.gender || "",
   });
 });
 const userStore = useUserStore();
@@ -45,13 +30,14 @@ const profileSchema = toTypedSchema(
       username: nameSchema,
       email: emailSchema,
       password: passwordSchema.optional(),
-      confirmPassword: z.string(),
-      gender: genderSchema,
+      confirmPassword: z.string().optional(),
+      // gender: genderSchema,
     })
     .refine(
       (data) => {
-        if (data.password && data.password === data.confirmPassword)
-          return false;
+        if (data.password) {
+          return data.password === data.confirmPassword;
+        }
         return true;
       },
       {
@@ -65,7 +51,7 @@ const form = useForm({
   initialValues: {
     username: userStore.user?.username || "",
     email: userStore.user?.email || "",
-    gender: userStore.user?.gender || "",
+    // gender: userStore.user?.gender || "",
     password: "*************",
     confirmPassword: "*************",
   },
@@ -75,7 +61,6 @@ const onSubmit = form.handleSubmit(async (values) => {
     const updates = {
       username: values.username,
       email: values.email,
-      gender: values.gender,
     };
 
     if (values.password) {
@@ -84,10 +69,11 @@ const onSubmit = form.handleSubmit(async (values) => {
 
     await userStore.updateUser(updates);
     isEditing.value = false;
+    console.log("Profile updated successfully", updates);
     form.resetForm();
-  } catch (error) {
-    console.error("Error updating profile:", error);
-  }
+  } catch (err) {
+    console.error("Error in updating profile:", err);
+  } 
 });
 </script>
 <template>
@@ -131,7 +117,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             v-model="form.values.confirmPassword"
           />
         </div>
-        <Select v-model="form.values.gender">
+        <!-- <Select v-model="form.values.gender">
           <Label for="gender" class="ml-1">Giới tính</Label>
           <SelectTrigger class="h-[3rem] mt-1 mb-5" :disabled="!isEditing">
             <SelectValue />
@@ -142,7 +128,7 @@ const onSubmit = form.handleSubmit(async (values) => {
               <SelectItem value="Female">Nữ</SelectItem>
             </SelectGroup>
           </SelectContent>
-        </Select>
+        </Select> -->
         <div class="flex justify-end">
           <div v-if="isEditing">
             <Button

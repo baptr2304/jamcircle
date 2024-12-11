@@ -2,7 +2,7 @@
   {
       meta: {
           layout: "default",
-          title: "Home"
+          title: "Home",
       }
   }
 </route>

@@ -1,7 +1,19 @@
-import { $post } from './axios'
+import { $post } from './axios';
 
-export function apiLogin(data) {
-  return $post('/auth/dang_nhap', data)
+export async function apiLogin(data) {
+  try {
+    const response = await $post('/auth/dang_nhap', data);
+
+    if (response?.ma_xac_thuc && response?.ma_lam_moi) {
+      localStorage.setItem('accessToken', response.ma_xac_thuc);
+      localStorage.setItem('refreshToken', response.ma_lam_moi);
+      return response;
+    } else {
+      throw new Error('Invalid login response');
+    }
+  } catch (error) {
+    throw error;
+  }
 }
 
 export function apiRegister(data) {

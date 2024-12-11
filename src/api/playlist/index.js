@@ -1,5 +1,5 @@
 // playlist.js
-import { $delete, $get, $patch } from "@/api/axios";
+import { $delete, $get, $patch, $post } from "@/api/axios";
 import { v4 as uuidv4 } from "uuid";
 import { songsData } from "../mock/songs";
 let playlistsData = [
@@ -45,59 +45,19 @@ let playlistsData = [
     }
 ];
 
-export function getPlaylistById(playlistId) {
-    // return $get(`/playlists/${playlistId}`)
-    return Promise.resolve({
-        data: playlistsData.find((playlist) => playlist.id === playlistId),
-    });
-}
-
-export function createPlaylist(name = 'My playlist ' + new Date().getTime()) {
-    // return $post('/playlists', { name })
-    return new Promise((resolve) => {
-        const newPlaylist = {
-            id: Date.now().toString(),
-            name,
-            songs: [],
-            createdAt: new Date().toISOString()
-        };
-        playlistsData.push(newPlaylist);
-        resolve({ data: newPlaylist });
-        console.log('playlistsData', playlistsData);
-    });
+export async function getPlaylistById(id) {
+    const response = await $get(`/danh_sach_phat/${id}`);
+    return response;
 
 }
+export async function createPlaylist(data) {
+    const { ten_danh_sach_phat, nguoi_dung_id, loai } = data;
+    console.log('data', data);
+    return $post('/danh_sach_phat', { ten_danh_sach_phat, nguoi_dung_id, loai });
 
-export function addSongToPlaylist(playlistId, songId) {
-    // return $post(`/playlists/${playlistId}/songs`, { songId })
-    return new Promise((resolve, reject) => {
-        const playlist = playlistsData.find((p) => p.id === playlistId);
-        if (!playlist) {
-            reject(new Error("Playlist not found"));
-            return;
-        }
-
-        const song = songsData.find((s) => s.id === songId);
-        if (!song) {
-            reject(new Error("Song not found"));
-            return;
-        }
-
-        const formattedSong = {
-            uniqueKey: uuidv4(),
-            songId: song.id,
-            title: song.title,
-            artist: song.artist?.name || "Unknown Artist",
-            albumName: song.albumName || "Unknown Album",
-            duration: song.duration || "Unknown Duration",
-            imageUrl: song.imageUrl || "",
-            dateAdded: new Date().toISOString(),
-        };
-
-        playlist.songs.push(formattedSong);
-        resolve({ data: playlist });
-        console.log('playlist', playlist);
-    });
+}
+export function addSong(playlistId, songId) {
+    return $post(`/danh_sach_phat/${playlistId}/bai_hat`, { bai_hat_id: songId });
 }
 
 export function removeSongFromPlaylist(playlistId, songId) {

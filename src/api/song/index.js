@@ -1,16 +1,16 @@
+import { $get } from '../axios';
 import { songsData } from '../mock/songs';
-export function apiGetSongs(title = '') {
-    // return $get('/songs')
-    return new Promise((resolve) => {
-        const data = songsData.filter(
-            (song) =>
-                song.title.toLowerCase().includes(title.toLowerCase()) ||
-                song.artist.name.toLowerCase().includes(title.toLowerCase())
-        )
-        resolve({ data })
-    })
+export async function apiGetSongs(title = '') {
+    try {
+        const response = await $get(`/bai_hat/tim_kiem?ten_bai_hat=${title}`)
+        return response;
+    }
+    catch {
+        throw new Error('Invalid search response');
+    }
 
 }
+
 export function addSongById(id) {
     // return $get(`/songs/${id}`)
 
@@ -18,9 +18,10 @@ export function addSongById(id) {
 
 }
 
-export function getAllSongs() {
-    // return $get('/songs')
-    return Promise.resolve({ data: songsData });
+
+export function getSongs() {
+    const response = $get(`/bai_hat`)
+    return response;
 
 }
 export function getOneSong(id) {

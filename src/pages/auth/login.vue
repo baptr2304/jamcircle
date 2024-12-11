@@ -1,11 +1,13 @@
 <route>
-    {
-        meta: {
-            layout: "auth",
-            title: "Login",
-        }
-    }
-</route>
+  {
+      name: 'auth-login',
+      path: '/auth/login',
+      meta: {
+          layout: "auth",
+          title: "Login"
+      }
+  }
+  </route>
 <script setup>
 import { useForm } from "vee-validate";
 import {useAuthStore} from '@/stores/auth'
