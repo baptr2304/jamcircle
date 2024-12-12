@@ -135,10 +135,12 @@ function toggleOpenDrawer() {
   emitter.emit('toggle-drawer-queue')
 }
 onMounted(() => {
-  emitter.on('play-song',resetControl)
+  emitter.on('play-song', resetControl)
+  emitter.on('toggle-play', handlePlay)
 })
 onUnmounted(() => {
-  emitter.off('play-song',resetControl)
+  emitter.off('play-song', resetControl)
+  emitter.off('toggle-play', handlePlay)
 })
 </script>
 
