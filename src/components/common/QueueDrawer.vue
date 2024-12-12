@@ -7,6 +7,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useSongStore } from '@/stores/song'
+import listEvents from '@/utils/enumEventBus'
 
 import emitter from '@/utils/eventBus'
 
@@ -15,7 +16,7 @@ const isVisible = defineModel()
 
 function handlePlaySong(song) {
   songStore.playSongInQueue(song)
-  emitter.emit('play-song')
+  emitter.emit(listEvents.playSong)
 }
 </script>
 

@@ -1,8 +1,10 @@
 <script setup>
+import KeyboardShortcuts from '@/components/common/KeyboardShortcuts.vue'
 import QueueDrawer from '@/components/common/QueueDrawer.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppSideBar from '@/components/layout/AppSideBar.vue'
+import listEvents from '@/utils/enumEventBus'
 import emitter from '@/utils/eventBus'
 
 const isVisibleDrawer = ref(false)
@@ -10,28 +12,21 @@ const isVisibleDrawer = ref(false)
 function toggleOpenDrawer() {
   isVisibleDrawer.value = !isVisibleDrawer.value
 }
-function handleKeyPress(event) {
-  switch (event.code) {
-    case 'Space':
-      event.preventDefault()
-      emitter.emit('toggle-play')
-      break
-    case 'Escape':
-      isVisibleDrawer.value = false
-      break
-  }
+function closeDrawer() {
+  isVisibleDrawer.value = false
 }
 onMounted(() => {
-  emitter.on('toggle-drawer-queue', toggleOpenDrawer)
-  document.addEventListener('keydown', handleKeyPress)
+  emitter.on(listEvents.toggleQueueDrawer, toggleOpenDrawer)
+  emitter.on(listEvents.closeQueueDrawer, closeDrawer)
 })
 onUnmounted(() => {
-  emitter.off('toggle-drawer-queue', toggleOpenDrawer)
-  document.removeEventListener('keydown', handleKeyPress)
+  emitter.off(listEvents.toggleQueueDrawer, toggleOpenDrawer)
+  emitter.off(listEvents.closeQueueDrawer, closeDrawer)
 })
 </script>
 
 <template>
+  <KeyboardShortcuts />
   <div class="flex flex-col h-full justify-between">
     <div
       class="flex w-full lg:[height:calc(100%-5.75rem)] h-[calc(100%-10rem)]"
@@ -48,7 +43,7 @@ onUnmounted(() => {
     </div>
     <QueueDrawer v-model="isVisibleDrawer" />
     <footer class="w-full fixed bottom-0 left-0 z-20 h-40 lg:h-[5.75rem]">
-      <AppFooter />
+      <AppFooter :is-visible-queue-drawer="isVisibleDrawer" />
     </footer>
   </div>
 </template>

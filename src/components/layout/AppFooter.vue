@@ -4,10 +4,14 @@ import VolumeControl from '@/components/song/VolumeControl.vue'
 import { Progress } from '@/components/ui/progress'
 import { useSongStore } from '@/stores/song'
 import { useUserStore } from '@/stores/user'
+import listEvents from '@/utils/enumEventBus'
 import emitter from '@/utils/eventBus'
 import { formatTime } from '@/utils/format'
 import Button from '../ui/button/Button.vue'
 
+const props = defineProps({
+  isVisibleQueueDrawer: Boolean,
+})
 defineExpose({ resetControl })
 
 const userStore = useUserStore()
@@ -132,15 +136,41 @@ function toggleMuted() {
   isMuted.value = audio.value.muted
 }
 function toggleOpenDrawer() {
-  emitter.emit('toggle-drawer-queue')
+  emitter.emit(listEvents.toggleQueueDrawer)
+}
+function handleIncreaseVolume() {
+  volume.value = Math.min(volume.value + 10, 100)
+}
+function handleDecreaseVolume() {
+  volume.value = Math.max(volume.value - 10, 0)
+}
+function seekForward() {
+  changeCurrentTime(15, 'forward')
+}
+function seekBackward() {
+  changeCurrentTime(15, 'backward')
 }
 onMounted(() => {
-  emitter.on('play-song', resetControl)
-  emitter.on('toggle-play', handlePlay)
+  emitter.on(listEvents.playSong, resetControl)
+  emitter.on(listEvents.togglePlay, handlePlay)
+  emitter.on(listEvents.nextSong, nextSong)
+  emitter.on(listEvents.prevSong, prevSong)
+  emitter.on(listEvents.toggleMute, toggleMuted)
+  emitter.on(listEvents.volumeUp, handleIncreaseVolume)
+  emitter.on(listEvents.volumeDown, handleDecreaseVolume)
+  emitter.on(listEvents.seekForward, seekForward)
+  emitter.on(listEvents.seekBackward, seekBackward)
 })
 onUnmounted(() => {
-  emitter.off('play-song', resetControl)
-  emitter.off('toggle-play', handlePlay)
+  emitter.off(listEvents.playSong, resetControl)
+  emitter.off(listEvents.togglePlay, handlePlay)
+  emitter.off(listEvents.nextSong, nextSong)
+  emitter.off(listEvents.prevSong, prevSong)
+  emitter.off(listEvents.seekForward, seekForward)
+  emitter.off(listEvents.seekBackward, seekBackward)
+  emitter.off(listEvents.toggleMute, toggleMuted)
+  emitter.off(listEvents.volumeUp, handleIncreaseVolume)
+  emitter.off(listEvents.volumeDown, handleDecreaseVolume)
 })
 </script>
 
@@ -179,7 +209,7 @@ onUnmounted(() => {
           <Icon
             name="IconBackward"
             class="icon-button"
-            @click="changeCurrentTime(15, 'backward')"
+            @click="seekBackward"
           />
           <Icon name="IconPrevious" class="icon-button" @click="prevSong" />
           <button class="button-play" @click="handlePlay">
@@ -194,7 +224,7 @@ onUnmounted(() => {
           <Icon
             name="IconForward"
             class="icon-button"
-            @click="changeCurrentTime(15, 'forward')"
+            @click="seekForward"
           />
         </div>
         <div class="flex gap-4 justify-center w-full">
@@ -231,7 +261,12 @@ onUnmounted(() => {
             </p>
           </div>
         </div>
-        <Icon name="IconQueue" class="w-8 h-8 p-1 lg:hidden cursor-pointer absolute top-1/2 right-[9rem] transform -translate-y-1/2" @click="toggleOpenDrawer" />
+        <Icon
+          name="IconQueue"
+          class="w-8 h-8 p-1 lg:hidden cursor-pointer absolute top-1/2 right-[9rem] transform -translate-y-1/2"
+          :class="{ 'text-primary': props.isVisibleQueueDrawer }"
+          @click="toggleOpenDrawer"
+        />
 
         <div class="flex items-center gap-4 absolute right-8 top-4 lg:hidden">
           <Icon name="IconPrevious" class="icon-button" @click="prevSong" />
@@ -247,7 +282,11 @@ onUnmounted(() => {
         </div>
       </div>
       <div class="flex max-lg:hidden gap-2 absolute right-8 items-center">
-        <Icon name="IconQueue" class=" w-8 h-8 p-1 cursor-pointer" @click="toggleOpenDrawer" />
+        <Icon
+          name="IconQueue" class=" w-8 h-8 p-1 cursor-pointer"
+          :class="{ 'text-primary': props.isVisibleQueueDrawer }"
+          @click="toggleOpenDrawer"
+        />
         <VolumeControl
           v-model="volume"
           :muted="isMuted"

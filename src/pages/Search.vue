@@ -7,6 +7,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useSongStore } from '@/stores/song'
+import listEvents from '@/utils/enumEventBus'
 import emitter from '@/utils/eventBus'
 import { useAsyncState, useInfiniteScroll } from '@vueuse/core'
 
@@ -52,7 +53,7 @@ watch(
 )
 function handlePlaySong(song) {
   songStore.playWithoutQueue(song)
-  emitter.emit('play-song')
+  emitter.emit(listEvents.playSong)
 }
 </script>
 
