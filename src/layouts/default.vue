@@ -10,11 +10,24 @@ const isVisibleDrawer = ref(false)
 function toggleOpenDrawer() {
   isVisibleDrawer.value = !isVisibleDrawer.value
 }
+function handleKeyPress(event) {
+  switch (event.code) {
+    case 'Space':
+      event.preventDefault()
+      emitter.emit('toggle-play')
+      break
+    case 'Escape':
+      isVisibleDrawer.value = false
+      break
+  }
+}
 onMounted(() => {
   emitter.on('toggle-drawer-queue', toggleOpenDrawer)
+  document.addEventListener('keydown', handleKeyPress)
 })
 onUnmounted(() => {
   emitter.off('toggle-drawer-queue', toggleOpenDrawer)
+  document.removeEventListener('keydown', handleKeyPress)
 })
 </script>
 
