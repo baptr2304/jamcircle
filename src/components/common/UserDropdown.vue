@@ -1,41 +1,43 @@
 <script setup>
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Button from "@/components/ui/button/Button.vue";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import Button from '@/components/ui/button/Button.vue'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Switch } from "@/components/ui/switch";
-import { useAuthStore } from "@/stores/auth";
-import { useUserStore } from "@/stores/user";
-import { useRouter } from "vue-router";
-const router = useRouter();
-const authStore = useAuthStore();
-const userStore = useUserStore();
+} from '@/components/ui/dropdown-menu'
+import { Switch } from '@/components/ui/switch'
+import { useAuthStore } from '@/stores/auth'
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
 
-const isDarkMode = ref(localStorage.getItem("dark") === "true");
+const router = useRouter()
+const authStore = useAuthStore()
+const userStore = useUserStore()
+
+const isDarkMode = ref(localStorage.getItem('dark') === 'true')
 function handleChange(value) {
-  isDarkMode.value = value;
-  localStorage.setItem("dark", value);
+  isDarkMode.value = value
+  localStorage.setItem('dark', value)
 }
 watch(
   isDarkMode,
   (value) => {
-    document.body.classList.toggle("dark", value);
+    document.body.classList.toggle('dark', value)
   },
-  { immediate: true }
-);
-const redirectProfile = () => {
+  { immediate: true },
+)
+function redirectProfile() {
   nextTick(() => {
-    if (router.currentRoute.value.path !== "/profile") {
-      router.push("/profile");
+    if (router.currentRoute.value.path !== '/profile') {
+      router.push('/profile')
     }
-  });
-};
+  })
+}
 </script>
+
 <template>
   <DropdownMenu v-if="userStore?.user">
     <DropdownMenuTrigger as-child>
@@ -45,7 +47,9 @@ const redirectProfile = () => {
             :src="userStore.user.avatar"
             :alt="userStore.user.name"
           />
-          <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
+          <AvatarFallback class="rounded-lg">
+            CN
+          </AvatarFallback>
         </Avatar>
         <div class="max-lg:hidden grid flex-1 text-left text-sm leading-tight">
           <span class="truncate font-semibold">{{ userStore.user.name }}</span>
@@ -62,14 +66,17 @@ const redirectProfile = () => {
     >
       <DropdownMenuItem>
         <div class="flex justify-between item-centers w-full">
-          <span>Dark mode</span
-          ><Switch :checked="isDarkMode" @update:checked="handleChange" />
+          <span>Dark mode</span><Switch :checked="isDarkMode" @update:checked="handleChange" />
         </div>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
-      <DropdownMenuItem @click="redirectProfile"> Profile </DropdownMenuItem>
+      <DropdownMenuItem @click="redirectProfile">
+        Profile
+      </DropdownMenuItem>
       <DropdownMenuSeparator />
-      <DropdownMenuItem @click="authStore.logout()"> Log out </DropdownMenuItem>
+      <DropdownMenuItem @click="authStore.logout()">
+        Log out
+      </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>

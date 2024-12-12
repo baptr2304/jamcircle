@@ -76,13 +76,13 @@ export const useSongStore = defineStore('queue', () => {
     currentSong.value = playlist.value[currentIndex.value]
   }
 
-  async function searchSongs(title) {
+  async function searchSongs(title, config = {}) {
     if (!title) {
       searchResults.value = []
       return searchResults.value
     }
     try {
-      const result = await apiGetSongs(title)
+      const result = await apiGetSongs(title, config)
       searchResults.value = result
       return searchResults.value
     }
