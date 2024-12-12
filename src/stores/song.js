@@ -92,15 +92,36 @@ export const useSongStore = defineStore('queue', () => {
     }
   }
 
-  function playSong(id) {
-    const index = playlist.value.findIndex(item => item.id === id)
+  function playSongInQueue(song) {
+    const index = playlist.value.findIndex(item => item.so_thu_tu === song.so_thu_tu)
     if (index === -1) {
       return
     }
     currentIndex.value = index
     currentSong.value = playlist.value[currentIndex.value]
   }
+  function playWithoutQueue(song) {
+    const alreadySong = addToQueue(song)
+    playSongInQueue(alreadySong)
+  }
 
+  function handleRemoveFromQueue(song) {
+    const index = playlist.value.findIndex(item => item.so_thu_tu === song.so_thu_tu)
+    if (index === -1) {
+      return
+    }
+    playlist.value.splice(index, 1)
+  }
+
+  function addToQueue(song) {
+    const lastIndex = playlist.value[playlist.value.length - 1].so_thu_tu
+    const newSong = {
+      ...song,
+      so_thu_tu: lastIndex + 1,
+    }
+    playlist.value.push(newSong)
+    return newSong
+  }
   return {
     playlist,
     currentSong,
@@ -111,6 +132,9 @@ export const useSongStore = defineStore('queue', () => {
     nextSong,
     prevSong,
     searchSongs,
-    playSong,
+    playSongInQueue,
+    addToQueue,
+    playWithoutQueue,
+    handleRemoveFromQueue
   }
 })

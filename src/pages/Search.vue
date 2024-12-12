@@ -1,4 +1,5 @@
 <script setup>
+import SongListItem from '@/components/common/SongListItem.vue'
 import PlaylistHeader from '@/components/playlist/PlaylistHeader.vue'
 import {
   Popover,
@@ -6,6 +7,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useSongStore } from '@/stores/song'
+import emitter from '@/utils/eventBus'
 import { useAsyncState, useInfiniteScroll } from '@vueuse/core'
 
 const songStore = useSongStore()
@@ -48,6 +50,10 @@ watch(
     await execute()
   },
 )
+function handlePlaySong(song) {
+  songStore.playWithoutQueue(song)
+  emitter.emit('play-song')
+}
 </script>
 
 <template>
@@ -60,41 +66,38 @@ watch(
       :key="song.id"
       class="flex items-center gap-4 py-4 justify-between px-2"
     >
-      <div class="flex items-center gap-4 w-[30%]">
-        <img
-          :src="song.anh"
-          :alt="song.ten_bai_hat"
-          class="w-10 h-10 rounded-xs object-cover"
-        >
-        <div>
-          <h3 class="font-medium text-foreground">
-            {{ song.ten_bai_hat }}
-          </h3>
-          <p class="text-foreground opacity-50">
-            {{ song.ten_ca_si }}
-          </p>
-        </div>
-      </div>
-      <div>{{ song.albumName }}</div>
-      <div class="w-[20%]">
-        <Popover>
-          <PopoverTrigger>
-            <Icon
-              name="IconEllipsis"
-              class="w-10 h-6 text-foreground cursor-pointer"
-            />
-          </PopoverTrigger>
-          <PopoverContent class="w-25">
-            <button @click="songStore.addSongToPlaylist(song)">
-              Thêm vào danh sách phát
-            </button>
-          </PopoverContent>
-        </Popover>
-      </div>
+      <SongListItem
+        :song="song"
+        :class="{ 'text-primary': song.id === songStore.currentSong.id }"
+        @handle-click="handlePlaySong(song)"
+      >
+        <template #start>
+          <div class="w-4">
+            <Icon v-if="song.id === songStore.currentSong.id" name="IconChart" class="w-4 h-4" />
+          </div>
+        </template>
+        <template #action>
+          <div class="w-[20%]">
+            <Popover>
+              <PopoverTrigger>
+                <Icon
+                  name="IconEllipsis"
+                  class="w-10 h-6  cursor-pointer"
+                />
+              </PopoverTrigger>
+              <PopoverContent class="w-25">
+                <button @click="songStore.addToQueue(song)">
+                  Add to queue
+                </button>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </template>
+      </SongListItem>
     </div>
   </div>
   <div v-else-if="!isLoading" class="flex justify-center items-center h-[50vh]">
-    <p class="text-foreground opacity-50">
+    <p class=" opacity-50">
       No results found
     </p>
   </div>
