@@ -6,48 +6,41 @@
       }
   }
 </route>
+
 <script setup>
-import Card from "@/components/home/Card/Card.vue";
-import { usePlaylistStore } from "@/stores/playlist";
-import { useAsyncState } from '@vueuse/core'
-import { useInfiniteScroll } from '@vueuse/core'
-import Drawer from "@/components/base/Drawer.vue";
-const playlistStore = usePlaylistStore();
+import Card from '@/components/home/Card/Card.vue'
+import { usePlaylistStore } from '@/stores/playlist'
+import { useAsyncState, useInfiniteScroll } from '@vueuse/core'
+
+const playlistStore = usePlaylistStore()
 const container = ref(null)
-const cards = ref([]);
+const cards = ref([])
 const query = ref({
   offset: 0,
   limit: 12,
 })
-const isVisibleDrawer = ref(false)
-const drawer = ref(null)
-const { state, isReady, isLoading, execute } = useAsyncState(
+const { isLoading, execute } = useAsyncState(
   async () => {
-    const response = await playlistStore.getPlaylists({ params: query.value });
-    cards.value.push(...response);
+    const response = await playlistStore.getPlaylists({ params: query.value })
+    cards.value.push(...response)
   },
   { id: null },
 )
-const { reset } = useInfiniteScroll(
+useInfiniteScroll(
   container,
   async () => {
-    query.value.offset += query.value.limit;
-    await execute();
+    query.value.offset += query.value.limit
+    await execute()
   },
   { distance: 0 },
 )
-const toggleOpenDrawer = () => {
-  isVisibleDrawer.value = !isVisibleDrawer.value
-}
 </script>
 
 <template>
-  <button @click="toggleOpenDrawer">Open Drawer</button>
-  <Drawer v-model="isVisibleDrawer">
-    <h1>Anh Truyeefn owiiiiiii</h1>
-  </Drawer>
   <div ref="container" class="p-6 space-y-6 h-full overflow-y-auto scrollbar">
-    <h1 class="text-2xl font-bold">Albums</h1>
+    <h1 class="text-2xl font-bold">
+      Albums
+    </h1>
 
     <div class="grid gap-6 justify-center md:grid-cols-4 sm:grid-cols-3 grid-cols-2 xl:grid-cols-5 2xl:grid-cols-6">
       <Card v-for="card in cards" :key=" card.id " v-bind=" card " />

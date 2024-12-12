@@ -1,8 +1,21 @@
 <script setup>
-import AppFooter from "@/components/layout/AppFooter.vue";
-import AppHeader from "@/components/layout/AppHeader.vue";
-import AppSideBar from "@/components/layout/AppSideBar.vue";
+import QueueDrawer from '@/components/common/QueueDrawer.vue'
+import AppFooter from '@/components/layout/AppFooter.vue'
+import AppHeader from '@/components/layout/AppHeader.vue'
+import AppSideBar from '@/components/layout/AppSideBar.vue'
+import emitter from '@/utils/eventBus'
 
+const isVisibleDrawer = ref(false)
+
+function toggleOpenDrawer() {
+  isVisibleDrawer.value = !isVisibleDrawer.value
+}
+onMounted(() => {
+  emitter.on('toggle-drawer-queue', toggleOpenDrawer)
+})
+onUnmounted(() => {
+  emitter.off('toggle-drawer-queue', toggleOpenDrawer)
+})
 </script>
 
 <template>
@@ -20,7 +33,8 @@ import AppSideBar from "@/components/layout/AppSideBar.vue";
         </div>
       </div>
     </div>
-    <footer class="w-full h-40 lg:h-[5.75rem]">
+    <QueueDrawer v-model="isVisibleDrawer" />
+    <footer class="w-full fixed bottom-0 left-0 z-20 h-40 lg:h-[5.75rem]">
       <AppFooter />
     </footer>
   </div>
