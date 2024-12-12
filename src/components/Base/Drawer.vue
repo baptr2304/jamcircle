@@ -4,7 +4,7 @@ const isVisible = defineModel()
 
 <template>
   <Transition name="sidebar-slide">
-    <div v-if="isVisible" class="bg-card w-[21.75rem] h-full fixed p-4 right-0 top-0">
+    <div v-if="isVisible" class="bg-card sm:w-[21.75rem] w-full h-full fixed p-4 right-0 top-0">
       <div class="flex justify-end items-center my-2 mt-2">
         <button class="btn-close" @click="isVisible = false">
           <Icon name="IconCloseBtn" class="btn-close w-8 h-8 p-2" />
