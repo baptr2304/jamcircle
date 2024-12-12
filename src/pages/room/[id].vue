@@ -11,10 +11,12 @@
 <script setup>
 import Chat from "@/components/room/roomDetail/roomChat/Chat.vue";
 import RoomHeader from "@/components/room/roomDetail/RoomHeader.vue";
-import RoomSideBar from "@/components/room/roomDetail/RoomSideBar.vue";
+import FriendList from "@/components/room/roomDetail/sidebarDetail/FriendList.vue";
+import MusicList from "@/components/room/roomDetail/sidebarDetail/MusicList.vue";
 import { useRoomStore } from "@/stores/room";
 import { useUserStore } from "@/stores/user";
 import { useRoute } from "vue-router";
+import Drawer from "@/components/base/Drawer.vue";
 const roomStore = useRoomStore();
 const route = useRoute();
 const roomId = computed(() => route.params.id);
@@ -76,13 +78,14 @@ const handleMessage = async (messageContent) => {
     <div v-else>
       <p>Loading room details...</p>
     </div>
-    <RoomSideBar
-      :isSidebarVisible="isSidebarVisible"
-      @toggle-sidebar="toggleSidebar"
-      :activeTab="activeTab"
-      :listSongs="listSongs"
-      :roomId="roomId"
-    />
+    <Drawer v-model="isSidebarVisible" >
+      <div v-if="activeTab === 'music'">
+        <MusicList :listSongs="listSongs" :roomId="roomId" />
+      </div>
+      <div v-else-if="activeTab === 'friends'">
+        <FriendList />
+      </div>
+    </Drawer>
     <Chat
       :messages="messages"
       :isSidebarVisible="isSidebarVisible"

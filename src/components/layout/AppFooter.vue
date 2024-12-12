@@ -1,129 +1,145 @@
 <script setup>
-import { Progress } from "@/components/ui/progress";
-import VolumeControl from "@/components/song/VolumeControl.vue";
-import BottomNavigationBar from "@/components/layout/BottomNavigationBar.vue";
-import { useUserStore } from "@/stores/user";
-import { formatTime } from "@/utils/format";
-import { useSongStore } from "@/stores/song";
-import Button from "../ui/button/Button.vue";
-const userStore = useUserStore();
-const songStore = useSongStore();
+import BottomNavigationBar from '@/components/layout/BottomNavigationBar.vue'
+import VolumeControl from '@/components/song/VolumeControl.vue'
+import { Progress } from '@/components/ui/progress'
+import { useSongStore } from '@/stores/song'
+import { useUserStore } from '@/stores/user'
+import emitter from '@/utils/eventBus'
+import { formatTime } from '@/utils/format'
+import Button from '../ui/button/Button.vue'
 
-const progress = ref(0);
-const progressBar = ref(null);
-const audio = ref(null);
-const isPlaying = ref(false);
-const isDragging = ref(false);
-const songCurrentTime = ref(0);
-const songDuration = ref(0);
-const volume = ref(100);
-const isMuted = ref(false);
+defineExpose({ resetControl })
+
+const userStore = useUserStore()
+const songStore = useSongStore()
+
+const progress = ref(0)
+const progressBar = ref(null)
+const audio = ref(null)
+const isPlaying = ref(false)
+const isDragging = ref(false)
+const songCurrentTime = ref(0)
+const songDuration = ref(0)
+const volume = ref(100)
+const isMuted = ref(false)
+
 watch(volume, (val) => {
-  audio.value.volume = val / 100;
-  isMuted.value = val === 0;
-});
-const updateProgress = (event) => {
-  const rect = progressBar.value.getBoundingClientRect();
+  audio.value.volume = val / 100
+  isMuted.value = val === 0
+})
+function updateProgress(event) {
+  const rect = progressBar.value.getBoundingClientRect()
   if (event.clientX < rect.left) {
-    progress.value = 0;
-    return;
+    progress.value = 0
+    return
   }
   if (event.clientX > rect.right) {
-    progress.value = 100;
-    return;
+    progress.value = 100
+    return
   }
-  const offsetX = event.clientX - rect.left;
-  const width = rect.width;
-  progress.value = Math.round((offsetX / width) * 100);
-};
+  const offsetX = event.clientX - rect.left
+  const width = rect.width
+  progress.value = Math.round((offsetX / width) * 100)
+}
 
-const handleMouseMove = (event) => {
-  event.preventDefault();
-  updateProgress(event);
-};
+function handleMouseMove(event) {
+  event.preventDefault()
+  updateProgress(event)
+}
 
-const handleMouseUp = () => {
-  isDragging.value = false;
-  changeCurrentTime((progress.value / 100) * audio.value.duration);
-  document.removeEventListener("mousemove", handleMouseMove);
-  document.removeEventListener("mouseup", handleMouseUp);
-};
+function handleMouseUp() {
+  isDragging.value = false
+  changeCurrentTime((progress.value / 100) * audio.value.duration)
+  document.removeEventListener('mousemove', handleMouseMove)
+  document.removeEventListener('mouseup', handleMouseUp)
+}
 
-const handleMouseDown = (event) => {
-  isDragging.value = true;
-  updateProgress(event);
-  document.addEventListener("mousemove", handleMouseMove);
-  document.addEventListener("mouseup", handleMouseUp);
-};
+function handleMouseDown(event) {
+  isDragging.value = true
+  updateProgress(event)
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', handleMouseUp)
+}
 
 function handlePlay() {
-  isPlaying.value = !isPlaying.value;
+  isPlaying.value = !isPlaying.value
   if (isPlaying.value) {
-    audio.value.play();
-  } else {
-    audio.value.pause();
+    audio.value.play()
+  }
+  else {
+    audio.value.pause()
   }
 }
 function updateTime() {
-   if (!audio.value || isDragging.value) return;
-  const { currentTime, duration } = audio.value;
+  if (!audio.value || isDragging.value)
+    return
+  const { currentTime, duration } = audio.value
   if (audio.value) {
-    const { currentTime, duration } = audio.value;
+    const { duration } = audio.value
     if (!duration) {
-      progress.value = 0;
-      return;
+      progress.value = 0
+      return
     }
   }
-  progress.value = (currentTime / duration) * 100;
-  songCurrentTime.value = Math.floor(currentTime);
-  songDuration.value = Math.floor(duration);
+  progress.value = (currentTime / duration) * 100
+  songCurrentTime.value = Math.floor(currentTime)
+  songDuration.value = Math.floor(duration)
   if (currentTime === duration) {
-    nextSong();
+    nextSong()
   }
 }
 function changeCurrentTime(time, type) {
   switch (type) {
-    case "backward":
-      audio.value.currentTime -= time;
-      break;
-    case "forward":
-      audio.value.currentTime += time;
-      break;
+    case 'backward':
+      audio.value.currentTime -= time
+      break
+    case 'forward':
+      audio.value.currentTime += time
+      break
 
     default:
-      audio.value.currentTime = time;
-      break;
+      audio.value.currentTime = time
+      break
   }
-  updateTime();
+  updateTime()
 }
 onMounted(() => {
   if (audio.value) {
-    setInterval(updateTime, 1000);
+    setInterval(updateTime, 1000)
   }
-});
+})
 onUnmounted(() => {
-  clearInterval(updateTime);
-});
+  clearInterval(updateTime)
+})
 async function resetControl() {
-  isPlaying.value = true;
-  progress.value = 0;
-  await audio.value.load();
-  audio.value.play();
-  songCurrentTime.value = 0;
-  changeCurrentTime(0);
+  isPlaying.value = true
+  progress.value = 0
+  await audio.value.load()
+  audio.value.play()
+  songCurrentTime.value = 0
+  changeCurrentTime(0)
 }
 function nextSong() {
-  songStore.nextSong();
-  resetControl();
+  songStore.nextSong()
+  resetControl()
 }
 function prevSong() {
-  songStore.prevSong();
-  resetControl();
+  songStore.prevSong()
+  resetControl()
 }
 function toggleMuted() {
-  audio.value.muted = !audio.value.muted;
-  isMuted.value = audio.value.muted;
+  audio.value.muted = !audio.value.muted
+  isMuted.value = audio.value.muted
 }
+function toggleOpenDrawer() {
+  emitter.emit('toggle-drawer-queue')
+}
+onMounted(() => {
+  emitter.on('play-song',resetControl)
+})
+onUnmounted(() => {
+  emitter.off('play-song',resetControl)
+})
 </script>
 
 <template>
@@ -139,20 +155,20 @@ function toggleMuted() {
         </div>
       </div>
       <RouterLink to="auth/login">
-        <Button class="flex h-12 py-4 lg:px-8 px-4 bg-foreground rounded-full"
-          >Sign up free</Button
-        >
+        <Button class="flex h-12 py-4 lg:px-8 px-4 bg-foreground rounded-full">
+          Sign up free
+        </Button>
       </RouterLink>
     </div>
-    <div class="song-controller" v-else>
+    <div v-else class="song-controller">
       <div class="song absolute left-8 max-w-80">
-        <img :src="songStore.currentSong.imageUrl" alt="" class="thumbnail" />
+        <img :src="songStore.currentSong.anh" alt="" class="thumbnail">
         <div class="song-meta w-full">
           <div class="title truncate font-semibold">
-            {{ songStore.currentSong.title }}
+            {{ songStore.currentSong.ten_bai_hat }}
           </div>
           <div class="artist truncate text-secondary-foreground">
-            {{ songStore.currentSong.artist.name }}
+            {{ songStore.currentSong.ten_ca_si }}
           </div>
         </div>
       </div>
@@ -200,19 +216,20 @@ function toggleMuted() {
           class="lg:hidden flex items-center h-10 gap-2.5 absolute left-4 top-2"
         >
           <img
-            :src="songStore.currentSong.imageUrl"
+            :src="songStore.currentSong.anh"
             alt=""
             class="w-10 h-10 rounded-lg object-cover"
-          />
+          >
           <div class="song-meta w-full max-w-32">
             <p class="title text-sm truncate font-semibold">
-              {{ songStore.currentSong.title }}
+              {{ songStore.currentSong.ten_bai_hat }}
             </p>
             <p class="artist text-xs truncate text-secondary-foreground">
-              {{ songStore.currentSong.artist.name }}
+              {{ songStore.currentSong.ten_ca_si }}
             </p>
           </div>
         </div>
+        <Icon name="IconQueue" class="w-8 h-8 p-1 lg:hidden cursor-pointer absolute top-1/2 right-[9rem] transform -translate-y-1/2" @click="toggleOpenDrawer" />
 
         <div class="flex items-center gap-4 absolute right-8 top-4 lg:hidden">
           <Icon name="IconPrevious" class="icon-button" @click="prevSong" />
@@ -227,14 +244,16 @@ function toggleMuted() {
           <Icon name="IconNext" class="icon-button" @click="nextSong" />
         </div>
       </div>
-      <VolumeControl
-        v-model="volume"
-        :muted="isMuted"
-        class="absolute right-8 max-lg:hidden"
-        @toggle-muted="toggleMuted"
-      />
+      <div class="flex max-lg:hidden gap-2 absolute right-8 items-center">
+        <Icon name="IconQueue" class=" w-8 h-8 p-1 cursor-pointer" @click="toggleOpenDrawer" />
+        <VolumeControl
+          v-model="volume"
+          :muted="isMuted"
+          @toggle-muted="toggleMuted"
+        />
+      </div>
       <audio ref="audio" controls class="hidden">
-        <source :src="songStore.currentSong.source" type="audio/mpeg" />
+        <source :src="songStore.currentSong.lien_ket" type="audio/mpeg">
       </audio>
     </div>
     <BottomNavigationBar
