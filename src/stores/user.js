@@ -1,17 +1,18 @@
 import { getUser, update } from '@/api/user'
 import { defineStore } from 'pinia'
+
 export const useUserStore = defineStore('user', () => {
   const user = ref(null)
   function setUser(newUser) {
     user.value = newUser
-
   }
 
   async function getUserAuth() {
     try {
       const response = await getUser()
       setUser(response)
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Error fetching user data:', error)
     }
   }
@@ -26,7 +27,7 @@ export const useUserStore = defineStore('user', () => {
       await getUserAuth()
       return response
     }
-    catch(error) {
+    catch (error) {
       console.error('Error updating user data:', error)
     }
   }

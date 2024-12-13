@@ -1,30 +1,31 @@
 <!-- components/dialogs/JoinRoomDialog.vue -->
 <script setup lang="ts">
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { ref } from "vue";
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { ref } from 'vue'
 
 const props = defineProps({
   open: {
     type: Boolean,
     required: true,
   },
-});
-const emit = defineEmits(["update:open", "join"]);
-const roomId = ref("");
+})
+const emit = defineEmits(['update:open', 'join'])
+const roomId = ref('')
 
-const handleJoin = () => {
-  if (!roomId.value.trim()) return;
-  emit("join", roomId.value);
-  roomId.value = "";
-  emit("update:open", false);
-};
+function handleJoin() {
+  if (!roomId.value.trim())
+    return
+  emit('join', roomId.value)
+  roomId.value = ''
+  emit('update:open', false)
+}
 </script>
 
 <template>

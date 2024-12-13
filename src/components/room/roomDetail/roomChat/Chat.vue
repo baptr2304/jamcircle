@@ -1,6 +1,7 @@
 <script setup>
-import MessageInput from "./messageList/MessageInput.vue";
-import MessageList from "./messageList/MessageList.vue";
+import MessageInput from './messageList/MessageInput.vue'
+import MessageList from './messageList/MessageList.vue'
+
 const props = defineProps({
   messages: {
     type: Array,
@@ -11,29 +12,30 @@ const props = defineProps({
     type: String,
     required: true,
   },
-});
-const emit = defineEmits(["toggle-sidebar", "message"]);
-const handleMessage = (messageContent) => {
-  emit("message", messageContent);
-};
+})
+const emit = defineEmits(['toggle-sidebar', 'message'])
+function handleMessage(messageContent) {
+  emit('message', messageContent)
+}
 watch(
   () => props.messages,
   (newMessages) => {
     nextTick(() => {
-      const messagesContainer = document.querySelector('.messages-container');
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    });
+      const messagesContainer = document.querySelector('.messages-container')
+      messagesContainer.scrollTop = messagesContainer.scrollHeight
+    })
   },
-  { deep: true }
-);
+  { deep: true },
+)
 </script>
+
 <template>
   <div
     :style="{ width: isSidebarVisible ? 'calc(100% - 25rem)' : '100%' }"
     class="relative"
   >
     <div class="flex flex-col justify-center">
-      <MessageList :messages="messages" :userId="userId"/>
+      <MessageList :messages="messages" :user-id="userId" />
       <MessageInput class="self-center" @message="handleMessage" />
     </div>
   </div>

@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "ionic:build": "npm run build",
+    "lint": "npx eslint . --fix",
     "ionic:serve": "vite dev --host"
   },
   "dependencies": {

@@ -1,97 +1,102 @@
 <script setup>
-import AppSideBarGroup from "@/components/layout/SideBar/AppSideBarGroup.vue";
-import AppSideBarItem from "@/components/layout/SideBar/AppSideBarItem.vue";
-import AppSideBarItemRoom from "@/components/layout/SideBar/AppSideBarItemRoom.vue";
-import ScrollArea from "@/components/ui/scroll-area/ScrollArea.vue";
-import router from "@/router";
-import { useRoomStore } from "@/stores/room";
-import { useUserStore } from "@/stores/user";
-import Separator from "../ui/separator/Separator.vue";
-const isLoading = ref(false);
-const roomStore = useRoomStore();
+import AppSideBarGroup from '@/components/layout/SideBar/AppSideBarGroup.vue'
+import AppSideBarItem from '@/components/layout/SideBar/AppSideBarItem.vue'
+import AppSideBarItemRoom from '@/components/layout/SideBar/AppSideBarItemRoom.vue'
+import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
+import router from '@/router'
+import { useRoomStore } from '@/stores/room'
+import { useUserStore } from '@/stores/user'
+import Separator from '../ui/separator/Separator.vue'
+
+const isLoading = ref(false)
+const roomStore = useRoomStore()
 const data = ref({
   groupA: [
     {
       id: 1,
-      icon: "IconHome",
-      title: "Home",
-      url: "/home",
+      icon: 'IconHome',
+      title: 'Home',
+      url: '/home',
     },
     {
       id: 2,
-      icon: "IconLibrary",
-      title: "Your Playlist",
-      url: "/playlist",
-      content: "Login to view your playlist",
+      icon: 'IconLibrary',
+      title: 'Your Playlist',
+      url: '/playlist',
+      content: 'Login to view your playlist',
       requiredAuthen: true,
     },
   ],
   groupB: [
     {
       id: 3,
-      icon: "IconAdd",
-      title: "Create Playlist",
-      url: "/playlist/create",
-      content: "Login to create and share playlists",
+      icon: 'IconAdd',
+      title: 'Create Playlist',
+      url: '/playlist/create',
+      content: 'Login to create and share playlists',
       requiredAuthen: true,
     },
     {
       id: 4,
-      icon: "IconMusic",
-      title: "Create Song",
-      url: "/song/create",
-      content: "Login to create and share song",
+      icon: 'IconMusic',
+      title: 'Create Song',
+      url: '/song/create',
+      content: 'Login to create and share song',
       requiredAuthen: true,
     },
     {
       id: 5,
-      icon: "IconFavorite",
-      title: "Favorite",
-      url: "/favorite",
-      content: "Login to view your favorite songs",
+      icon: 'IconFavorite',
+      title: 'Favorite',
+      url: '/favorite',
+      content: 'Login to view your favorite songs',
       requiredAuthen: true,
     },
   ],
   groupC: [
     {
       id: 6,
-      icon: "IconJam",
-      title: "Jam",
-      type: "button",
-      content: "Login to start a jam",
+      icon: 'IconJam',
+      title: 'Jam',
+      type: 'button',
+      content: 'Login to start a jam',
       requiredAuthen: true,
     },
     {
       id: 7,
-      icon: "IconJoin",
-      title: "Join room",
-      type: "button",
-      content: "Login to join room",
+      icon: 'IconJoin',
+      title: 'Join room',
+      type: 'button',
+      content: 'Login to join room',
       requiredAuthen: true,
     },
   ],
-});
+})
 
-const handleRoomCreation = async (roomName) => {
-  isLoading.value = true;
-  const userStore = useUserStore();
+async function handleRoomCreation(roomName) {
+  isLoading.value = true
+  const userStore = useUserStore()
   try {
     await roomStore.createNewRoom({
       name: roomName,
       hostId: userStore.user?.id,
-    });
+    })
     if (roomStore.currentRoom?.id) {
-      router.push(`/room/${roomStore.currentRoom.id}`);
-    } else {
-      console.error("Failed to create room");
+      router.push(`/room/${roomStore.currentRoom.id}`)
     }
-  } catch (err) {
-    console.error(err);
-  } finally {
-    isLoading.value = false;
+    else {
+      console.error('Failed to create room')
+    }
   }
-};
+  catch (err) {
+    console.error(err)
+  }
+  finally {
+    isLoading.value = false
+  }
+}
 </script>
+
 <template>
   <div class="flex flex-col duration-200 w-[15rem] bg-transparent ease-linear">
     <div

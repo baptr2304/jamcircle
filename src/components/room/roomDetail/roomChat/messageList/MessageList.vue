@@ -1,5 +1,5 @@
 <script setup>
-import ScrollArea from "@/components/ui/scroll-area/ScrollArea.vue";
+import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
 
 const props = defineProps({
   messages: {
@@ -10,15 +10,15 @@ const props = defineProps({
     type: String,
     required: true,
   },
-});
+})
 
-const formatTime = (date) => {
+function formatTime(date) {
   return new Date(date).toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit",
+    hour: 'numeric',
+    minute: '2-digit',
     hour12: true,
-  });
-};
+  })
+}
 </script>
 
 <template>
@@ -27,8 +27,7 @@ const formatTime = (date) => {
       <div
         v-for="message in messages"
         :key="message.id"
-        :class="[
-          'message-wrapper',
+        class="message-wrapper" :class="[
           message.senderId === userId ? 'sent' : 'received',
         ]"
       >
@@ -44,7 +43,9 @@ const formatTime = (date) => {
           </div>
 
           <div class="message-bubble">
-            <p class="message-text">{{ message.content }}</p>
+            <p class="message-text">
+              {{ message.content }}
+            </p>
           </div>
 
           <div class="timestamp">
@@ -52,7 +53,9 @@ const formatTime = (date) => {
           </div>
         </div>
         <div v-if="message.senderId === userId" class="avatar">
-          <div class="avatar-circle sent">You</div>
+          <div class="avatar-circle sent">
+            You
+          </div>
         </div>
       </div>
     </div>

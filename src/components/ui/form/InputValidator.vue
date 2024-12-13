@@ -1,17 +1,38 @@
 <script setup lang="js">
-import { ref, computed } from 'vue'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import Input from '@/components/ui/input/Input.vue'
+import { computed, ref } from 'vue'
 
 // Định nghĩa props
 const props = defineProps({
-  id: 'text',
-  type: 'text',
-  label: 'Text',
-  name: 'text',
-  placeholder: 'Text',
-  disabled: Boolean,
-  custom: ""
+  id: {
+    type: String,
+    default: 'text',
+  },
+  type: {
+    type: String,
+    default: 'text',
+  },
+  label: {
+    type: String,
+    default: 'Text',
+  },
+  name: {
+    type: String,
+    default: 'text',
+  },
+  placeholder: {
+    type: String,
+    default: 'Text',
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  custom: {
+    type: String,
+    default: '',
+  },
 })
 
 // State hiển thị mật khẩu
@@ -43,6 +64,7 @@ const typeInputComputed = computed(() => {
             v-bind="componentField"
             class="pr-9 rounded-[0.25rem]"
             autocomplete="off"
+            @keydown.stop
           />
           <div
             v-if="props.type === 'password'"

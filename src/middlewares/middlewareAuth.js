@@ -7,7 +7,6 @@ export async function middlewareAuth(to, from, next) {
   const userStore = useUserStore()
   const accessToken = localStorage.getItem('accessToken')
 
-
   if (accessToken && !userStore.isAuthenticated) {
     try {
       const response = await getUser()

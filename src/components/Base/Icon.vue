@@ -1,19 +1,19 @@
 <script setup>
-import { defineProps, computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, defineProps } from 'vue'
 
 const props = defineProps({
   name: {
     type: String,
     required: true,
     validator(value) {
-      return value.startsWith('Icon');
-    }
+      return value.startsWith('Icon')
+    },
   },
-});
+})
 
 const component = computed(() => {
-  return defineAsyncComponent(() => import(`../icons/${props.name}.vue`));
-});
+  return defineAsyncComponent(() => import(`../icons/${props.name}.vue`))
+})
 </script>
 
 <template>

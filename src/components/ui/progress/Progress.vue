@@ -1,38 +1,38 @@
 <script setup>
-import { cn } from "@/lib/utils";
-import { ProgressIndicator, ProgressRoot } from "radix-vue";
-import { computed } from "vue";
+import { cn } from '@/lib/utils'
+import { ProgressIndicator, ProgressRoot } from 'radix-vue'
+import { computed } from 'vue'
 
 const props = defineProps({
-	modelValue: { type: [Number, null], required: false, default: 0 },
-	max: { type: Number, required: false },
-	getValueLabel: { type: Function, required: false },
-	asChild: { type: Boolean, required: false },
-	as: { type: null, required: false },
-	class: { type: null, required: false },
-});
+  modelValue: { type: [Number, null], required: false, default: 0 },
+  max: { type: Number, required: false },
+  getValueLabel: { type: Function, required: false },
+  asChild: { type: Boolean, required: false },
+  as: { type: null, required: false },
+  class: { type: null, required: false },
+})
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props;
+  const { class: _, ...delegated } = props
 
-	return delegated;
-});
+  return delegated
+})
 const currentPosition = computed(() => {
-	return (props.modelValue ?? 0) + "%";
-});
+  return `${props.modelValue ?? 0}%`
+})
 </script>
 
 <template>
-	<ProgressRoot
-		v-bind="delegatedProps"
-		class="progress-root"
-		:class="cn('relative h-[0.375rem] w-full rounded-full bg-muted-foreground', props.class)"
-	>
-		<ProgressIndicator
-			class="h-full w-full flex-1 bg-foreground rounded-full progress-indicator"
-			:style="`width:${currentPosition};`"
-		/>
-	</ProgressRoot>
+  <ProgressRoot
+    v-bind="delegatedProps"
+    class="progress-root"
+    :class="cn('relative h-[0.375rem] w-full rounded-full bg-muted-foreground', props.class)"
+  >
+    <ProgressIndicator
+      class="h-full w-full flex-1 bg-foreground rounded-full progress-indicator"
+      :style="`width:${currentPosition};`"
+    />
+  </ProgressRoot>
 </template>
 
 <style lang="scss" scoped>
@@ -56,4 +56,3 @@ const currentPosition = computed(() => {
 	}
 }
 </style>
-

@@ -5,7 +5,7 @@ onMounted(() => {
   window.addEventListener('unhandledrejection', (event) => {
     event.promise.catch((error) => {
       console.log(error)
-      const errorMessage = error?.response?.data?.detail || "There was a problem with your request."
+      const errorMessage = error?.response?.data?.detail || 'There was a problem with your request.'
       if (errorMessage) {
         toast({
           title: 'Error',

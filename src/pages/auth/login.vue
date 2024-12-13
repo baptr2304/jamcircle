@@ -8,42 +8,43 @@
       }
   }
   </route>
+
 <script setup>
-import { useForm } from "vee-validate";
-import { useAuthStore } from '@/stores/auth'
-import { toast } from "@/components/ui/toast";
-import { toTypedSchema } from "@vee-validate/zod";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { emailSchema, passwordSchema } from "@/utils/validation";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { toast } from '@/components/ui/toast'
+import { useAuthStore } from '@/stores/auth'
+import { emailSchema, requiredStringSchema } from '@/utils/validation'
+import { toTypedSchema } from '@vee-validate/zod'
+import { useForm } from 'vee-validate'
+import * as z from 'zod'
 
-const isLoading = ref(false);
+const isLoading = ref(false)
 const authStore = useAuthStore()
 const formSchema = toTypedSchema(
   z.object({
     email: emailSchema,
-    mat_khau: z.string(),
-  })
-);
+    mat_khau: requiredStringSchema,
+  }),
+)
 
 const form = useForm({
   validationSchema: formSchema,
-});
+})
 
 const onSubmit = form.handleSubmit(async (values) => {
   try {
-    isLoading.value = true;
+    isLoading.value = true
     await authStore.login(values)
-  } catch (error) {
-    console.log(error?.response?.data?.detail)
-    const errorMessage = error?.response?.data?.detail || "There was a problem with your request."
+  }
+  catch (error) {
+    const errorMessage = error?.response?.data?.detail || 'There was a problem with your request.'
     if (errorMessage) {
       toast({
         title: 'Error',
@@ -61,20 +62,25 @@ const onSubmit = form.handleSubmit(async (values) => {
     })
   }
   finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-});
+})
 </script>
+
 <template>
   <div class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2">
-    <h1 class="text-2xl flex justify-center font-semibold">ĐĂNG NHẬP</h1>
-    <form @submit=" onSubmit " class="mt-[2.25rem]">
+    <h1 class="text-2xl flex justify-center font-semibold">
+      ĐĂNG NHẬP
+    </h1>
+    <form class="mt-[2.25rem]" @submit=" onSubmit ">
       <FormField v-slot=" { componentField } " name="email" class="gap-2.5">
         <FormItem>
           <Label class="font-semibold">Địa chỉ Email</Label>
           <FormControl>
-            <Input type="text" placeholder="Email address" class="rounded-[0.25rem] h-[2.875rem]"
-              v-bind=" componentField " />
+            <Input
+              type="text" placeholder="Email address" class="rounded-[0.25rem] h-[2.875rem]"
+              v-bind=" componentField "
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -83,14 +89,18 @@ const onSubmit = form.handleSubmit(async (values) => {
         <FormItem class="mt-4">
           <Label class="font-semibold">Mật khẩu</Label>
           <FormControl>
-            <Input type="password" placeholder="Password" class="rounded-[0.25rem] h-[2.875rem]"
-              v-bind=" componentField " />
+            <Input
+              type="password" placeholder="Password" class="rounded-[0.25rem] h-[2.875rem]"
+              v-bind=" componentField "
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
       </FormField>
-      <Button type="submit"
-        class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-6 h-[2.875rem] rounded-full">
+      <Button
+        type="submit"
+        class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-6 h-[2.875rem] rounded-full"
+      >
         <template v-if="isLoading">
           <div class="flex w-full p-8 justify-center gap-2 items-center">
             <Icon name="IconLoading" />
@@ -105,8 +115,10 @@ const onSubmit = form.handleSubmit(async (values) => {
     <div class="text-center mt-4 font-medium">
       Bạn đã đăng ký tài khoản chưa?
     </div>
-    <Button @click="$router.push('/auth/register')" type="submit"
-      class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2 h-[2.875rem] rounded-full bg-white text-black duration-300 hover:text-white shadow-inherit border-2 hover:border-0">
+    <Button
+      type="submit" class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2 h-[2.875rem] rounded-full bg-white text-black duration-300 hover:text-white shadow-inherit border-2 hover:border-0"
+      @click="$router.push('/auth/register')"
+    >
       ĐĂNG KÝ
     </Button>
   </div>
