@@ -11,7 +11,6 @@ export const useUserStore = defineStore('user', () => {
     try {
       const response = await getUser()
       setUser(response)
-      console.log(response)
     } catch (error) {
       console.error('Error fetching user data:', error)
     }

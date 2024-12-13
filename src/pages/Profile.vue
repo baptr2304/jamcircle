@@ -69,11 +69,10 @@ const onSubmit = form.handleSubmit(async (values) => {
 
     await userStore.updateUser(updates);
     isEditing.value = false;
-    console.log("Profile updated successfully", updates);
     form.resetForm();
   } catch (err) {
     console.error("Error in updating profile:", err);
-  } 
+  }
 });
 </script>
 <template>

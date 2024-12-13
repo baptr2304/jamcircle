@@ -10,14 +10,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useSongStore } from "@/stores/song";
-import ScrollArea from "../../ui/scroll-area/ScrollArea.vue";
 import SongsResult from "./SongsResult.vue";
+
 const props = defineProps({
-  songs: {
-    type: Array,
-    required: true,
-  },
-  playlistSongs: {
+  songsPlaylist: {
     type: Array,
     default: () => [],
   },
@@ -37,7 +33,7 @@ const handleSearch = async () => {
     const songs = await songStore.searchSongs(searchQuery.value);
     searchResults.value = songs;
   } catch (error) {
-    console.error('Search error:', error);
+    console.error("Search error:", error);
     searchResults.value = [];
   }
 };
@@ -47,12 +43,11 @@ const handleDuplicateSong = (song) => {
 };
 
 const handleAddSong = (song) => {
-  const isDuplicate = props.playlistSongs.some((s) => s.songId === song.id);
-  if (isDuplicate) {
+  if (props.songsPlaylist.some((s) => s.id === song.id)) {
     handleDuplicateSong(song);
-  } else {
-    emit("add-song", song);
+    return;
   }
+  emit("add-song", song);
 };
 const handleConfirmAdd = () => {
   emit("add-song", selectedSong.value);
@@ -97,7 +92,7 @@ const handleClose = () => {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-    <ScrollArea class="mt-4 w-full h-80">
+    <div class="mt-4 overflow-y-auto scrollbar">
       <SongsResult
         v-if="searchResults.length > 0"
         :songs="searchResults"
@@ -109,6 +104,6 @@ const handleClose = () => {
       >
         Not found any songs.
       </div>
-    </ScrollArea>
+    </div>
   </div>
 </template>

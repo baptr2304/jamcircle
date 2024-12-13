@@ -1,4 +1,5 @@
 <script setup>
+
 const props = defineProps({
   ten_danh_sach_phat: {
     type: String,
@@ -10,9 +11,10 @@ const props = defineProps({
     required: true,
   },
 });
+
 </script>
 <template>
-  <div class="flex justify-center items-center">
+  <div class="flex justify-center items-center" >
     <div
       class="2xl:w-[16rem] lg:w-[12.5rem] sm:w-44 w-[10.5rem] max-sm:max-w-[10.5rem] max-sm:w-full rounded-xs flex items-center flex-col gap-2 hover:bg-secondary cursor-pointer p-4 "
     >

@@ -1,7 +1,5 @@
 // playlist.js
-import { $delete, $get, $patch, $post } from "@/api/axios";
-import { v4 as uuidv4 } from "uuid";
-import { songsData } from "../mock/songs";
+import { $delete, $get, $post } from "@/api/axios";
 let playlistsData = [
     {
         id: "1",
@@ -44,33 +42,36 @@ let playlistsData = [
         createdAt: "2023-11-11T12:00:00Z",
     }
 ];
+export async function createPlaylist(data) {
+    const { ten_danh_sach_phat, nguoi_dung_id, loai,anh } = data;
+    return $post('/danh_sach_phat', { ten_danh_sach_phat, nguoi_dung_id, loai,anh });
 
+}
+//get detail of a playlist
 export async function getPlaylistById(id) {
     const response = await $get(`/danh_sach_phat/${id}`);
     return response;
 
 }
-export async function createPlaylist(data) {
-    const { ten_danh_sach_phat, nguoi_dung_id, loai } = data;
-    console.log('data', data);
-    return $post('/danh_sach_phat', { ten_danh_sach_phat, nguoi_dung_id, loai });
-
+// get songs of a playlist
+export async function getPlaylistSongs(id) {
+    const response = await $get(`/danh_sach_phat/${id}/bai_hat`);
+    return response;
 }
+// add song to a playlist
 export function addSong(playlistId, songId) {
-    return $post(`/danh_sach_phat/${playlistId}/bai_hat`, { bai_hat_id: songId });
+    return $post(`/danh_sach_phat/${playlistId}/bai_hat/${songId}`);
+}
+// get my playlists
+export async function getMy() {
+    const response = await $get('/danh_sach_phat/tim_kiem?loai=yeu_thich');
+    return response;
 }
 
-export function removeSongFromPlaylist(playlistId, songId) {
-    // return $delete(`/playlists/${playlistId}/songs/${songId}`)
-    return new Promise((resolve, reject) => {
-        const playlist = playlistsData.find((p) => p.id === playlistId);
-        if (!playlist) {
-            reject(new Error("Playlist not found"));
-        } else {
-            playlist.songs = playlist.songs.filter((song) => song.songId !== songId);
-            resolve({ data: playlist });
-        }
-    });
+
+export function removeSong(playlistId, index) {
+    const response = $delete(`/danh_sach_phat/${playlistId}/bai_hat?so_thu_tu=${index}`);
+    return response;
 }
 
 export function updatePlaylistName(playlistId, data) {

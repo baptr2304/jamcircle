@@ -52,7 +52,6 @@ const handleRoomCreation = async (roomName) => {
       name: roomName,
       hostId: userStore.user?.id,
     });
-    console.log(roomStore.currentRoom);
     if (roomStore.currentRoom?.id) {
       router.push(`/room/${roomStore.currentRoom.id}`);
     } else {

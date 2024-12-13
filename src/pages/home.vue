@@ -32,8 +32,20 @@ useInfiniteScroll(
     query.value.offset += query.value.limit
     await execute()
   },
-  { distance: 0 },
-)
+  { distance: 0 }
+);
+const handleDetailPlaylist = (playlistId) => {
+  try{
+    playlistStore.fetchDetailPlaylist(playlistId);
+    console.log("fetchDetailPlaylist", playlistId);
+  }
+  catch(err){
+    console.error("Error in handleDetailPlaylist:", err);
+  }
+  finally{
+    router.push(`/playlist/${playlistId}`);
+  }
+};
 </script>
 
 <template>
@@ -42,10 +54,17 @@ useInfiniteScroll(
       Albums
     </h1>
 
-    <div class="grid gap-6 justify-center md:grid-cols-4 sm:grid-cols-3 grid-cols-2 xl:grid-cols-5 2xl:grid-cols-6">
-      <Card v-for="card in cards" :key=" card.id " v-bind=" card " />
+    <div
+      class="grid gap-6 justify-center md:grid-cols-4 sm:grid-cols-3 grid-cols-2 xl:grid-cols-5 2xl:grid-cols-6"
+    >
+      <Card
+        v-for="card in cards"
+        :key="card.id"
+        v-bind="card"
+        @click="handleDetailPlaylist(card.id)"
+      />
     </div>
-    <div v-show=" isLoading " class="flex w-full p-8 justify-center items-center">
+    <div v-show="isLoading" class="flex w-full p-8 justify-center items-center">
       <Icon name="IconLoading" />
     </div>
   </div>

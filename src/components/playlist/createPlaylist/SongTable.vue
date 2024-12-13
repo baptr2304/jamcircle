@@ -4,9 +4,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { usePlaylistStore } from "@/stores/playlist";
+import { useUserStore } from "@/stores/user";
 import IconEllipsis from "../../icons/IconEllipsis.vue";
-
+import { usePlaylistStore } from "@/stores/playlist";
+const playlistStore = usePlaylistStore();
+const removeSong = async (index) => {
+  try {
+    await playlistStore.removeSongFromPlaylist(props.playlistId, index);
+  } catch (error) {
+    console.error("Error removing song from playlist:", error);
+  }
+};
 const props = defineProps({
   songs: {
     type: Array,
@@ -16,28 +24,23 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  currentPlaylistOwner: {
+    type: String,
+    required: true,
+  },
 });
-
-const playlistStore = usePlaylistStore();
-
-const emit = defineEmits(["update:songs"]);
-
-const removeSong = async (uniqueKey) => {
-  try {
-    const updatedSongs = props.songs.filter(
-      (song) => song.uniqueKey !== uniqueKey
-    );
-    emit("update:songs", updatedSongs);
-
-    await playlistStore.removeSong(props.playlistId, uniqueKey);
-  } catch (error) {
-    console.error("Error removing song from playlist:", error);
-  }
+const userStore = useUserStore();
+const user = userStore.user;
+const addSongToQueue = async (song) => {
+  console.log("addSongToQueue", song);
 };
 </script>
 
 <template>
-  <div v-if="songs && songs.length > 0">
+  <div
+    v-if="songs && songs.length > 0"
+    class="overflow-y-auto max-h-64 scrollbar"
+  >
     <table class="w-full text-left">
       <thead>
         <tr>
@@ -45,32 +48,50 @@ const removeSong = async (uniqueKey) => {
           <th>Album</th>
           <th>Duration</th>
           <th></th>
-        </tr>
+      </tr>
       </thead>
       <tbody>
-        <tr v-for="song in songs" :key="song.uniqueKey">
+        <tr v-for="(song, index) in songs" :key="index">
           <td class="flex items-center gap-4 my-2">
             <img
-              :src="song.imageUrl"
-              :alt="song.title"
+              :src="song.anh"
+              :alt="song.ten_bai_hat"
               class="w-10 h-10 rounded-xs object-cover"
             />
             <div>
-              <h3 class="font-medium text-foreground">{{ song.title }}</h3>
-              <p class="text-foreground opacity-50">{{ song.artist.name }}</p>
+              <h3 class="font-medium text-foreground">
+                {{ song.ten_bai_hat }}
+              </h3>
+              <p class="text-foreground opacity-50">{{ song.ten_ca_si }}</p>
             </div>
           </td>
-          <td>{{ song.albumName }}</td>
-          <td>{{ song.dateAdded }}</td>
+          <td>{{ song.loai || "Pop Ballad" }}</td>
+          <td>{{ String(song.thoi_gian_tao).split("T")[0] }}</td>
           <td>
-            <Popover>
-              <PopoverTrigger>
-                <IconEllipsis class="w-10 h-6 text-foreground cursor-pointer" />
-              </PopoverTrigger>
-              <PopoverContent class="w-25">
-                <button @click="removeSong(song.uniqueKey)">Remove</button>
-              </PopoverContent>
-            </Popover>
+            <div v-if="user?.id === currentPlaylistOwner">
+              <Popover>
+                <PopoverTrigger>
+                  <IconEllipsis
+                    class="w-10 h-6 text-foreground cursor-pointer"
+                  />
+                </PopoverTrigger>
+                <PopoverContent class="w-25">
+                  <button @click="removeSong(index)">Remove</button>
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div v-else>
+              <Popover>
+                <PopoverTrigger>
+                  <IconEllipsis
+                    class="w-10 h-6 text-foreground cursor-pointer"
+                  />
+                </PopoverTrigger>
+                <PopoverContent class="w-25">
+                  <button @click="addSongToQueue(song.id)">Add to queue</button>
+                </PopoverContent>
+              </Popover>
+            </div>
           </td>
         </tr>
       </tbody>
