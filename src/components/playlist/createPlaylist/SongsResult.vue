@@ -2,8 +2,8 @@
 const props = defineProps({
   songs: {
     type: Array,
-    required: true,
-  }
+    default: () => [],
+  },
 });
 
 const emit = defineEmits(["add-song"]);
@@ -13,7 +13,7 @@ const handleAddSong = (song) => {
 };
 </script>
 <template>
-  <div>
+  <div class="overflow-y-auto max-h-[13rem] scrollbar">
     <div class="mt-4">
       <div
         v-for="song in songs"

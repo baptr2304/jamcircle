@@ -3,50 +3,39 @@ import PlaylistSearch from "@/components/playlist//createPlaylist/PlaylistSearch
 import PlaylistHeaderDetail from "@/components/playlist/createPlaylist/PlaylistHeaderDetail.vue";
 import SongTable from "@/components/playlist/createPlaylist/SongTable.vue";
 import { usePlaylistStore } from "@/stores/playlist";
-import { useSongStore } from "@/stores/songs";
+import { useUserStore } from "@/stores/user";
 import { computed, onMounted } from "vue";
 const route = useRoute();
 const playlistStore = usePlaylistStore();
-const songStores = useSongStore();
 const playlistId = computed(() => route.params.id);
-const playlistLocal = ref(null);
+const songsPlaylist = ref([]);
+const currentPlaylist = ref(null);
+const userStore = useUserStore();
+const user = userStore.user;
 onMounted(async () => {
   try {
-    const result = await playlistStore.fetchDetailPlaylist(playlistId.value);
-    if (result) {
-      playlistLocal.value = result;
-    } else {
-      console.error("Failed to fetch playlist: No data returned");
-    }
-  } catch (error) {
-    console.error("Error fetching playlist:", error);
+    currentPlaylist.value = await playlistStore.fetchDetailPlaylist(
+      playlistId.value
+    );
+    songsPlaylist.value = await playlistStore.fetchSongsPlaylist(
+      playlistId.value
+    );
+  } catch {
+    console.error("Error fetching playlist detail");
   }
-
-  // await songStores.fetchSongs();
 });
-const handleSongsUpdate = (updatedSongs) => {
-  if (playlistLocal.value) {
-    playlistLocal.value.songs = updatedSongs;
-  }
-};
 
 const addToPlaylist = async (song) => {
   try {
-    const updatedPlaylist = await playlistStore.addSongToPlaylist(
-      playlistId.value,
-      song
-    );
-    if (updatedPlaylist && updatedPlaylist.songs) {
-      playlistLocal.value.songs = [...updatedPlaylist.songs];
-    }
+    await playlistStore.addSongToPlaylist(playlistId.value, song);
   } catch (error) {
     console.error("Error adding song to playlist:", error);
   }
 };
 const updatePlaylistName = async (newName) => {
   try {
-    await playlistStore.updatePlaylist(playlistId.value, newName);
-    playlistLocal.value.name = newName;
+    await playlistStore.updatePlaylistName(playlistId.value, newName);
+    currentPlaylist.value.ten_danh_sach_phat = newName;
   } catch (error) {
     console.error("Error updating playlist name:", error);
   }
@@ -56,16 +45,16 @@ const updatePlaylistName = async (newName) => {
 <template>
   <div :id="playlistId">
     <PlaylistHeaderDetail
-      v-if="playlistLocal"
-      :playlist-data="playlistLocal"
+      :playlistName="currentPlaylist?.ten_danh_sach_phat"
+      :playlistImg ="currentPlaylist?.anh"
       @update-name="updatePlaylistName"
     />
-    <div v-if="playlistLocal" class="ml-10">
+    <div v-if="songsPlaylist" class="ml-10">
       <SongTable
         :playlistId="playlistId"
-        v-if="playlistLocal.songs && playlistLocal.songs.length"
-        :songs="playlistLocal.songs"
-        @update:songs="handleSongsUpdate"
+        v-if="songsPlaylist"
+        :songs="songsPlaylist"
+        :currentPlaylistOwner="currentPlaylist?.nguoi_dung_id"
       />
       <p v-else>No songs available in this playlist.</p>
     </div>
@@ -73,9 +62,10 @@ const updatePlaylistName = async (newName) => {
       <p>Playlist not found. Please try again.</p>
     </div>
     <PlaylistSearch
-      :songs="songStores.songs"
+      v-if="user?.id === currentPlaylist?.nguoi_dung_id"
+      :songsPlaylist="songsPlaylist || []"
       @add-song="addToPlaylist"
-      :playlist-songs="playlistLocal?.songs || []"
+      :playlistSongs="currentPlaylist"
     />
   </div>
 </template>
