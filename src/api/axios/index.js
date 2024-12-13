@@ -38,13 +38,15 @@ axiosInstance.interceptors.response.use(
 
           // Retry the original request
           return axiosInstance(originalRequest)
-        } catch (refreshError) {
+        }
+        catch (refreshError) {
           localStorage.removeItem('accessToken')
           localStorage.removeItem('refreshToken')
           window.location.href = '/auth/login'
           return Promise.reject(refreshError)
         }
-      } else if (!window.location.pathname.includes('/auth/')) {
+      }
+      else if (!window.location.pathname.includes('/auth/')) {
         window.location.href = '/auth/login'
       }
     }
@@ -78,4 +80,3 @@ async function $delete(url, config = {}) {
 }
 
 export { $delete, $get, $patch, $post, $put }
-

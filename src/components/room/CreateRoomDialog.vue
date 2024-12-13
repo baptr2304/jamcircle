@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -7,27 +7,28 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ref } from "vue";
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { ref } from 'vue'
 
 const props = defineProps({
   open: {
     type: Boolean,
     required: true,
   },
-});
+})
 
-const emit = defineEmits(["update:open", "create"]);
+const emit = defineEmits(['update:open', 'create'])
 
-const roomName = ref("");
+const roomName = ref('')
 
-const handleCreate = () => {
-  if (!roomName.value.trim()) return;
-  emit("create", roomName.value);
-  emit("update:open", false);
-};
+function handleCreate() {
+  if (!roomName.value.trim())
+    return
+  emit('create', roomName.value)
+  emit('update:open', false)
+}
 </script>
 
 <template>

@@ -1,37 +1,40 @@
 <script setup>
-import IconEllipsis from "@/components/icons/IconEllipsis.vue";
+import IconEllipsis from '@/components/icons/IconEllipsis.vue'
 
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import ScrollArea from "@/components/ui/scroll-area/ScrollArea.vue";
-import { useRoomStore } from "@/stores/room";
-import SearchInRoom from "./SearchInRoom.vue";
+} from '@/components/ui/popover'
+import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
+import { useRoomStore } from '@/stores/room'
+import SearchInRoom from './SearchInRoom.vue'
 
-const roomStore = useRoomStore();
-const removeSong = (uniqueKey) => {
-  roomStore.removeSongFromQueue(uniqueKey);
-};
 const props = defineProps({
   listSongs: Array,
   roomId: String,
-});
+})
+const roomStore = useRoomStore()
+function removeSong(uniqueKey) {
+  roomStore.removeSongFromQueue(uniqueKey)
+}
 </script>
+
 <template>
   <div class="w-full flex items-center justify-center">
     <div class="w-full flex flex-col">
       <SearchInRoom
         class="items-center self-center"
-        :roomId="roomId"
-        :listSongs="listSongs"
+        :room-id="roomId"
+        :list-songs="listSongs"
       />
-      <h3 class="mx-4 mt-3 text-xl">Queue</h3>
+      <h3 class="mx-4 mt-3 text-xl">
+        Queue
+      </h3>
 
       <ScrollArea
-        class="w-full h-[30rem]"
         v-if="listSongs && listSongs.length > 0"
+        class="w-full h-[30rem]"
       >
         <div
           v-for="song in listSongs"
@@ -43,12 +46,14 @@ const props = defineProps({
               :src="song.imageUrl"
               :alt="song.title"
               class="w-10 h-10 rounded-xs object-cover"
-            />
+            >
             <div>
               <h3 class="font-normal text-foreground truncate">
                 {{ song.title }}
               </h3>
-              <p class="text-foreground opacity-50">{{ song.artist.name }}</p>
+              <p class="text-foreground opacity-50">
+                {{ song.artist.name }}
+              </p>
             </div>
           </div>
           <div>{{ song.albumName }}</div>
@@ -57,7 +62,9 @@ const props = defineProps({
               <IconEllipsis class="w-6 h-6 text-foreground cursor-pointer" />
             </PopoverTrigger>
             <PopoverContent class="w-25">
-              <button @click="removeSong(song.uniqueKey)">Remove</button>
+              <button @click="removeSong(song.uniqueKey)">
+                Remove
+              </button>
             </PopoverContent>
           </Popover>
         </div>

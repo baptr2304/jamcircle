@@ -5,7 +5,7 @@ const { song } = defineProps({
   song: {
     type: Object,
     required: true,
-  }
+  },
 })
 defineEmits(['handleClick'])
 const songStore = useSongStore()

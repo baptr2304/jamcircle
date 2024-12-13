@@ -186,7 +186,7 @@ onUnmounted(() => {
           credit card needed.
         </div>
       </div>
-      <RouterLink to="auth/login">
+      <RouterLink to="/auth/login">
         <Button class="flex h-12 py-4 lg:px-8 px-4 bg-foreground rounded-full">
           Sign up free
         </Button>

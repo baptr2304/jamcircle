@@ -1,56 +1,60 @@
 <script setup>
-import UnauthenPopover from "@/components/common/UnauthenPopover.vue";
-import CreateRoomDialog from "@/components/room/CreateRoomDialog.vue";
-import JoinRoomDialog from "@/components/room/JoinRoomDialog.vue";
-import { useUserStore } from "@/stores/user";
+import UnauthenPopover from '@/components/common/UnauthenPopover.vue'
+import CreateRoomDialog from '@/components/room/CreateRoomDialog.vue'
+import JoinRoomDialog from '@/components/room/JoinRoomDialog.vue'
+import { useUserStore } from '@/stores/user'
+
 const props = defineProps({
   icon: String,
   title: String,
   type: {
     type: String,
-    default: "router-link",
+    default: 'router-link',
   },
   url: {
     type: String,
-    default: "/",
+    default: '/',
   },
   textStyle: {
     type: String,
-    default: "text-sm",
+    default: 'text-sm',
   },
   requiredAuthen: Boolean,
-});
-const emit = defineEmits(["create-room"]);
-const userStore = useUserStore();
-const route = useRoute();
-const isCreateRoomOpen = ref(false);
-const isJoinRoomOpen = ref(false);
-const isActive = computed(() => props.url === route.path);
+})
+const emit = defineEmits(['create-room'])
+const userStore = useUserStore()
+const route = useRoute()
+const isCreateRoomOpen = ref(false)
+const isJoinRoomOpen = ref(false)
+const isActive = computed(() => props.url === route.path)
 const component = computed(() => {
-  if (userStore.isAuthenticated) return props.type;
+  if (userStore.isAuthenticated)
+    return props.type
 
-  if (props.requiredAuthen) return "button";
-  else return "RouterLink";
-});
-const handleClick = () => {
-  if (!userStore.isAuthenticated || props.type !== "button") return;
+  if (props.requiredAuthen)
+    return 'button'
+  else return 'RouterLink'
+})
+function handleClick() {
+  if (!userStore.isAuthenticated || props.type !== 'button')
+    return
 
   switch (props.title) {
-    case "Jam":
-      isCreateRoomOpen.value = true;
-      break;
-    case "Join room":
-      isJoinRoomOpen.value = true;
-      break;
+    case 'Jam':
+      isCreateRoomOpen.value = true
+      break
+    case 'Join room':
+      isJoinRoomOpen.value = true
+      break
   }
-};
+}
 
-const handleCreateRoom = (roomName) => {
-  emit("create-room", roomName);
-};
-const handleJoinRoom = (roomId) => {
-  emit("join-room", roomId);
-};
+function handleCreateRoom(roomName) {
+  emit('create-room', roomName)
+}
+function handleJoinRoom(roomId) {
+  emit('join-room', roomId)
+}
 </script>
 
 <template>

@@ -1,28 +1,28 @@
 // src/utils/zodLocale.ts
 import { z, ZodIssueCode } from 'zod'
 
-export const errorMap = (issue, _ctx) => {
+export function errorMap(issue, _ctx) {
   // console.log(issue)
   switch (issue.code) {
     case ZodIssueCode.invalid_type:
       if (issue.received === 'undefined') {
-        return { message: 'Trường này là bắt buộc' }
+        return { message: 'This field is required' }
       }
-      return { message: `Loại dữ liệu không hợp lệ. Mong đợi ${issue.expected}, nhận được ${issue.received}` }
+      return { message: `Invalid data type. Expected ${issue.expected}, received ${issue.received}` }
     case ZodIssueCode.invalid_string:
       if (issue.validation === 'email') {
-        return { message: 'Email không hợp lệ' }
+        return { message: 'Invalid email' }
       }
       if (issue.validation === 'url') {
-        return { message: 'URL không hợp lệ' }
+        return { message: 'Invalid URL' }
       }
-      return { message: 'Chuỗi không hợp lệ' }
+      return { message: 'Invalid string' }
     case ZodIssueCode.too_small:
-      return { message: `Giá trị phải lớn hơn hoặc bằng ${issue.minimum}` }
+      return { message: `Value must be greater than or equal to ${issue.minimum}` }
     case ZodIssueCode.too_big:
-      return { message: `Giá trị phải nhỏ hơn hoặc bằng ${issue.maximum}` }
+      return { message: `Value must be less than or equal to ${issue.maximum}` }
     default:
-      return { message: 'Giá trị không hợp lệ' }
+      return { message: 'Invalid value' }
   }
 }
 

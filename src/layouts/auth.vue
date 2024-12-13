@@ -1,23 +1,25 @@
-<template>
-	<div class="auth-layout">
-		<header class="logo">
-			<router-link to="/home"><IconBack /></router-link>
-			<div class="image-logo">
-				<IconLogo />
-				<h1>JamCircle</h1>
-			</div>
-			<div></div>
-		</header>
-		<main>
-			<router-view />
-		</main>
-	</div>
-</template>
-
 <script setup>
-import IconLogo from "@/components/icons/IconLogo.vue";
-import IconBack from "@/components/icons/IconBack.vue";
+import IconBack from '@/components/icons/IconBack.vue'
+import IconLogo from '@/components/icons/IconLogo.vue'
 </script>
+
+<template>
+  <div class="auth-layout">
+    <header class="logo">
+      <router-link to="/home">
+        <IconBack />
+      </router-link>
+      <div class="image-logo">
+        <IconLogo />
+        <h1>JamCircle</h1>
+      </div>
+      <div />
+    </header>
+    <main>
+      <router-view />
+    </main>
+  </div>
+</template>
 
 <style scoped>
 .auth-layout {

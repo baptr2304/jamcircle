@@ -1,52 +1,55 @@
 <script setup>
-import AppSideBarItem from "@/components/layout/SideBar/AppSideBarItem.vue";
+import AppSideBarItem from '@/components/layout/SideBar/AppSideBarItem.vue'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import Input from "@/components/ui/input/Input.vue";
-import ScrollArea from "@/components/ui/scroll-area/ScrollArea.vue";
-import Separator from "@/components/ui/separator/Separator.vue";
-import { useRoomStore } from "@/stores/room";
-import { useRouter } from "vue-router";
-const router = useRouter();
+} from '@/components/ui/collapsible'
+import Input from '@/components/ui/input/Input.vue'
+import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
+import Separator from '@/components/ui/separator/Separator.vue'
+import { useRoomStore } from '@/stores/room'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const data = ref({
   id: 8,
-  icon: "IconDoor",
-  title: "Your Room",
-  url: "/room",
-  type: "button",
-});
+  icon: 'IconDoor',
+  title: 'Your Room',
+  url: '/room',
+  type: 'button',
+})
 
-const isOpen = ref(false);
-const classAnimate = ref("");
+const isOpen = ref(false)
+const classAnimate = ref('')
 watch(isOpen, (value) => {
-  classAnimate.value = value ? "animate-rotate-up" : "animate-rotate-down";
-});
+  classAnimate.value = value ? 'animate-rotate-up' : 'animate-rotate-down'
+})
 
-const roomStore = useRoomStore();
-const roomName = ref("");
+const roomStore = useRoomStore()
+const roomName = ref('')
 
 onMounted(async () => {
   try {
-    await roomStore.getAllRooms();
-  } catch (err) {
-    console.log(err);
+    await roomStore.getAllRooms()
   }
-});
-const rooms = ref([]);
+  catch (err) {
+    console.log(err)
+  }
+})
+const rooms = ref([])
 watchEffect(() => {
-  rooms.value = roomStore.rooms;
-});
+  rooms.value = roomStore.rooms
+})
 const listRoom = computed(() => {
-  return rooms.value;
-});
-const handleRoomClick = (roomId) => {
-  roomStore.getRoomById(roomId);
-  router.push(`/room/${roomId}`);
-};
+  return rooms.value
+})
+function handleRoomClick(roomId) {
+  roomStore.getRoomById(roomId)
+  router.push(`/room/${roomId}`)
+}
 </script>
+
 <template>
   <Collapsible v-model:open="isOpen" class="space-y-2">
     <CollapsibleTrigger as-child>
@@ -60,8 +63,8 @@ const handleRoomClick = (roomId) => {
     <CollapsibleContent class="space-y-2 py-2 px-4">
       <div class="relative w-full max-w-sm items-center">
         <Input
-          v-model="roomName"
           id="find"
+          v-model="roomName"
           type="text"
           placeholder="Search..."
           class="pl-10"

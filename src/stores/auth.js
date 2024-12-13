@@ -10,9 +10,9 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(credentials) {
     const data = await apiLogin(credentials)
-    localStorage.setItem("accessToken", data.ma_xac_thuc)
-    localStorage.setItem("refreshToken", data.ma_lam_moi)
-    router.push("/home")
+    localStorage.setItem('accessToken', data.ma_xac_thuc)
+    localStorage.setItem('refreshToken', data.ma_lam_moi)
+    router.push('/home')
   }
 
   async function logout() {

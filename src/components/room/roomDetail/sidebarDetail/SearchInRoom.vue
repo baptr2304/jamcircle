@@ -1,5 +1,5 @@
 <script setup>
-import IconEllipsis from "@/components/icons/IconEllipsis.vue";
+import IconEllipsis from '@/components/icons/IconEllipsis.vue'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,77 +9,83 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import Input from "@/components/ui/input/Input.vue";
+} from '@/components/ui/alert-dialog'
+import Input from '@/components/ui/input/Input.vue'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import ScrollArea from "@/components/ui/scroll-area/ScrollArea.vue";
-import { useRoomStore } from "@/stores/room";
-import { useSongStore } from "@/stores/song";
-import { Search } from "lucide-vue-next";
+} from '@/components/ui/popover'
+import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
+import { useRoomStore } from '@/stores/room'
+import { useSongStore } from '@/stores/songs'
+import { Search } from 'lucide-vue-next'
+
 const props = defineProps({
   roomId: String,
   listSongs: Array,
-});
+})
 
-const searchQuery = ref("");
-const songs = useSongStore();
-const roomStore = useRoomStore();
-const allSongs = computed(() => songs.songs);
+const searchQuery = ref('')
+const songs = useSongStore()
+const roomStore = useRoomStore()
+const allSongs = computed(() => songs.songs)
 const filteredSongs = computed(() => {
   if (!searchQuery.value.trim()) {
-    return [];
+    return []
   }
-  return allSongs.value.filter((song) =>
-    song.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
-});
+  return allSongs.value.filter(song =>
+    song.title.toLowerCase().includes(searchQuery.value.toLowerCase()),
+  )
+})
 onMounted(async () => {
   try {
-    await songs.fetchSongs();
-  } catch (err) {
-    console.error(err);
+    await songs.fetchSongs()
   }
-});
-const showDuplicateDialog = ref(false);
-const selectedSong = ref(null);
-const handleClose = () => {
-  showDuplicateDialog.value = false;
-};
-const handleConfirmAdd = async () => {
+  catch (err) {
+    console.error(err)
+  }
+})
+const showDuplicateDialog = ref(false)
+const selectedSong = ref(null)
+function handleClose() {
+  showDuplicateDialog.value = false
+}
+async function handleConfirmAdd() {
   try {
-    await roomStore.addSongToRoomPlaylist(props.roomId, selectedSong.value.id);
-    showDuplicateDialog.value = false;
-    searchQuery.value = "";
-  } catch (err) {
-    console.error(err);
+    await roomStore.addSongToRoomPlaylist(props.roomId, selectedSong.value.id)
+    showDuplicateDialog.value = false
+    searchQuery.value = ''
   }
-};
-const addSongToQueue = async (songId) => {
-  const isDuplicate = props.listSongs.some((s) => s.id === songId);
+  catch (err) {
+    console.error(err)
+  }
+}
+async function addSongToQueue(songId) {
+  const isDuplicate = props.listSongs.some(s => s.id === songId)
   if (isDuplicate) {
-    const song = allSongs.value.find((s) => s.id === songId);
-    selectedSong.value = song;
-    showDuplicateDialog.value = true;
-  } else {
+    const song = allSongs.value.find(s => s.id === songId)
+    selectedSong.value = song
+    showDuplicateDialog.value = true
+  }
+  else {
     try {
-      await roomStore.addSongToRoomPlaylist(props.roomId, songId);
-      searchQuery.value = "";
-    } catch {
-      console.error(err);
+      await roomStore.addSongToRoomPlaylist(props.roomId, songId)
+      searchQuery.value = ''
+    }
+    catch {
+      console.error(err)
     }
   }
-};
+}
 </script>
+
 <template>
   <div class="w-full flex justify-center flex-col">
     <div class="relative w-[90%] max-w-sm">
       <Input
-        v-model="searchQuery"
         id="search"
+        v-model="searchQuery"
         type="text"
         placeholder="Search..."
         class="pl-10 rounded-[99px]"
@@ -99,16 +105,18 @@ const addSongToQueue = async (songId) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel @click="handleClose">Don't add</AlertDialogCancel>
-          <AlertDialogAction @click="handleConfirmAdd"
-            >Add anyway</AlertDialogAction
-          >
+          <AlertDialogCancel @click="handleClose">
+            Don't add
+          </AlertDialogCancel>
+          <AlertDialogAction @click="handleConfirmAdd">
+            Add anyway
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
     <ScrollArea
-      type="text"
       v-if="filteredSongs && filteredSongs.length > 0"
+      type="text"
       class="w-full h-36 mt-2"
     >
       <div class="flex flex-col gap-2 w-full">
@@ -122,12 +130,14 @@ const addSongToQueue = async (songId) => {
               :src="song.imageUrl"
               :alt="song.title"
               class="w-8 h-8 rounded-xs object-cover"
-            />
+            >
             <div>
               <h3 class="font-normal text-sm truncate">
                 {{ song.title }}
               </h3>
-              <p class="text-xs opacity-50">{{ song.artist.name }}</p>
+              <p class="text-xs opacity-50">
+                {{ song.artist.name }}
+              </p>
             </div>
           </div>
           <div>{{ song.albumName }}</div>
@@ -136,7 +146,9 @@ const addSongToQueue = async (songId) => {
               <IconEllipsis class="w-6 h-6 text-foreground cursor-pointer" />
             </PopoverTrigger>
             <PopoverContent class="w-25">
-              <button @click="addSongToQueue(song.id)">Add song</button>
+              <button @click="addSongToQueue(song.id)">
+                Add song
+              </button>
             </PopoverContent>
           </Popover>
         </div>
