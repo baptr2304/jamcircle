@@ -1,10 +1,10 @@
-import { addSongById, apiGetSongs, getOneSong, getSongs } from "@/api/song";
+import { apiGetSongs, getOneSong, getSongs, uploadSong } from '@/api/song'
 import { toast } from '@/components/ui/toast'
 import { defineStore } from 'pinia'
 import { v4 as uuidv4 } from 'uuid'
 
 export const useSongStore = defineStore('queue', () => {
-  const songs = ref([]);
+  const songs = ref([])
   const playlist = ref([
     {
       id: uuidv4(),
@@ -128,11 +128,15 @@ export const useSongStore = defineStore('queue', () => {
     return newSong
   }
   async function fetchSongs() {
-    return await getSongs();
+    return await getSongs()
   }
   async function getSongById(id) {
-    const response = await getOneSong(id);
+    const response = await getOneSong(id)
     return response
+  }
+
+  async function uploadSongToServer(data) {
+    return uploadSong(data)
   }
 
   return {
@@ -152,5 +156,6 @@ export const useSongStore = defineStore('queue', () => {
     addToQueue,
     playWithoutQueue,
     handleRemoveFromQueue,
+    uploadSongToServer,
   }
 })

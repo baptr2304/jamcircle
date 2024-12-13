@@ -1,4 +1,4 @@
-import { $get } from '../axios'
+import { $get, $post } from '../axios'
 import { songsData } from '../mock/songs'
 
 export async function apiGetSongs(title = '', config = {}) {
@@ -24,4 +24,14 @@ export function getSongs() {
 export function getOneSong(id) {
   // return $get(`/songs/${id}`)
   return Promise.resolve({ data: songsData.find(song => song.id === id) })
+}
+export function uploadSong(data) {
+  const { file, ...songData } = data
+  const map = Object.entries(songData).map(([key, value]) => {
+    return `"${key}":"${value}"`
+  })
+  const url = `bai_hat?bai_hat={${map.join(',')}}`
+  const formData = new FormData()
+  formData.append('file', file)
+  return $post(url, formData)
 }

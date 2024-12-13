@@ -70,6 +70,11 @@ function redirectProfile() {
         </div>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
+      <DropdownMenuItem>
+        <RouterLink to="/song/create">
+          Create Song
+        </RouterLink>
+      </DropdownMenuItem>
       <DropdownMenuItem @click="redirectProfile">
         Profile
       </DropdownMenuItem>

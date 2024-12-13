@@ -36,7 +36,7 @@ onUnmounted(() => {
         <header class="flex h-16 items-center">
           <AppHeader />
         </header>
-        <div class="flex flex-1 flex-col gap-4 bg-muted h-[calc(100%-64px)]">
+        <div class="flex flex-1 flex-col gap-4 bg-muted h-[calc(100%-64px)] pb-4">
           <router-view />
         </div>
       </div>
