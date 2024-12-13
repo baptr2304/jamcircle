@@ -1,5 +1,6 @@
 <script setup>
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from '@/stores/user'
+
 const props = defineProps({
   playlistName: {
     type: String,
@@ -9,26 +10,22 @@ const props = defineProps({
     type: String,
     required: true,
   },
-});
-const userStore = useUserStore();
-const user = userStore.user;
+})
+const userStore = useUserStore()
+const user = userStore.user
 </script>
 
 <template>
   <div
-    class="w-full h-[15rem] bg-accent flex items-center mb-4 relative"
-    :style="{
-      backgroundImage: `url(${playlistImg})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'top',
-    }"
+    class="w-full h-[15rem]  flex items-center mb-4 relative bg-cover bg-center"
+    :class="`bg-[url('${props.playlistImg}')]`"
   >
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-xl"></div>
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-xl" />
 
     <div
       class="w-[11.25rem] h-[11.25rem] bg-muted flex justify-center items-center ml-8 rounded-xs z-10"
     >
-      <img :src="playlistImg" class="w-full h-full rounded-xs" />
+      <img :src="playlistImg" class="w-full h-full rounded-xs">
     </div>
 
     <div class="ml-4 h-[11.25rem] flex flex-col justify-between z-10">
@@ -38,7 +35,9 @@ const user = userStore.user;
           {{ props.playlistName }}
         </h1>
       </div>
-      <h5 class="font-semibold">{{ user?.username }}</h5>
+      <h5 class="font-semibold">
+        {{ user?.username }}
+      </h5>
     </div>
   </div>
 </template>

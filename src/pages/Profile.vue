@@ -1,29 +1,30 @@
 <script setup>
-import { Button } from "@/components/ui/button";
-import InputValidator from "@/components/ui/form/InputValidator.vue";
-import { useUserStore } from "@/stores/user";
-import { emailSchema, nameSchema, passwordSchema } from "@/utils/validation";
-import { toTypedSchema } from "@vee-validate/zod";
-import { useForm } from "vee-validate";
-import * as z from "zod";
-onMounted(async () => {
-  await userStore.getUserAuth();
-  form.setValues({
-    username: userStore.user?.username || "",
-    email: userStore.user?.email || "",
-    // gender: userStore.user?.gender || "",
-  });
-});
-const userStore = useUserStore();
-const isEditing = ref(false);
+import { Button } from '@/components/ui/button'
+import InputValidator from '@/components/ui/form/InputValidator.vue'
+import { useUserStore } from '@/stores/user'
+import { emailSchema, nameSchema, passwordSchema } from '@/utils/validation'
+import { toTypedSchema } from '@vee-validate/zod'
+import { useForm } from 'vee-validate'
+import * as z from 'zod'
 
-const startEdit = () => {
-  isEditing.value = true;
-};
-const cancelEdit = () => {
-  isEditing.value = false;
-  form.resetForm();
-};
+onMounted(async () => {
+  await userStore.getUserAuth()
+  form.setValues({
+    username: userStore.user?.username || '',
+    email: userStore.user?.email || '',
+    // gender: userStore.user?.gender || "",
+  })
+})
+const userStore = useUserStore()
+const isEditing = ref(false)
+
+function startEdit() {
+  isEditing.value = true
+}
+function cancelEdit() {
+  isEditing.value = false
+  form.resetForm()
+}
 const profileSchema = toTypedSchema(
   z
     .object({
@@ -36,84 +37,88 @@ const profileSchema = toTypedSchema(
     .refine(
       (data) => {
         if (data.password) {
-          return data.password === data.confirmPassword;
+          return data.password === data.confirmPassword
         }
-        return true;
+        return true
       },
       {
-        message: "Mật khẩu không khớp",
-        path: ["confirmPassword"],
-      }
-    )
-);
+        message: 'Mật khẩu không khớp',
+        path: ['confirmPassword'],
+      },
+    ),
+)
 const form = useForm({
   validationSchema: profileSchema,
   initialValues: {
-    username: userStore.user?.username || "",
-    email: userStore.user?.email || "",
+    username: userStore.user?.username || '',
+    email: userStore.user?.email || '',
     // gender: userStore.user?.gender || "",
-    password: "*************",
-    confirmPassword: "*************",
+    password: '*************',
+    confirmPassword: '*************',
   },
-});
+})
 const onSubmit = form.handleSubmit(async (values) => {
   try {
     const updates = {
       username: values.username,
       email: values.email,
-    };
-
-    if (values.password) {
-      updates.password = values.password;
     }
 
-    await userStore.updateUser(updates);
-    isEditing.value = false;
-    form.resetForm();
-  } catch (err) {
-    console.error("Error in updating profile:", err);
+    if (values.password) {
+      updates.password = values.password
+    }
+
+    await userStore.updateUser(updates)
+    isEditing.value = false
+    form.resetForm()
   }
-});
+  catch (err) {
+    console.error('Error in updating profile:', err)
+  }
+})
 </script>
+
 <template>
   <div class="w-full flex justify-center">
     <div class="flex flex-col items-center w-11/12 md:w-3/4 lg:w-1/2">
-      <h1 class="self-start text-2xl font-bold mt-4 mb-2">Thông tin cá nhân</h1>
-      <form @submit="onSubmit" class="w-full">
+      <h1 class="self-start text-2xl font-bold mt-4 mb-2">
+        Thông tin cá nhân
+      </h1>
+      <form class="w-full" @submit="onSubmit">
         <InputValidator
+          v-model="form.values.username"
           type="text"
           label="Tên người dùng"
           name="username"
           :disabled="!isEditing"
-          :custom="'h-[3rem] mb-5 mt-1'"
-          v-model="form.values.username"
+          custom="h-[3rem] mb-5 mt-1"
         />
         <InputValidator
+          v-model="form.values.email"
           type="text"
           label="Địa chỉ Email"
           name="email"
           :disabled="!isEditing"
-          :custom="'h-[3rem] mb-5 mt-1'"
-          v-model="form.values.email"
+          custom="h-[3rem] mb-5 mt-1"
         />
         <InputValidator
+          v-model="form.values.password"
           type="password"
           label="Mật khẩu"
           name="password"
           :disabled="!isEditing"
-          :custom="'h-[3rem] mb-5 mt-1'"
+          custom="h-[3rem] mb-5 mt-1"
           placeholder="*********"
-          v-model="form.values.password"
         />
         <div v-if="isEditing">
           <InputValidator
+            v-model="form.values.confirmPassword"
             type="password"
             label="Xác nhận mật khẩu"
             name="confirmPassword"
             :disabled="!isEditing"
-            :custom="'h-[3rem] mb-5 mt-1'"
+            custom="h-[3rem] mb-5 mt-1"
             placeholder="*********"
-            v-model="form.values.confirmPassword"
           />
         </div>
         <!-- <Select v-model="form.values.gender">
@@ -136,10 +141,14 @@ const onSubmit = form.handleSubmit(async (values) => {
             >
               Hủy
             </Button>
-            <Button type="submit">Lưu</Button>
+            <Button type="submit">
+              Lưu
+            </Button>
           </div>
           <div v-else>
-            <Button @click="startEdit">Chỉnh sửa</Button>
+            <Button @click="startEdit">
+              Chỉnh sửa
+            </Button>
           </div>
         </div>
       </form>

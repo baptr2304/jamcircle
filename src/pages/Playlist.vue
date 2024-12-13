@@ -6,11 +6,7 @@ import router from "@/router";
 import { usePlaylistStore } from "@/stores/playlist";
 const playlistStore = usePlaylistStore();
 onMounted(async () => {
-  try {
     await playlistStore.getMyPlaylists();
-  } catch (error) {
-    console.error("Error fetching playlists:", error);
-  }
 });
 
 const handlePlaylistClick = (playlistId) => {

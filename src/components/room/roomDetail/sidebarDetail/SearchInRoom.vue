@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover";
 import ScrollArea from "@/components/ui/scroll-area/ScrollArea.vue";
 import { useRoomStore } from "@/stores/room";
-import { useSongStore } from "@/stores/songs";
+import { useSongStore } from "@/stores/song";
 import { Search } from "lucide-vue-next";
 const props = defineProps({
   roomId: String,

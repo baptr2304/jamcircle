@@ -11,7 +11,9 @@
 import Card from '@/components/home/Card/Card.vue'
 import { usePlaylistStore } from '@/stores/playlist'
 import { useAsyncState, useInfiniteScroll } from '@vueuse/core'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const playlistStore = usePlaylistStore()
 const container = ref(null)
 const cards = ref([])
@@ -32,20 +34,19 @@ useInfiniteScroll(
     query.value.offset += query.value.limit
     await execute()
   },
-  { distance: 0 }
-);
-const handleDetailPlaylist = (playlistId) => {
-  try{
-    playlistStore.fetchDetailPlaylist(playlistId);
-    console.log("fetchDetailPlaylist", playlistId);
+  { distance: 0 },
+)
+function handleDetailPlaylist(playlistId) {
+  try {
+    playlistStore.fetchDetailPlaylist(playlistId)
   }
-  catch(err){
-    console.error("Error in handleDetailPlaylist:", err);
+  catch (err) {
+    console.error('Error in handleDetailPlaylist:', err)
   }
-  finally{
-    router.push(`/playlist/${playlistId}`);
+  finally {
+    router.push(`/playlist/${playlistId}`)
   }
-};
+}
 </script>
 
 <template>
