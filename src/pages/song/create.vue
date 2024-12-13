@@ -113,16 +113,16 @@ function hanldeUploadThumbnail(event) {
   <div class="pb-4">
     <PlaylistHeader icon="IconUpload" title="Upload Your Music" />
   </div>
-  <div class="overflow-y-auto scrollbar px-8 grid gap-4 grid-cols-1 md:grid-cols-2">
+  <div class="overflow-y-auto scrollbar px-8 grid gap-4 max-w-7xl mx-auto grid-cols-1 md:grid-cols-2">
     <div class="container flex items-center flex-col gap-10 pb-10">
       <div
         ref="dropZoneRef"
         class="w-full max-w-80 rounded border border-foreground border-dashed flex justify-center items-center h-40 cursor-pointer"
         @click="inputRef.click()"
       >
-        <div class="flex flex-col gap-2 items-center justify-center">
+        <div class="flex flex-col gap-2 items-center justify-center p-2">
           <Icon name="IconUploadCloud" class="w-10 h-10" />
-          <span class="text-lg font-semibold">Drag and drop your files here</span>
+          <span class="text-lg font-semibold text-center">Drag and drop your files here</span>
           <span>Supported format: audio file</span>
         </div>
       </div>

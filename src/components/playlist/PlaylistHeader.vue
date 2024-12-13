@@ -1,6 +1,10 @@
 <script setup>
 const props = defineProps({
   icon: String,
+  title: {
+    type: String,
+    required: true,
+  },
 })
 </script>
 
@@ -14,7 +18,9 @@ const props = defineProps({
       <Icon :name="props.icon" class="w-12 h-12" />
     </div>
     <div class="ml-10 h-[11.25rem] flex justify-between items-center">
-      <h1 class="text-[4rem] font-bold cursor-pointer">My Playlist</h1>
+      <h1 class="text-2xl md:text-[4rem] font-bold cursor-pointer">
+        {{ props.title }}
+      </h1>
     </div>
   </div>
 </template>

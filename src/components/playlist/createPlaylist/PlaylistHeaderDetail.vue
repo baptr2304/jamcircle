@@ -18,7 +18,6 @@ const user = userStore.user
 <template>
   <div
     class="w-full h-[15rem]  flex items-center mb-4 relative bg-cover bg-center"
-    :class="`bg-[url('${props.playlistImg}')]`"
   >
     <div class="absolute inset-0 bg-black/50 backdrop-blur-xl" />
 
@@ -31,7 +30,7 @@ const user = userStore.user
     <div class="ml-4 h-[11.25rem] flex flex-col justify-between z-10">
       <h5>Playlist</h5>
       <div>
-        <h1 class="text-[4rem] font-bold cursor-pointer text-">
+        <h1 class="text-2xl md:text-[4rem] font-bold cursor-pointer text-">
           {{ props.playlistName }}
         </h1>
       </div>
