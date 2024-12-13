@@ -31,7 +31,6 @@ function handlePlaySong(song) {
           <template #start>
             <div class="w-4">
               <Icon v-if="song.so_thu_tu === songStore.currentSong.so_thu_tu" name="IconChart" class="w-4 h-4" />
-              <span v-else>{{ song.so_thu_tu }}</span>
             </div>
           </template>
           <template #action>

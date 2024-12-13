@@ -120,6 +120,10 @@ export const useSongStore = defineStore('queue', () => {
       so_thu_tu: lastIndex + 1,
     }
     playlist.value.push(newSong)
+    toast({
+      title: 'Success',
+      description: 'Added to queue',
+    })
     return newSong
   }
   return {
@@ -135,6 +139,6 @@ export const useSongStore = defineStore('queue', () => {
     playSongInQueue,
     addToQueue,
     playWithoutQueue,
-    handleRemoveFromQueue
+    handleRemoveFromQueue,
   }
 })
