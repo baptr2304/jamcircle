@@ -3,12 +3,19 @@ import { uploadImage } from '@/api/upload'
 import PlaylistHeader from '@/components/playlist/PlaylistHeader.vue'
 import Button from '@/components/ui/button/Button.vue'
 import InputValidator from '@/components/ui/form/InputValidator.vue'
+import { toast } from '@/components/ui/toast'
+import { useSongStore } from '@/stores/song'
+import { useUserStore } from '@/stores/user'
+import { requiredStringSchema } from '@/utils/validation'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useDropZone } from '@vueuse/core'
 import { useForm } from 'vee-validate'
-
 import { nextTick } from 'vue'
 import * as z from 'zod'
+
+const router = useRouter()
+const songStore = useSongStore()
+const userStore = useUserStore()
 
 const dropZoneRef = ref(null)
 const audioFile = ref()
@@ -18,6 +25,7 @@ const imageRef = ref(null)
 const previewAudio = ref(null)
 const imageFile = ref(null)
 const imagePreview = ref(null)
+const isUploading = ref(false)
 function onDrop(files) {
   if (files.length === 0)
     return
@@ -34,14 +42,42 @@ useDropZone(dropZoneRef, {
 const form = useForm({
   validationSchema: toTypedSchema(
     z.object({
-      name: z.string(),
+      name: requiredStringSchema,
     }),
   ),
 })
 
 const onSubmit = form.handleSubmit(async (values) => {
-  console.log(values)
-  uploadImage(audioFile.value)
+  try {
+    if (!imageFile.value) {
+      toast({
+        title: 'Error',
+        description: 'Please upload thumbnail for your song',
+        variant: 'destructive',
+        duration: 5000,
+      })
+      return
+    }
+    isUploading.value = true
+    const { url } = await uploadImage(imageFile.value)
+    const data = {
+      ten_bai_hat: values.name,
+      anh: url,
+      ten_ca_si: userStore.user?.username ?? 'Unknown',
+      file: audioFile.value,
+    }
+
+    await songStore.uploadSongToServer(data)
+    toast({
+      title: 'Success',
+      description: 'Your song has been uploaded successfully',
+      duration: 5000,
+    })
+    router.push('/home')
+  }
+  finally {
+    isUploading.value = false
+  }
 })
 
 watch(audioFile, async (value) => {
@@ -78,6 +114,26 @@ function hanldeUploadThumbnail(event) {
     <PlaylistHeader icon="IconUpload" title="Upload Your Music" />
   </div>
   <div class="overflow-y-auto scrollbar px-8 grid gap-4 grid-cols-1 md:grid-cols-2">
+    <div class="container flex items-center flex-col gap-10 pb-10">
+      <div
+        ref="dropZoneRef"
+        class="w-full max-w-80 rounded border border-foreground border-dashed flex justify-center items-center h-40 cursor-pointer"
+        @click="inputRef.click()"
+      >
+        <div class="flex flex-col gap-2 items-center justify-center">
+          <Icon name="IconUploadCloud" class="w-10 h-10" />
+          <span class="text-lg font-semibold">Drag and drop your files here</span>
+          <span>Supported format: audio file</span>
+        </div>
+      </div>
+      <audio
+        v-if="previewAudio"
+        ref="audioRef"
+        controls
+      >
+        <source :src="previewAudio" type="audio/mpeg">
+      </audio>
+    </div>
     <form
       class="w-full max-w-96 m-auto"
       @submit="onSubmit"
@@ -102,6 +158,7 @@ function hanldeUploadThumbnail(event) {
           <label for="picture" class="mb-2">Song thumbnail</label>
           <Button
             variant="secondary"
+            type="button"
             @click="imageRef.click()"
           >
             <Icon name="IconUpload" class="w-8 h-8" />
@@ -127,30 +184,19 @@ function hanldeUploadThumbnail(event) {
       <div class="flex pt-4">
         <Button
           :disabled="!audioFile"
+          type="submit"
         >
-          Upload files
+          <template v-if="isUploading">
+            <div class="flex w-full p-8 justify-center gap-2 items-center">
+              <Icon name="IconLoading" />
+              Please wait...
+            </div>
+          </template>
+          <template v-else>
+            Upload files
+          </template>
         </Button>
       </div>
     </form>
-    <div class="container flex items-center flex-col gap-10 pb-10">
-      <div
-        ref="dropZoneRef"
-        class="w-full max-w-80 rounded border border-foreground border-dashed flex justify-center items-center h-40 cursor-pointer"
-        @click="inputRef.click()"
-      >
-        <div class="flex flex-col gap-2 items-center justify-center">
-          <Icon name="IconUploadCloud" class="w-10 h-10" />
-          <span class="text-lg font-semibold">Drag and drop your files here</span>
-          <span>Supported format: audio file</span>
-        </div>
-      </div>
-      <audio
-        v-if="previewAudio"
-        ref="audioRef"
-        controls
-      >
-        <source :src="previewAudio" type="audio/mpeg">
-      </audio>
-    </div>
   </div>
 </template>
