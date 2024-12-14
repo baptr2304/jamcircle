@@ -53,7 +53,7 @@ async function updatePlaylistName(newName) {
       :playlist-img="currentPlaylist?.anh"
       @update-name="updatePlaylistName"
     />
-    <div v-if="songsPlaylist" class="ml-10">
+    <div v-if="songsPlaylist">
       <SongTable
         v-if="songsPlaylist"
         :playlist-id="playlistId"

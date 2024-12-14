@@ -20,7 +20,7 @@ function handleCreatePlaylist() {
 
 <template>
   <div class="relative">
-    <PlaylistHeader icon="IconMusicSolid" />
+    <PlaylistHeader icon="IconMusicSolid" title="My Playlist" />
     <div
       class="absolute right-8 top-44 flex justify-center items-center px-4 py-2 rounded-full bg-primary hover:bg-ring cursor-pointer font-semibold"
     >
@@ -29,7 +29,7 @@ function handleCreatePlaylist() {
         Create playlist
       </div>
     </div>
-    <div class="overflow-y-auto scrollbar max-h-[70%]">
+    <div class="overflow-y-auto scrollbar max-h-[50%]">
       <div
         v-if="playlistStore.playlists && playlistStore.playlists.length"
         class="flex flex-wrap gap-5 p-5"
@@ -43,7 +43,7 @@ function handleCreatePlaylist() {
             class="w-[22.5rem] bg-secondary border h-[5rem] flex items-center rounded-md cursor-pointer"
           >
             <div
-              class="w-[5rem] h-[5rem] flex items-center justify-center bg-gradient-to-r from-accent to-gray-700 rounded-tl-md rounded-bl-md"
+              class="w-[5rem] h-[5rem] sm:w-[4rem] sm:h-[4rem] xl:w-[5rem] xl:h-[5rem] flex items-center justify-center bg-gradient-to-r from-accent to-gray-700 rounded-tl-md rounded-bl-md"
             >
               <IconMusicSolid class="w-10 h-10" />
             </div>

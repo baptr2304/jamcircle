@@ -58,7 +58,7 @@ export const useRoomStore = defineStore('room', () => {
         if (index !== -1) {
           currentRoom.value.queue.splice(index, 1)
         }
-      } console.log(data)
+      }
       return data
     }
     catch {

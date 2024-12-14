@@ -60,14 +60,13 @@ function handleClose() {
 </script>
 
 <template>
-  <div class="ml-10">
-    <h1 class="my-4 font-medium">
+  <div class="ml-6">
+    <div class="mb-2 font-medium">
       Let's find something for your playlist
-    </h1>
+    </div>
     <div class="relative w-full max-w-sm items-center">
       <input
         id="search"
-        ref="input-search"
         v-model="searchQuery"
         type="text"
         placeholder="Search..."
