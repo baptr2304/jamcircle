@@ -69,7 +69,7 @@ function handleJoinRoom(roomId) {
       :class="
         isActive || props.type !== 'router-link' ? 'opacity-100' : 'opacity-50'
       "
-      class="flex py-2 lg:pl-4 gap-4 items-center cursor-pointer text-foreground max-lg:flex-col bg-transparent"
+      class="flex py-2 lg:pl-4 gap-2 items-center cursor-pointer text-foreground max-lg:flex-col bg-transparent"
       @click="handleClick"
     >
       <Icon :name="props.icon" class="w-6 h-6" />

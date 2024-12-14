@@ -17,20 +17,20 @@ const user = userStore.user
 
 <template>
   <div
-    class="w-full h-[15rem]  flex items-center mb-4 relative bg-cover bg-center"
+    class="w-full md:h-[15rem] h-[8rem] xl:[15rem] flex items-center relative bg-cover bg-center"
   >
     <div class="absolute inset-0 bg-black/50 backdrop-blur-xl" />
 
     <div
-      class="w-[11.25rem] h-[11.25rem] bg-muted flex justify-center items-center ml-8 rounded-xs z-10"
+      class="lg:w-[11.25rem] lg:h-[11.25rem] bg-muted flex justify-center items-center ml-4 rounded-xs z-10 sm:w-[10rem] sm:h-[10rem] w-[6rem] h-[6rem]"
     >
       <img :src="playlistImg" class="w-full h-full rounded-xs">
     </div>
 
-    <div class="ml-4 h-[11.25rem] flex flex-col justify-between z-10">
+    <div class="ml-4 lg:h-[11.25rem] sm:h-[10rem] h-[6rem] flex flex-col xl:justify-between z-10 justify-around ">
       <h5>Playlist</h5>
       <div>
-        <h1 class="text-2xl md:text-[4rem] font-bold cursor-pointer text-">
+        <h1 class="xl:text-[4rem] font-bold cursor-pointer sm:text-[3rem] text-[1.3rem]">
           {{ props.playlistName }}
         </h1>
       </div>
