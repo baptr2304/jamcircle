@@ -24,7 +24,7 @@ const user = userStore.user
     <div
       class="lg:w-[11.25rem] lg:h-[11.25rem] bg-muted flex justify-center items-center ml-4 rounded-xs z-10 sm:w-[10rem] sm:h-[10rem] w-[6rem] h-[6rem]"
     >
-      <img :src="playlistImg" class="w-full h-full rounded-xs">
+      <img v-if="playlistImg" v-lazy="playlistImg" class="w-full h-full rounded-xs">
     </div>
 
     <div class="ml-4 lg:h-[11.25rem] sm:h-[10rem] h-[6rem] flex flex-col xl:justify-between z-10 justify-around ">

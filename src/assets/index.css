@@ -33,13 +33,13 @@ body {
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background: hsl(240 3.7% 15.9%);
+  background: hsl(142.4 71.8% 29.2%);
   border-radius: 100vh;
   cursor: pointer;
 }
 
 .scrollbar::-webkit-scrollbar-thumb:hover {
-  background: hsl(240 3.7% 15.9%);
+  background: hsl(142.4 71.8% 29.2%);
 }
 
 @layer base {
