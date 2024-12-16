@@ -69,14 +69,9 @@ function handlePlaySong(song) {
     >
       <SongListItem
         :song="song"
-        :class="{ 'text-primary': song.id === songStore.currentSong.id }"
+        :is-playing="song.id === songStore.currentSong?.id"
         @handle-click="handlePlaySong(song)"
       >
-        <template #start>
-          <div class="w-4">
-            <Icon v-if="song.id === songStore.currentSong.id" name="IconChart" class="w-4 h-4" />
-          </div>
-        </template>
         <template #action>
           <div class="w-[20%]">
             <Popover>

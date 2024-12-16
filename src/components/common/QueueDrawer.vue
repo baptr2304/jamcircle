@@ -27,12 +27,13 @@ function handlePlaySong(song) {
         Queue
       </h1>
       <div class="grid gap-4 mt-4 h-full max-h-[calc(100%-2rem)] overflow-y-auto scrollbar pb-44 lg:pb-24 pr-4">
-        <SongListItem v-for="song in songStore.playlist" :key="song.so_thu_tu" :song="song" :class="{ 'text-primary': song.so_thu_tu === songStore.currentSong.so_thu_tu }" @handle-click="handlePlaySong(song)">
-          <template #start>
-            <div class="w-4">
-              <Icon v-if="song.so_thu_tu === songStore.currentSong.so_thu_tu" name="IconChart" class="w-4 h-4" />
-            </div>
-          </template>
+        <SongListItem
+          v-for="song in songStore.playlist"
+          :key="song.so_thu_tu"
+          :song="song"
+          :is-playing="song.so_thu_tu === songStore.currentSong.so_thu_tu"
+          @handle-click="handlePlaySong(song)"
+        >
           <template #action>
             <div class="w-[20%]">
               <Popover>
