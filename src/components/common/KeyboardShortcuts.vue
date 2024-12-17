@@ -7,7 +7,10 @@ import Separator from '@/components/ui/separator/Separator.vue'
 import listEvents from '@/utils/enumEventBus'
 import emitter from '@/utils/eventBus'
 import listShortcuts from '@/utils/listShortcuts'
-
+import { useDebounceFn } from '@vueuse/core'
+const debouncedKeyPress = useDebounceFn((event) => {
+  handleKeyPress(event)
+}, 200)
 const isVisibleDialog = ref(false)
 function handleKeyPress(event) {
   console.log(event)
@@ -61,10 +64,10 @@ function handleKeyPress(event) {
   }
 }
 onMounted(() => {
-  document.addEventListener('keydown', handleKeyPress)
+  document.addEventListener('keydown', debouncedKeyPress)
 })
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeyPress)
+  document.removeEventListener('keydown', debouncedKeyPress)
 })
 </script>
 
