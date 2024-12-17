@@ -81,6 +81,7 @@ export const useSongStore = defineStore('queue', () => {
   const searchResults = ref([])
   const currentSong = ref(playlist.value[0])
   const currentIndex = ref(0)
+// Song
   function addSong(song) {
     const index = playlist.value.findIndex(item => item.id === song.id)
     if (index !== -1) {
@@ -110,6 +111,20 @@ export const useSongStore = defineStore('queue', () => {
     currentSong.value = playlist.value[currentIndex.value]
   }
 
+// Playlist
+  function clearPlaylist() {
+    playlist.value = []
+    currentIndex.value = 0
+    currentSong.value = null
+  }
+
+  function setPlaylist(newPlaylist) {
+    playlist.value = newPlaylist
+    currentIndex.value = 0
+    currentSong.value = playlist.value[currentIndex.value]
+  }
+
+// API
   async function searchSongs(title, config = {}) {
     if (!title) {
       searchResults.value = []
@@ -173,11 +188,14 @@ export const useSongStore = defineStore('queue', () => {
   }
 
   return {
+    // State
     playlist,
     currentSong,
     currentIndex,
     searchResults,
     songs,
+    setPlaylist,
+    clearPlaylist,
     fetchSongs,
     getSongById,
     addSong,
