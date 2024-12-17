@@ -18,7 +18,7 @@ const props = defineProps({
       class="2xl:w-[16rem] lg:w-[12.5rem] sm:w-44 w-[10.5rem] max-sm:max-w-[10.5rem] max-sm:w-full rounded-xs flex items-center flex-col gap-2 hover:bg-secondary cursor-pointer p-4 "
     >
       <img
-        :src="anh"
+        v-lazy="anh"
         :alt="ten_danh_sach_phat"
         class="xl:w-[11rem] lg:w-40 md:w-36 w-[9.5rem] xl:h-[10.5rem] lg:h-40 md:h-36 rounded-md object-cover"
       >

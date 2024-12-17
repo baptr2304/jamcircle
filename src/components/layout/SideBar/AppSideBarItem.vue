@@ -21,7 +21,7 @@ const props = defineProps({
   },
   requiredAuthen: Boolean,
 })
-const emit = defineEmits(['create-room'])
+const emit = defineEmits(['create-room', 'toggleQueue'])
 const userStore = useUserStore()
 const route = useRoute()
 const isCreateRoomOpen = ref(false)
@@ -45,6 +45,9 @@ function handleClick() {
       break
     case 'Join room':
       isJoinRoomOpen.value = true
+      break
+    case 'Queue':
+      emit('toggleQueue')
       break
   }
 }

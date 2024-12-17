@@ -194,7 +194,7 @@ onUnmounted(() => {
     </div>
     <div v-else class="song-controller">
       <div class="song absolute left-8 max-w-80">
-        <img :src="songStore.currentSong.anh" alt="" class="thumbnail">
+        <img v-lazy="songStore.currentSong.anh" alt="" class="thumbnail">
         <div class="song-meta w-full">
           <div class="title truncate font-semibold">
             {{ songStore.currentSong.ten_bai_hat }}
@@ -248,7 +248,7 @@ onUnmounted(() => {
           class="lg:hidden flex items-center h-10 gap-2.5 absolute left-4 top-2"
         >
           <img
-            :src="songStore.currentSong.anh"
+            v-lazy="songStore.currentSong.anh"
             alt=""
             class="w-10 h-10 rounded-lg object-cover"
           >
@@ -261,13 +261,6 @@ onUnmounted(() => {
             </p>
           </div>
         </div>
-        <Icon
-          name="IconQueue"
-          class="w-8 h-8 p-1 lg:hidden cursor-pointer absolute top-1/2 right-[9rem] transform -translate-y-1/2"
-          :class="{ 'text-primary': props.isVisibleQueueDrawer }"
-          @click="toggleOpenDrawer"
-        />
-
         <div class="flex items-center gap-4 absolute right-8 top-4 lg:hidden">
           <Icon name="IconPrevious" class="icon-button" @click="prevSong" />
           <button class="button-play" @click="handlePlay">

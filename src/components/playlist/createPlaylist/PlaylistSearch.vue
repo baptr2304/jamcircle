@@ -1,15 +1,7 @@
 <script setup>
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+import { useConfirmStore } from '@/stores/confirm'
 import { useSongStore } from '@/stores/song'
+import { useDebounceFn } from '@vueuse/core'
 import SongsResult from './SongsResult.vue'
 
 const props = defineProps({
@@ -21,15 +13,16 @@ const props = defineProps({
 const emit = defineEmits(['add-song'])
 const searchQuery = ref('')
 const searchResults = ref([])
-const showDuplicateDialog = ref(false)
-const selectedSong = ref(null)
+const isLoading = ref(false)
 const songStore = useSongStore()
+const confirmStore = useConfirmStore()
 async function handleSearch() {
   if (!searchQuery.value.trim()) {
     searchResults.value = []
     return
   }
   try {
+    isLoading.value = true
     const songs = await songStore.searchSongs(searchQuery.value)
     searchResults.value = songs
   }
@@ -37,26 +30,25 @@ async function handleSearch() {
     console.error('Search error:', error)
     searchResults.value = []
   }
-}
-function handleDuplicateSong(song) {
-  selectedSong.value = song
-  showDuplicateDialog.value = true
+  finally {
+    isLoading.value = false
+  }
 }
 
-function handleAddSong(song) {
+async function handleAddSong(song) {
   if (props.songsPlaylist.some(s => s.id === song.id)) {
-    handleDuplicateSong(song)
-    return
+    const result = await confirmStore.showConfirmDialog({
+      title: 'Already added',
+      message: `Do you want to add ${song.title} to your playlist any way?`,
+    })
+    if (!result)
+      return
   }
   emit('add-song', song)
 }
-function handleConfirmAdd() {
-  emit('add-song', selectedSong.value)
-  showDuplicateDialog.value = false
-}
-function handleClose() {
-  showDuplicateDialog.value = false
-}
+const debouncedSearch = useDebounceFn(() => {
+  handleSearch()
+}, 500)
 </script>
 
 <template>
@@ -71,7 +63,8 @@ function handleClose() {
         type="text"
         placeholder="Search..."
         class="flex h-10 w-[20rem] border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-card-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 pl-10 text-white rounded-full bg-background placeholder:opacity-50"
-        @input="handleSearch"
+        @input="debouncedSearch"
+        @keydown.stop
       >
       <span
         class="absolute start-0 inset-y-0 flex items-center justify-center h-10 pl-4 pr-2"
@@ -79,36 +72,23 @@ function handleClose() {
         <Icon name="IconSearch" class="w-4 text-muted-foreground" />
       </span>
     </div>
-    <AlertDialog :open="showDuplicateDialog" @update:open="handleClose">
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Already added</AlertDialogTitle>
-          <AlertDialogDescription>
-            This song is already in your playlist.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel @click="handleClose">
-            Don't add
-          </AlertDialogCancel>
-          <AlertDialogAction @click="handleConfirmAdd">
-            Add anyway
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
     <div class="mt-4 overflow-y-auto scrollbar">
-      <SongsResult
-        v-if="searchResults.length > 0"
-        :songs="searchResults"
-        @add-song="handleAddSong"
-      />
-      <div
-        v-else-if="searchQuery.trim() !== ''"
-        class="text-center text-gray-500"
-      >
-        Not found any songs.
+      <div v-if=" isLoading " class="flex w-full p-8 justify-center items-center">
+        <Icon name="IconLoading" />
       </div>
+      <template v-else>
+        <SongsResult
+          v-if="searchResults.length > 0"
+          :songs="searchResults"
+          @add-song="handleAddSong"
+        />
+        <div
+          v-else-if="searchQuery.trim() !== ''"
+          class="text-center text-gray-500"
+        >
+          Not found any songs.
+        </div>
+      </template>
     </div>
   </div>
 </template>

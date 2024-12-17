@@ -2,6 +2,8 @@
 import AppSideBarItem from '@/components/layout/SideBar/AppSideBarItem.vue'
 import { useRoomStore } from '@/stores/room'
 import { useUserStore } from '@/stores/user'
+import listEvents from '@/utils/enumEventBus'
+import emitter from '@/utils/eventBus'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -9,9 +11,9 @@ const isLoading = ref(false)
 const data = ref([
   {
     id: 0,
-    icon: 'IconSearch',
-    title: 'Search',
-    url: '/search',
+    icon: 'IconQueue',
+    title: 'Queue',
+    type: 'button',
   },
   {
     id: 1,
@@ -67,6 +69,9 @@ async function handleRoomCreation(roomName) {
     isLoading.value = false
   }
 }
+function toggleOpenDrawer() {
+  emitter.emit(listEvents.toggleQueueDrawer)
+}
 </script>
 
 <template>
@@ -78,6 +83,7 @@ async function handleRoomCreation(roomName) {
       text-style="text-xs text-center font-normal"
       class="flex-col item"
       @create-room="handleRoomCreation"
+      @toggle-queue="toggleOpenDrawer"
     />
   </div>
 </template>

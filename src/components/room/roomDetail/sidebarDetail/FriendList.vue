@@ -64,7 +64,7 @@ const room = roomStore.currentRoom
             >
               <div class="flex items-center">
                 <img
-                  :src="member.avatar"
+                  v-lazy="member.avatar"
                   alt="avatar"
                   class="w-8 h-8 rounded-full"
                 >
