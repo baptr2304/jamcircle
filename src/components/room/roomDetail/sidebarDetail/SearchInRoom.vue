@@ -1,15 +1,5 @@
 <script setup>
 import IconEllipsis from '@/components/icons/IconEllipsis.vue'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
 import Input from '@/components/ui/input/Input.vue'
 import {
   Popover,
@@ -17,6 +7,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
+import { useConfirmStore } from '@/stores/confirm'
 import { useRoomStore } from '@/stores/room'
 import { useSongStore } from '@/stores/songs'
 import { Search } from 'lucide-vue-next'
@@ -26,6 +17,7 @@ const props = defineProps({
   listSongs: Array,
 })
 
+const confirmStore = useConfirmStore()
 const searchQuery = ref('')
 const songs = useSongStore()
 const roomStore = useRoomStore()
@@ -46,36 +38,26 @@ onMounted(async () => {
     console.error(err)
   }
 })
-const showDuplicateDialog = ref(false)
 const selectedSong = ref(null)
-function handleClose() {
-  showDuplicateDialog.value = false
-}
-async function handleConfirmAdd() {
-  try {
-    await roomStore.addSongToRoomPlaylist(props.roomId, selectedSong.value.id)
-    showDuplicateDialog.value = false
-    searchQuery.value = ''
-  }
-  catch (err) {
-    console.error(err)
-  }
-}
 async function addSongToQueue(songId) {
   const isDuplicate = props.listSongs.some(s => s.id === songId)
   if (isDuplicate) {
     const song = allSongs.value.find(s => s.id === songId)
     selectedSong.value = song
-    showDuplicateDialog.value = true
+    const result = await confirmStore.showConfirmDialog({
+      title: 'Already added',
+      message: `Do you want to add ${song.title} to your playlist any way?`,
+    })
+    if (!result) {
+      return
+    }
   }
-  else {
-    try {
-      await roomStore.addSongToRoomPlaylist(props.roomId, songId)
-      searchQuery.value = ''
-    }
-    catch {
-      console.error(err)
-    }
+  try {
+    await roomStore.addSongToRoomPlaylist(props.roomId, songId)
+    searchQuery.value = ''
+  }
+  catch {
+    console.error(err)
   }
 }
 </script>
@@ -96,24 +78,6 @@ async function addSongToQueue(songId) {
         <Search class="size-6 text-muted-foreground" />
       </span>
     </div>
-    <AlertDialog :open="showDuplicateDialog" @update:open="handleClose">
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Already added</AlertDialogTitle>
-          <AlertDialogDescription>
-            This song is already in your playlist.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel @click="handleClose">
-            Don't add
-          </AlertDialogCancel>
-          <AlertDialogAction @click="handleConfirmAdd">
-            Add anyway
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
     <ScrollArea
       v-if="filteredSongs && filteredSongs.length > 0"
       type="text"
