@@ -22,7 +22,7 @@ function handleAddSong(song) {
         <div class="flex items-center gap-2 col-span-5">
           <div class="flex items-center gap-4 relative overflow-clip truncate">
             <img
-              :src="song.anh"
+              v-lazy="song.anh"
               :alt="song.ten_bai_hat"
               class="w-10 h-10 rounded-xs object-cover"
             >

@@ -47,24 +47,24 @@ function handlePlaySong(song) {
 <template>
   <div v-if=" songs.length > 0">
     <div class="w-full text-left pr-2">
-      <div class="grid grid-cols-6 gap-4 py-4 text-md text-muted-foreground">
+      <div class="grid grid-cols-4 sm:grid-cols-6 gap-4 py-4 text-md text-muted-foreground pr-2.5">
         <div class="col-span-3 pl-10">
           # Title
         </div>
-        <div>
+        <span class="text-center max-sm:hidden">
           Date added
-        </div>
-        <div>
+        </span>
+        <span class="text-center max-sm:hidden">
           Duration
-        </div>
-        <div>
+        </span>
+        <span class="text-center">
           Action
-        </div>
+        </span>
       </div>
       <Separator class="bg-muted-foreground/50 mb-4" />
       <div class="overflow-y-auto max-h-56 scrollbar ">
         <div v-for="(song, index) in songs" :key="song.id">
-          <div class="grid grid-cols-6 gap-4 my-2 hover:bg-secondary rounded-xl">
+          <div class="grid grid-cols-4 sm:grid-cols-6 gap-4 my-2 hover:bg-secondary rounded-xl">
             <div class="col-span-3">
               <SongListItem
                 :song="song"
@@ -72,14 +72,14 @@ function handlePlaySong(song) {
                 @handle-click="handlePlaySong(song)"
               />
             </div>
-            <div class="flex items-center">
+            <div class="items-center justify-center hidden sm:flex">
               {{ String(song.thoi_gian_tao).split('T')[0] }}
             </div>
-            <div class="flex items-center">
+            <div class="items-center justify-center hidden sm:flex">
               {{ formatTime(song.thoi_luong) }}
             </div>
 
-            <div class="flex items-center" v-if="user?.id === currentPlaylistOwner">
+            <div class="flex items-center justify-center" v-if="user?.id === currentPlaylistOwner">
               <Popover>
                 <PopoverTrigger>
                   <IconEllipsis class="w-9 h-9 text-foreground cursor-pointer ml-1 p-2 hover:bg-muted rounded-sm" />

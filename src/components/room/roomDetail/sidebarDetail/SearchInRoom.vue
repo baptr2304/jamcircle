@@ -127,7 +127,7 @@ async function addSongToQueue(songId) {
         >
           <div class="flex gap-2">
             <img
-              :src="song.imageUrl"
+              v-lazy="song.imageUrl"
               :alt="song.title"
               class="w-8 h-8 rounded-xs object-cover"
             >

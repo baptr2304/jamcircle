@@ -26,7 +26,7 @@ defineEmits(['handleClick'])
       <div
         class="flex items-center gap-4 relative overflow-clip truncate"
       >
-        <img :src="song.anh" :alt="song.ten_bai_hat" class="w-10 h-10 rounded-xs object-cover">
+        <img v-lazy="song.anh" :alt="song.ten_bai_hat" class="w-10 h-10 rounded-xs object-cover">
         <div
           class="play absolute left-0 top-1 bg-card/60  bg-opacity-20 w-10 h-10 hidden items-center justify-center rounded-xs cursor-pointer"
           @click="$emit('handleClick', song.id)"
