@@ -79,7 +79,7 @@ function handlePlaySong(song) {
               {{ formatTime(song.thoi_luong) }}
             </div>
 
-            <div class="flex items-center justify-center" v-if="user?.id === currentPlaylistOwner">
+            <div v-if="user?.id === currentPlaylistOwner" class="flex items-center justify-center">
               <Popover>
                 <PopoverTrigger>
                   <IconEllipsis class="w-9 h-9 text-foreground cursor-pointer ml-1 p-2 hover:bg-muted rounded-sm" />
@@ -95,17 +95,19 @@ function handlePlaySong(song) {
                 </PopoverContent>
               </Popover>
             </div>
-            <div v-else>
-              <Popover>
-                <PopoverTrigger>
-                  <IconEllipsis class="w-10 h-10 text-foreground cursor-pointer" />
-                </PopoverTrigger>
-                <PopoverContent class="w-25">
-                  <button @click="addSongToQueue(song.id)">
-                    Add to queue
-                  </button>
-                </PopoverContent>
-              </Popover>
+            <div v-else class="flex items-center justify-center">
+              <div>
+                <Popover>
+                  <PopoverTrigger>
+                    <IconEllipsis class="w-9 h-9 text-foreground cursor-pointer p-2 hover:bg-muted rounded-sm" />
+                  </PopoverTrigger>
+                  <PopoverContent class="w-25">
+                    <button @click="addSongToQueue(song.id)">
+                      Add to queue
+                    </button>
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
           </div>
         </div>

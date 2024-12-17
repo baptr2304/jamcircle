@@ -3,7 +3,10 @@ import PlaylistSearch from '@/components/playlist//createPlaylist/PlaylistSearch
 import PlaylistHeaderDetail from '@/components/playlist/createPlaylist/PlaylistHeaderDetail.vue'
 import SongTable from '@/components/playlist/createPlaylist/SongTable.vue'
 import { usePlaylistStore } from '@/stores/playlist'
+import { useSongStore } from '@/stores/song'
 import { useUserStore } from '@/stores/user'
+import listEvents from '@/utils/enumEventBus'
+import emitter from '@/utils/eventBus'
 import { computed, onMounted } from 'vue'
 
 const route = useRoute()
@@ -12,6 +15,7 @@ const playlistId = computed(() => route.params.id)
 const songsPlaylist = ref([])
 const currentPlaylist = ref(null)
 const userStore = useUserStore()
+const songStore = useSongStore()
 const user = userStore.user
 onMounted(async () => {
   try {
@@ -44,6 +48,12 @@ async function updatePlaylistName(newName) {
     console.error('Error updating playlist name:', error)
   }
 }
+async function playPlaylist() {
+  await playlistStore.setCurrentPlaylist(currentPlaylist.value)
+  songStore.clearPlaylist()
+  songStore.setPlaylist(songsPlaylist.value)
+  emitter.emit(listEvents.playSong)
+}
 </script>
 
 <template>
@@ -51,7 +61,9 @@ async function updatePlaylistName(newName) {
     <PlaylistHeaderDetail
       :playlist-name="currentPlaylist?.ten_danh_sach_phat"
       :playlist-img="currentPlaylist?.anh"
+      :is-playing="playlistStore.currentPlaylist?.id === playlistId"
       @update-name="updatePlaylistName"
+      @play-playlist="playPlaylist"
     />
     <div v-if="songsPlaylist">
       <SongTable

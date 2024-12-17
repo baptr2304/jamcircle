@@ -1,4 +1,3 @@
-import { useSongStore } from '@/stores/songs'
 import { useUserStore } from '@/stores/user'
 import { v4 as uuidv4 } from 'uuid'
 import { songsData } from '../mock/songs'

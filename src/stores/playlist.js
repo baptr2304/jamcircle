@@ -37,7 +37,6 @@ export const usePlaylistStore = defineStore('playlist', () => {
   async function fetchDetailPlaylist(playlistId) {
     try {
       const data = await getPlaylistById(playlistId)
-      currentPlaylist.value = data
       return data
     }
     catch (error) {
@@ -80,7 +79,7 @@ export const usePlaylistStore = defineStore('playlist', () => {
   }
   async function removeSongFromPlaylist(playlistId, index) {
     try {
-      const data = await removeSong(playlistId, index)
+      await removeSong(playlistId, index)
       songsPlaylist.value.splice(index, 1)
     }
     catch {
@@ -108,9 +107,16 @@ export const usePlaylistStore = defineStore('playlist', () => {
     return await apiGetPlaylists(config)
   }
 
+  function setCurrentPlaylist(playlist) {
+    currentPlaylist.value = playlist
+  }
+
+  function clearCurrentPlaylist() {
+    currentPlaylist.value = null
+  }
+
   function reset() {
     playlists.data = []
-    localStorage.removeItem('playlists')
   }
   return {
     playlists,
@@ -124,6 +130,8 @@ export const usePlaylistStore = defineStore('playlist', () => {
     removeSongFromPlaylist,
     updatePlaylist,
     getPlaylists,
+    setCurrentPlaylist,
+    clearCurrentPlaylist,
     reset,
   }
 })

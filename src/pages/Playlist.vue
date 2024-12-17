@@ -30,7 +30,7 @@ onMounted(async () => {
           :to="`/playlist/${playlist.id}`"
         >
           <div
-            class="p-2 bg-secondary border flex items-center rounded-md cursor-pointer"
+            class="p-2 pr-4 bg-secondary border flex items-center rounded-md cursor-pointer"
           >
             <div
               class="lg:w-[5rem] lg:h-[5rem] w-[4rem] h-[4rem] sm:w-[4rem] sm:h-[4rem] xl:w-[5rem] xl:h-[5rem] flex items-center justify-center bg-gradient-to-r from-accent to-gray-700 rounded-md overflow-hidden"
