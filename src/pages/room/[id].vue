@@ -1,7 +1,7 @@
 <route>
      {
       meta: {
-          layout: "default",
+          layout: "room",
           title: "Room Detail",
           name: "Room Detail",
       },
@@ -11,6 +11,7 @@
 
 <script setup>
 import Drawer from '@/components/base/Drawer.vue'
+import BottomNavigationBar from '@/components/layout/BottomNavigationBar.vue'
 import Chat from '@/components/room/roomDetail/roomChat/Chat.vue'
 import RoomHeader from '@/components/room/roomDetail/RoomHeader.vue'
 import FriendList from '@/components/room/roomDetail/sidebarDetail/FriendList.vue'
@@ -21,15 +22,15 @@ import { useRoute } from 'vue-router'
 
 const roomStore = useRoomStore()
 const route = useRoute()
-const roomId = computed(() => route.params.id)
-const roomData = computed(() => roomStore.currentRoom)
-const listSongs = computed(() => roomStore.currentRoom?.queue || [])
 const currentUser = useUserStore()
 const user = currentUser.user
 const userId = user.id
 const messages = ref([])
 const isSidebarVisible = ref(true)
 const activeTab = ref('music')
+const roomId = computed(() => route.params.id)
+const roomData = computed(() => roomStore.currentRoom)
+const listSongs = computed(() => roomStore.currentRoom?.queue || [])
 function toggleSidebar() {
   isSidebarVisible.value = !isSidebarVisible.value
 }
@@ -69,12 +70,15 @@ async function handleMessage(messageContent) {
 }
 </script>
 
-<template>
-  <div class="">
-    <div v-if="roomData">
+<template> 
+  <div class="h-full relative">
+    <div
+      v-if="roomData"
+    >
       <RoomHeader
         :name="roomData.name"
         :is-sidebar-visible="isSidebarVisible"
+        :active-tab="activeTab"
         @toggle-sidebar="toggleSidebar"
         @set-active-tab="setActiveTab"
       />
@@ -96,5 +100,6 @@ async function handleMessage(messageContent) {
       :user-id="userId"
       @message="handleMessage"
     />
+    <BottomNavigationBar class="lg:hidden absolute bottom-0 left-4 w-[calc(100%-2rem)] z-10" />
   </div>
 </template>

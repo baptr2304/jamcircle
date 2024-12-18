@@ -177,7 +177,7 @@ export function addToQueue(roomId, songId) {
       const room = roomsData.find(room => room.id === roomId)
       if (!room) {
         reject(new Error('Room not found'))
-        console.log('room not found')
+
         return
       }
       const songWithUniqueKey = {

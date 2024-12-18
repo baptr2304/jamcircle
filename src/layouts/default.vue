@@ -7,8 +7,8 @@ import AppSideBar from '@/components/layout/AppSideBar.vue'
 import listEvents from '@/utils/enumEventBus'
 import emitter from '@/utils/eventBus'
 
-const isVisibleDrawer = ref(false)
 
+const isVisibleDrawer = ref(false)
 function toggleOpenDrawer() {
   isVisibleDrawer.value = !isVisibleDrawer.value
 }

@@ -19,11 +19,23 @@ function formatTime(date) {
     hour12: true,
   })
 }
+const messagesContainerRef = ref(null)
+watch(
+  () => props.messages,
+  (newMessages) => {
+    nextTick(() => {
+      if (messagesContainerRef.value) {
+        messagesContainerRef.value.scrollTop = messagesContainerRef.value.scrollHeight
+      }
+    })
+  },
+  { deep: true },
+)
 </script>
 
 <template>
   <ScrollArea>
-    <div class="messages-container">
+    <div ref="messagesContainerRef" class="messages-container overflow-y-auto scrollbar h-[calc(100vh-10.5rem)]">
       <div
         v-for="message in messages"
         :key="message.id"
@@ -63,18 +75,26 @@ function formatTime(date) {
 </template>
 
 <style scoped>
+@media (max-width: 640px) {
+  .messages-container {
+    height: calc(100vh - 15.55rem);
+  }
+
+}
 .messages-container {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 16px;
-  height: 72vh;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .message-wrapper {
   display: flex;
   gap: 8px;
   max-width: 80%;
+  margin-top: 0.5rem;
+
 }
 
 .message-wrapper.sent {
@@ -84,6 +104,9 @@ function formatTime(date) {
 
 .message-wrapper.received {
   margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .avatar {
   width: 32px;
@@ -104,8 +127,8 @@ function formatTime(date) {
 }
 
 .avatar-circle.sent {
-  background: #4caf50;
-  color: white;
+  background: hsl(var(--primary));
+  color: hsl(var(--foreground));
 }
 
 .message-content {

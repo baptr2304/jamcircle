@@ -7,13 +7,15 @@ import { useUserStore } from '@/stores/user'
 import listEvents from '@/utils/enumEventBus'
 import emitter from '@/utils/eventBus'
 import { formatTime } from '@/utils/format'
+import { useRoute } from 'vue-router'
 import Button from '../ui/button/Button.vue'
 
 const props = defineProps({
   isVisibleQueueDrawer: Boolean,
 })
 defineExpose({ resetControl })
-
+const route = useRoute()
+const isRoomPage = computed(() => route.path.includes('/room'))
 const userStore = useUserStore()
 const songStore = useSongStore()
 
@@ -175,7 +177,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="grid w-full h-full lg:bg-muted-foreground select-none relative">
+  <div class="grid w-full h-full select-none relative">
     <div v-if="!userStore.isAuthenticated" class="well-come-bar">
       <div class="flex flex-col h-full justify-center">
         <div class="title text-sm font-medium max-lg:hidden">
@@ -192,7 +194,7 @@ onUnmounted(() => {
         </Button>
       </RouterLink>
     </div>
-    <div v-else class="song-controller">
+    <div v-else-if="!isRoomPage" class="song-controller">
       <div class="song absolute left-8 max-w-80">
         <img v-lazy="songStore.currentSong.anh" alt="" class="thumbnail">
         <div class="song-meta w-full">
@@ -243,7 +245,6 @@ onUnmounted(() => {
           }}</span>
         </div>
 
-        <!-- Màn hình điện thoại -->
         <div
           class="lg:hidden flex items-center h-10 gap-2.5 absolute left-4 top-2"
         >

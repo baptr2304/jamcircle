@@ -1,4 +1,9 @@
 <script setup>
+import IconSend from '@/components/icons/IconSend.vue'
+
+const props = defineProps({
+  isSidebarVisible: Boolean,
+})
 const emit = defineEmits(['message'])
 const message = ref('')
 function sendMessage() {
@@ -11,15 +16,18 @@ function sendMessage() {
 </script>
 
 <template>
-  <div class="flex items-center space-x-2 w-[99%]">
-    <input
-      v-model="message"
-      class="w-full px-4 py-2 border border-gray-300 text-foreground bg-inherit"
-      placeholder="Type a message..."
-      @keyup.enter="sendMessage"
-    >
-    <button class="px-4 py-2 bg-blue-500 text-white" @click="sendMessage">
-      Send
-    </button>
+  <div class="relative h-10" :class="[{ 'input-message-none': props.isSidebarVisible }]">
+    <input id="default-input" v-model="message" type="text" class="block w-full p-3 text-gray-900  text-sm dark:bg-secondary dark:text-white border-0 focus:outline-none focus:ring-0 " placeholder="Type a message..." @keyup.enter="sendMessage">
+
+    <IconSend class="absolute top-[25%] right-4 cursor-pointer" @click="sendMessage" />
   </div>
 </template>
+
+<style scoped>
+  @media screen and (max-width: 640px) {
+    .input-message-none {
+      display: none;
+    }
+
+  }
+</style>
