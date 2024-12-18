@@ -70,7 +70,7 @@ async function handleMessage(messageContent) {
 }
 </script>
 
-<template> 
+<template>
   <div class="h-full relative">
     <div
       v-if="roomData"
