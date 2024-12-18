@@ -5,6 +5,7 @@ import IconListFriend from '@/components/icons/IconListFriend.vue'
 const props = defineProps({
   name: String,
   isSidebarVisible: Boolean,
+  activeTab: String,
 })
 const emit = defineEmits(['toggle-sidebar', 'set-active-tab'])
 function handleButtonClick(tab) {
@@ -21,16 +22,16 @@ function handleButtonClick(tab) {
 <template>
   <div class="room-header" :class="[{ 'room-header-expanded': !isSidebarVisible }]">
     <div
-      class="h-[4rem] w-full bg-border pt-4 xl:px-8 px-4 xl:text-xl text-sm flex justify-between items-center relative"
+      class="h-[4rem] w-full bg-border  xl:px-8 px-4 xl:text-xl text-sm flex justify-between items-center"
     >
-      <div class="">
+      <div class="room-name">
         {{ props.name }}
       </div>
-      <div class="btn-sidebar">
-        <button class="btn-music-list" @click="handleButtonClick('music')">
+      <div class="btn-sidebar"> 
+        <button class="btn-music-list" :class="{ 'text-primary': props.activeTab === 'music' }" @click="handleButtonClick('music')">
           <IconBtnMusicList class="btn btn-music-list" />
         </button>
-        <button class="btn-room-friends" @click="handleButtonClick('friends')">
+        <button class="btn-room-friends" :class="{ 'text-primary': props.activeTab === 'friends' }" @click="handleButtonClick('friends')">
           <IconListFriend class="btn" />
         </button>
       </div>
@@ -45,6 +46,12 @@ function handleButtonClick(tab) {
 }
 .room-header-expanded {
   width: 100%;
+
+}
+.room-name {
+  font-weight: 700;
+  color: hsl(var(--primary));
+  font-size: 1.5rem;
 }
 .btn {
   width: 1.5rem;

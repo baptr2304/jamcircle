@@ -17,26 +17,32 @@ const emit = defineEmits(['toggle-sidebar', 'message'])
 function handleMessage(messageContent) {
   emit('message', messageContent)
 }
-watch(
-  () => props.messages,
-  (newMessages) => {
-    nextTick(() => {
-      const messagesContainer = document.querySelector('.messages-container')
-      messagesContainer.scrollTop = messagesContainer.scrollHeight
-    })
-  },
-  { deep: true },
-)
 </script>
 
 <template>
   <div
-    :style="{ width: isSidebarVisible ? 'calc(100% - 25rem)' : '100%' }"
-    class="relative"
+    class="chat" :class="[{ 'chat-expanded': !isSidebarVisible }]"
   >
-    <div class="flex flex-col justify-center">
+    <div class="flex flex-col h-full w-full">
       <MessageList :messages="messages" :user-id="userId" />
-      <MessageInput class="self-center" @message="handleMessage" />
+      <MessageInput @message="handleMessage" :isSidebarVisible="props.isSidebarVisible"/>
     </div>
   </div>
 </template>
+
+<style scoped>
+.chat {
+  width: calc(100% - 21.75rem);
+  transition: width 0.3s ease-in-out;
+}
+.chat-expanded {
+  width: 100%;
+}
+@media (max-width: 640px) {
+  .chat {
+    height: calc(100% - 5rem);
+    width: 100%;
+
+  }
+}
+</style>

@@ -9,7 +9,7 @@ import {
 import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
 import { useConfirmStore } from '@/stores/confirm'
 import { useRoomStore } from '@/stores/room'
-import { useSongStore } from '@/stores/songs'
+import { useSongStore } from '@/stores/song'
 import { Search } from 'lucide-vue-next'
 
 const props = defineProps({
@@ -64,7 +64,7 @@ async function addSongToQueue(songId) {
 
 <template>
   <div class="w-full flex justify-center flex-col">
-    <div class="relative w-[90%] max-w-sm">
+    <div class="relative w-[90%] max-w-sm mt-2">
       <Input
         id="search"
         v-model="searchQuery"
