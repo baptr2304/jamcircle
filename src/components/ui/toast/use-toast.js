@@ -101,7 +101,6 @@ function useToast() {
 
 function toast(props) {
   const id = genId()
-  console.log('toast - bla bla')
   const update = props =>
     dispatch({
       type: actionTypes.UPDATE_TOAST,

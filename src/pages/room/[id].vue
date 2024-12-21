@@ -11,7 +11,6 @@
 
 <script setup>
 import Drawer from '@/components/base/Drawer.vue'
-import BottomNavigationBar from '@/components/layout/BottomNavigationBar.vue'
 import Chat from '@/components/room/roomDetail/roomChat/Chat.vue'
 import RoomHeader from '@/components/room/roomDetail/RoomHeader.vue'
 import FriendList from '@/components/room/roomDetail/sidebarDetail/FriendList.vue'
@@ -62,6 +61,7 @@ async function handleMessage(messageContent) {
         id: Date.now().toString(),
       }
       await roomStore.addMessageToRoom(roomId.value, newMessage)
+      messages.value.push(newMessage)
     }
   }
   catch {
@@ -71,35 +71,33 @@ async function handleMessage(messageContent) {
 </script>
 
 <template>
-  <div class="h-full relative">
-    <div
+  <div class="h-full relative overflow-y-hidden">
+    <RoomHeader
       v-if="roomData"
-    >
-      <RoomHeader
-        :name="roomData.name"
-        :is-sidebar-visible="isSidebarVisible"
-        :active-tab="activeTab"
-        @toggle-sidebar="toggleSidebar"
-        @set-active-tab="setActiveTab"
-      />
-    </div>
-    <div v-else>
+      class="absolute left-0 top-0 w-full"
+      :name="roomData.name"
+      :is-sidebar-visible="isSidebarVisible"
+      :active-tab="activeTab"
+      @toggle-sidebar="toggleSidebar"
+      @set-active-tab="setActiveTab"
+    />
+    <template v-else>
       <p>Loading room details...</p>
-    </div>
-    <Drawer v-model="isSidebarVisible">
-      <div v-if="activeTab === 'music'">
-        <MusicList :list-songs="listSongs" :room-id="roomId" />
-      </div>
-      <div v-else-if="activeTab === 'friends'">
-        <FriendList />
-      </div>
-    </Drawer>
+    </template>
     <Chat
       :messages="messages"
       :is-sidebar-visible="isSidebarVisible"
       :user-id="userId"
+      class="pt-16"
       @message="handleMessage"
     />
-    <BottomNavigationBar class="lg:hidden absolute bottom-0 left-4 w-[calc(100%-2rem)] z-10" />
   </div>
+  <Drawer v-model="isSidebarVisible">
+    <div v-if="activeTab === 'music'">
+      <MusicList :list-songs="listSongs" :room-id="roomId" />
+    </div>
+    <div v-else-if="activeTab === 'friends'">
+      <FriendList />
+    </div>
+  </Drawer>
 </template>

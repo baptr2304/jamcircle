@@ -21,12 +21,11 @@ function handleMessage(messageContent) {
 
 <template>
   <div
-    class="chat" :class="[{ 'chat-expanded': !isSidebarVisible }]"
+    class="chat flex flex-col h-full w-full pb-4"
+    :class="[{ 'chat-expanded': !isSidebarVisible }]"
   >
-    <div class="flex flex-col h-full w-full">
-      <MessageList :messages="messages" :user-id="userId" />
-      <MessageInput @message="handleMessage" :isSidebarVisible="props.isSidebarVisible"/>
-    </div>
+    <MessageList :messages="messages" :user-id="userId" />
+    <MessageInput :is-sidebar-visible="props.isSidebarVisible" @message="handleMessage" />
   </div>
 </template>
 
@@ -37,12 +36,5 @@ function handleMessage(messageContent) {
 }
 .chat-expanded {
   width: 100%;
-}
-@media (max-width: 640px) {
-  .chat {
-    height: calc(100% - 5rem);
-    width: 100%;
-
-  }
 }
 </style>
