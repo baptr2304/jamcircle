@@ -16,7 +16,7 @@ const roomsData = [
         avatar: 'https://avatars.githubusercontent.com/u/109841268?v=4',
       },
       {
-        id: '2',
+        id: '7de8793e-d7fa-40ef-8e2e-9e725c1e92be',
         role: 'member',
         username: 'bap',
         joinedAt: new Date().toISOString(),
@@ -33,7 +33,7 @@ const roomsData = [
       },
       {
         id: '2',
-        senderId: '2',
+        senderId: '7de8793e-d7fa-40ef-8e2e-9e725c1e92be',
         content: 'Hehe',
         username: 'bap',
         createdAt: new Date().toISOString(),
@@ -48,7 +48,7 @@ const roomsData = [
       },
       {
         id: '4',
-        senderId: '2',
+        senderId: '7de8793e-d7fa-40ef-8e2e-9e725c1e92be',
         content: 'I am fine',
         username: 'bap',
         createdAt: new Date().toISOString(),
@@ -63,7 +63,7 @@ const roomsData = [
       },
       {
         id: '6',
-        senderId: '2',
+        senderId: '7de8793e-d7fa-40ef-8e2e-9e725c1e92be',
         content: 'I am fine',
         username: 'bap',
         createdAt: new Date().toISOString(),
@@ -78,7 +78,7 @@ const roomsData = [
       },
       {
         id: '8',
-        senderId: '2',
+        senderId: '7de8793e-d7fa-40ef-8e2e-9e725c1e92be',
         content: 'I am fine',
         username: 'bap',
         createdAt: new Date().toISOString(),
@@ -93,7 +93,7 @@ const roomsData = [
       },
       {
         id: '10',
-        senderId: '2',
+        senderId: '7de8793e-d7fa-40ef-8e2e-9e725c1e92be',
         content: 'I am fine',
         username: 'bap',
         createdAt: new Date().toISOString(),

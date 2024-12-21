@@ -31,47 +31,48 @@ watch(
   },
   { deep: true },
 )
+function isCurrentUserSender(message) {
+  return message.senderId === props.userId
+}
 </script>
 
 <template>
-  <ScrollArea>
-    <div ref="messagesContainerRef" class="messages-container overflow-y-auto scrollbar h-[calc(100vh-10.5rem)]">
-      <div
-        v-for="message in messages"
-        :key="message.id"
-        class="message-wrapper" :class="[
-          message.senderId === userId ? 'sent' : 'received',
-        ]"
-      >
-        <div v-if="message.senderId !== userId" class="avatar">
-          <div class="avatar-circle">
-            {{ message.username?.[0] || "U" }}
-          </div>
+  <div ref="messagesContainerRef" class="messages-container overflow-y-auto scrollbar">
+    <div
+      v-for="message in messages"
+      :key="message.id"
+      class="message-wrapper" :class="[
+        isCurrentUserSender(message) ? 'sent' : 'received',
+      ]"
+    >
+      <div class="avatar">
+        <div
+          class="avatar-circle"
+          :class="[
+            isCurrentUserSender(message) ? 'sent' : 'received',
+          ]"
+        >
+          {{ !isCurrentUserSender(message) ? (message.username?.[0] || "U") : 'You' }}
+        </div>
+      </div>
+
+      <div class="message-content">
+        <div class="sender-name">
+          {{ message.username || "User" }}
         </div>
 
-        <div class="message-content">
-          <div v-if="message.senderId !== userId" class="sender-name">
-            {{ message.username || "User" }}
-          </div>
-
-          <div class="message-bubble">
-            <p class="message-text">
-              {{ message.content }}
-            </p>
-          </div>
-
-          <div class="timestamp">
-            {{ formatTime(message.createdAt) }}
-          </div>
+        <div class="message-bubble">
+          <p class="message-text">
+            {{ message.content }}
+          </p>
         </div>
-        <div v-if="message.senderId === userId" class="avatar">
-          <div class="avatar-circle sent">
-            You
-          </div>
+
+        <div class="timestamp">
+          {{ formatTime(message.createdAt) }}
         </div>
       </div>
     </div>
-  </ScrollArea>
+  </div>
 </template>
 
 <style scoped>
@@ -94,7 +95,8 @@ watch(
   gap: 8px;
   max-width: 80%;
   margin-top: 0.5rem;
-
+  justify-content: center;
+  align-items: center;
 }
 
 .message-wrapper.sent {
@@ -104,9 +106,6 @@ watch(
 
 .message-wrapper.received {
   margin-right: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .avatar {
   width: 32px;

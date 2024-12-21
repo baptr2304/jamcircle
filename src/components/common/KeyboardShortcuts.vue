@@ -8,6 +8,7 @@ import listEvents from '@/utils/enumEventBus'
 import emitter from '@/utils/eventBus'
 import listShortcuts from '@/utils/listShortcuts'
 import { useDebounceFn } from '@vueuse/core'
+
 const debouncedKeyPress = useDebounceFn((event) => {
   handleKeyPress(event)
 }, 200)
