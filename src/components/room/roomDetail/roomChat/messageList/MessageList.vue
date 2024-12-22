@@ -37,7 +37,7 @@ function isCurrentUserSender(message) {
 </script>
 
 <template>
-  <div ref="messagesContainerRef" class="messages-container overflow-y-auto scrollbar">
+  <div ref="messagesContainerRef" class="messages-container overflow-y-auto scrollbar h-[calc(100%-2.5px)] py-2">
     <div
       v-for="message in messages"
       :key="message.id"

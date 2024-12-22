@@ -15,6 +15,7 @@ import Chat from '@/components/room/roomDetail/roomChat/Chat.vue'
 import RoomHeader from '@/components/room/roomDetail/RoomHeader.vue'
 import FriendList from '@/components/room/roomDetail/sidebarDetail/FriendList.vue'
 import MusicList from '@/components/room/roomDetail/sidebarDetail/MusicList.vue'
+import SearchInRoom from '@/components/room/roomDetail/sidebarDetail/SearchInRoom.vue'
 import { useRoomStore } from '@/stores/room'
 import { useUserStore } from '@/stores/user'
 import { useRoute } from 'vue-router'
@@ -26,10 +27,9 @@ const user = currentUser.user
 const userId = user.id
 const messages = ref([])
 const isSidebarVisible = ref(true)
-const activeTab = ref('music')
+const activeTab = ref('friends')
 const roomId = computed(() => route.params.id)
 const roomData = computed(() => roomStore.currentRoom)
-const listSongs = computed(() => roomStore.currentRoom?.queue || [])
 function toggleSidebar() {
   isSidebarVisible.value = !isSidebarVisible.value
 }
@@ -60,7 +60,7 @@ async function handleMessage(messageContent) {
         createdAt: new Date(),
         id: Date.now().toString(),
       }
-      await roomStore.addMessageToRoom(roomId.value, newMessage)
+      // await roomStore.addMessageToRoom(roomId.value, newMessage)
       messages.value.push(newMessage)
     }
   }
@@ -74,7 +74,7 @@ async function handleMessage(messageContent) {
   <div class="h-full relative overflow-y-hidden">
     <RoomHeader
       v-if="roomData"
-      class="absolute left-0 top-0 w-full"
+      class="absolute left-0 top-0 w-full z-10"
       :name="roomData.name"
       :is-sidebar-visible="isSidebarVisible"
       :active-tab="activeTab"
@@ -86,18 +86,21 @@ async function handleMessage(messageContent) {
     </template>
     <Chat
       :messages="messages"
+      class="pt-36"
       :is-sidebar-visible="isSidebarVisible"
       :user-id="userId"
-      class="pt-16"
       @message="handleMessage"
     />
   </div>
-  <Drawer v-model="isSidebarVisible">
-    <div v-if="activeTab === 'music'">
-      <MusicList :list-songs="listSongs" :room-id="roomId" />
-    </div>
-    <div v-else-if="activeTab === 'friends'">
-      <FriendList />
-    </div>
+  <Drawer
+    v-if="roomData"
+    v-model="isSidebarVisible"
+  >
+    <MusicList v-if="activeTab === 'queue'" :room-id="roomId" />
+    <SearchInRoom
+      v-else-if="activeTab === 'music'"
+      :room-id="roomId"
+    />
+    <FriendList v-else-if="activeTab === 'friends'" />
   </Drawer>
 </template>

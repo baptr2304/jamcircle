@@ -75,6 +75,7 @@ function redirectProfile() {
           Create Song
         </RouterLink>
       </DropdownMenuItem>
+      <DropdownMenuSeparator />
       <DropdownMenuItem @click="redirectProfile">
         Profile
       </DropdownMenuItem>

@@ -1,13 +1,15 @@
 <script setup>
-import IconBtnMusicList from '@/components/icons/IconBtnMusicList.vue'
-import IconListFriend from '@/components/icons/IconListFriend.vue'
+import MusicPlayer from '@/components/room/roomDetail/sidebarDetail/MusicPlayer.vue'
+import { useRoomQueue } from '@/stores/room-queue'
 
 const props = defineProps({
   name: String,
   isSidebarVisible: Boolean,
   activeTab: String,
 })
+
 const emit = defineEmits(['toggle-sidebar', 'set-active-tab'])
+const roomQueueStore = useRoomQueue()
 function handleButtonClick(tab) {
   if (props.isSidebarVisible) {
     emit('set-active-tab', tab)
@@ -24,17 +26,42 @@ function handleButtonClick(tab) {
     <div
       class="h-[4rem] w-full bg-border  xl:px-8 px-4 xl:text-xl text-sm flex justify-between items-center"
     >
-      <div class="room-name">
+      <div class="font-bold text-primary text-xl w-40 truncate">
         {{ props.name }}
       </div>
-      <div class="btn-sidebar"> 
-        <button class="btn-music-list" :class="{ 'text-primary': props.activeTab === 'music' }" @click="handleButtonClick('music')">
-          <IconBtnMusicList class="btn btn-music-list" />
+      <div
+        class="max-lg:hidden flex items-center h-10 gap-2.5 -ml-10"
+      >
+        <img
+          v-lazy="roomQueueStore.currentSong.anh"
+          alt=""
+          class="w-10 h-10 rounded-lg object-cover"
+        >
+        <div class="song-meta w-full max-w-36">
+          <p class="title text-sm truncate font-semibold">
+            {{ roomQueueStore.currentSong.ten_bai_hat }}
+          </p>
+          <p class="artist text-xs truncate text-secondary-foreground">
+            {{ roomQueueStore.currentSong.ten_ca_si }}
+          </p>
+        </div>
+      </div>
+      <div class="btn-sidebar min-w-24">
+        <button class="btn-music-list" :class="{ 'text-primary': props.activeTab === 'queue' && isSidebarVisible }" @click="handleButtonClick('queue')">
+          <Icon name="IconQueue" class="btn btn-music-list" />
         </button>
-        <button class="btn-room-friends" :class="{ 'text-primary': props.activeTab === 'friends' }" @click="handleButtonClick('friends')">
-          <IconListFriend class="btn" />
+        <button class="btn-music-list" :class="{ 'text-primary': props.activeTab === 'music' && isSidebarVisible }" @click="handleButtonClick('music')">
+          <Icon name="IconMusic" class="btn btn-music-list" />
+        </button>
+        <button class="btn-room-friends" :class="{ 'text-primary': props.activeTab === 'friends' && isSidebarVisible }" @click="handleButtonClick('friends')">
+          <Icon name="IconListFriend" class="btn" />
         </button>
       </div>
+    </div>
+    <div
+      class="w-full"
+    >
+      <MusicPlayer />
     </div>
   </div>
 </template>
@@ -48,11 +75,7 @@ function handleButtonClick(tab) {
   width: 100%;
 
 }
-.room-name {
-  font-weight: 700;
-  color: hsl(var(--primary));
-  font-size: 1.5rem;
-}
+
 .btn {
   width: 1.5rem;
   height: 1.5rem;

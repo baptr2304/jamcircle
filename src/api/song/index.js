@@ -1,5 +1,4 @@
 import { $get, $post } from '../axios'
-import { songsData } from '../mock/songs'
 
 export async function apiGetSongs(title = '', config = {}) {
   try {
@@ -11,20 +10,11 @@ export async function apiGetSongs(title = '', config = {}) {
   }
 }
 
-export function addSongById(id) {
-  // return $get(`/songs/${id}`)
-
-  return Promise.resolve({ data: songsData.find(song => song.id === id) })
-}
-
 export function getSongs() {
   const response = $get(`/bai_hat`)
   return response
 }
-export function getOneSong(id) {
-  // return $get(`/songs/${id}`)
-  return Promise.resolve({ data: songsData.find(song => song.id === id) })
-}
+
 export function uploadSong(data) {
   const { file, ...songData } = data
   const map = Object.entries(songData).map(([key, value]) => {

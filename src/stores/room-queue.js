@@ -1,8 +1,7 @@
-import { apiGetSongs, getSongs, uploadSong } from '@/api/song'
 import { toast } from '@/components/ui/toast'
 import { defineStore } from 'pinia'
 
-export const useSongStore = defineStore('queue', () => {
+export const useRoomQueue = defineStore('room-queue', () => {
   const playlist = ref([
     {
       id: 'c1dd9254-1e26-4857-a849-cb2295877c20',
@@ -77,10 +76,9 @@ export const useSongStore = defineStore('queue', () => {
       so_thu_tu: 4,
     },
   ])
-  const searchResults = ref([])
   const currentSong = ref(playlist.value[0])
   const currentIndex = ref(0)
-  // Song
+// Song
   function addSong(song) {
     const index = playlist.value.findIndex(item => item.id === song.id)
     if (index !== -1) {
@@ -110,7 +108,7 @@ export const useSongStore = defineStore('queue', () => {
     currentSong.value = playlist.value[currentIndex.value]
   }
 
-  // Playlist
+// Playlist
   function clearPlaylist() {
     playlist.value = []
     currentIndex.value = 0
@@ -123,22 +121,7 @@ export const useSongStore = defineStore('queue', () => {
     currentSong.value = playlist.value[currentIndex.value]
   }
 
-  // API
-  async function searchSongs(title, config = {}) {
-    if (!title) {
-      searchResults.value = []
-      return searchResults.value
-    }
-    try {
-      const result = await apiGetSongs(title, config)
-      searchResults.value = result
-      return searchResults.value
-    }
-    catch (error) {
-      console.error('Error searching songs:', error)
-      return []
-    }
-  }
+// API
 
   function playSongInQueue(song) {
     const index = playlist.value.findIndex(item => item.so_thu_tu === song.so_thu_tu)
@@ -147,11 +130,6 @@ export const useSongStore = defineStore('queue', () => {
     }
     currentIndex.value = index
     currentSong.value = playlist.value[currentIndex.value]
-  }
-
-  function playWithoutQueue(song) {
-    const alreadySong = addToQueue(song)
-    playSongInQueue(alreadySong)
   }
 
   function handleRemoveFromQueue(song) {
@@ -175,32 +153,20 @@ export const useSongStore = defineStore('queue', () => {
     })
     return newSong
   }
-  async function fetchSongs() {
-    return await getSongs()
-  }
-
-  async function uploadSongToServer(data) {
-    return uploadSong(data)
-  }
 
   return {
     // State
     playlist,
     currentSong,
     currentIndex,
-    searchResults,
     setPlaylist,
     clearPlaylist,
-    fetchSongs,
     addSong,
     removeSong,
     nextSong,
     prevSong,
-    searchSongs,
     playSongInQueue,
     addToQueue,
-    playWithoutQueue,
     handleRemoveFromQueue,
-    uploadSongToServer,
   }
 })

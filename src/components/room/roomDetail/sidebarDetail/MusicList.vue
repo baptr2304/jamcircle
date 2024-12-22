@@ -1,73 +1,60 @@
 <script setup>
-import IconEllipsis from '@/components/icons/IconEllipsis.vue'
-
+import SongListItem from '@/components/common/SongListItem.vue'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+
 import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
 import { useRoomStore } from '@/stores/room'
-import SearchInRoom from './SearchInRoom.vue'
+import { useRoomQueue } from '@/stores/room-queue'
 
 const props = defineProps({
-  listSongs: Array,
   roomId: String,
 })
 const roomStore = useRoomStore()
-function removeSong(uniqueKey) {
-  roomStore.removeSongFromQueue(uniqueKey)
+const roomQueueStore = useRoomQueue()
+function removeSong(id) {
+  roomStore.removeSongFromQueue(id)
 }
 </script>
 
 <template>
   <div class="w-full flex items-center justify-center">
     <div class="w-full flex flex-col">
-      <SearchInRoom
-        class="items-center self-center"
-        :room-id="roomId"
-        :list-songs="listSongs"
-      />
       <h3 class="mx-4 mt-3 text-xl">
         Queue
       </h3>
 
       <ScrollArea
-        v-if="listSongs && listSongs.length > 0"
         class="w-full h-[30rem]"
       >
-        <div
-          v-for="song in listSongs"
-          :key="song.uniqueKey"
-          class="flex gap-2 py-4 mx-4 border-b-2 justify-between"
+        <SongListItem
+          v-for="song in roomQueueStore.playlist"
+          :key="song.so_thu_tu"
+          :song="song"
+          :is-playing="song.so_thu_tu === roomQueueStore.currentSong.so_thu_tu"
+          @handle-click="handlePlaySong(song)"
         >
-          <div class="flex gap-2">
-            <img
-              :src="song.imageUrl"
-              :alt="song.title"
-              class="w-10 h-10 rounded-xs object-cover"
-            >
-            <div>
-              <h3 class="font-normal text-foreground truncate">
-                {{ song.title }}
-              </h3>
-              <p class="text-foreground opacity-50">
-                {{ song.artist.name }}
-              </p>
+          <template #action>
+            <div class="w-[20%]">
+              <Popover>
+                <PopoverTrigger>
+                  <Icon
+                    name="IconEllipsis"
+                    class="w-10 h-6  cursor-pointer"
+                  />
+                </PopoverTrigger>
+                <PopoverContent class="w-25">
+                  <button @click="roomQueueStore.handleRemoveFromQueue(song)">
+                    Remove from queue
+                  </button>
+                </PopoverContent>
+              </Popover>
             </div>
-          </div>
-          <div>{{ song.albumName }}</div>
-          <Popover>
-            <PopoverTrigger>
-              <IconEllipsis class="w-6 h-6 text-foreground cursor-pointer" />
-            </PopoverTrigger>
-            <PopoverContent class="w-25">
-              <button @click="removeSong(song.uniqueKey)">
-                Remove
-              </button>
-            </PopoverContent>
-          </Popover>
-        </div>
+          </template>
+        </SongListItem>
       </ScrollArea>
     </div>
   </div>
