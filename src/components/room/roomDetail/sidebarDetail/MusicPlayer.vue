@@ -1,20 +1,14 @@
 <script setup>
-import BottomNavigationBar from '@/components/layout/BottomNavigationBar.vue'
-import VolumeControl from '@/components/song/VolumeControl.vue'
 import { Progress } from '@/components/ui/progress'
-import { useSongStore } from '@/stores/song'
+import { useRoomQueue } from '@/stores/room-queue'
 import { useUserStore } from '@/stores/user'
 import listEvents from '@/utils/enumEventBus'
 import emitter from '@/utils/eventBus'
 import { formatTime } from '@/utils/format'
-import Button from '../ui/button/Button.vue'
 
-const props = defineProps({
-  isVisibleQueueDrawer: Boolean,
-})
 defineExpose({ resetControl })
 const userStore = useUserStore()
-const songStore = useSongStore()
+const roomQueueStore = useRoomQueue()
 
 const progress = ref(0)
 const progressBar = ref(null)
@@ -23,13 +17,8 @@ const isPlaying = ref(false)
 const isDragging = ref(false)
 const songCurrentTime = ref(0)
 const songDuration = ref(0)
-const volume = ref(100)
 const isMuted = ref(false)
 
-watch(volume, (val) => {
-  audio.value.volume = val / 100
-  isMuted.value = val === 0
-})
 function updateProgress(event) {
   const rect = progressBar.value.getBoundingClientRect()
   if (event.clientX < rect.left) {
@@ -123,25 +112,16 @@ async function resetControl() {
   changeCurrentTime(0)
 }
 function nextSong() {
-  songStore.nextSong()
+  roomQueueStore.nextSong()
   resetControl()
 }
 function prevSong() {
-  songStore.prevSong()
+  roomQueueStore.prevSong()
   resetControl()
 }
 function toggleMuted() {
   audio.value.muted = !audio.value.muted
   isMuted.value = audio.value.muted
-}
-function toggleOpenDrawer() {
-  emitter.emit(listEvents.toggleQueueDrawer)
-}
-function handleIncreaseVolume() {
-  volume.value = Math.min(volume.value + 10, 100)
-}
-function handleDecreaseVolume() {
-  volume.value = Math.max(volume.value - 10, 0)
 }
 function seekForward() {
   changeCurrentTime(15, 'forward')
@@ -155,8 +135,6 @@ onMounted(() => {
   emitter.on(listEvents.nextSong, nextSong)
   emitter.on(listEvents.prevSong, prevSong)
   emitter.on(listEvents.toggleMute, toggleMuted)
-  emitter.on(listEvents.volumeUp, handleIncreaseVolume)
-  emitter.on(listEvents.volumeDown, handleDecreaseVolume)
   emitter.on(listEvents.seekForward, seekForward)
   emitter.on(listEvents.seekBackward, seekBackward)
 })
@@ -168,41 +146,23 @@ onUnmounted(() => {
   emitter.off(listEvents.seekForward, seekForward)
   emitter.off(listEvents.seekBackward, seekBackward)
   emitter.off(listEvents.toggleMute, toggleMuted)
-  emitter.off(listEvents.volumeUp, handleIncreaseVolume)
-  emitter.off(listEvents.volumeDown, handleDecreaseVolume)
 })
 </script>
 
 <template>
-  <div class="grid w-full h-full select-none relative">
-    <div v-if="!userStore.isAuthenticated" class="well-come-bar">
-      <div class="flex flex-col h-full justify-center">
-        <div class="title text-sm font-medium max-lg:hidden">
-          REVIEW FOR JAMCIRCLE
+  <div class="grid w-full h-full select-none relative bg-secondary">
+    <!-- <div class="song max-w-80 lg:pl-10">
+      <img v-lazy="roomQueueStore.currentSong.anh" alt="" class="thumbnail">
+      <div class="song-meta w-full">
+        <div class="title truncate font-semibold">
+          {{ roomQueueStore.currentSong.ten_bai_hat }}
         </div>
-        <div class="description text-sm max-lg:line-clamp-2">
-          Sign up to get unlimited songs and podcasts with occasional ads. No
-          credit card needed.
-        </div>
-      </div>
-      <RouterLink to="/auth/login">
-        <Button class="flex h-12 py-4 lg:px-8 px-4 bg-foreground rounded-full">
-          Sign up free
-        </Button>
-      </RouterLink>
-    </div>
-    <div v-else class="song-controller">
-      <div class="song absolute left-8 max-w-44">
-        <img v-lazy="songStore.currentSong.anh" alt="" class="thumbnail">
-        <div class="song-meta w-full">
-          <div class="title truncate font-semibold">
-            {{ songStore.currentSong.ten_bai_hat }}
-          </div>
-          <div class="artist truncate text-secondary-foreground">
-            {{ songStore.currentSong.ten_ca_si }}
-          </div>
+        <div class="artist truncate text-secondary-foreground">
+          {{ roomQueueStore.currentSong.ten_ca_si }}
         </div>
       </div>
+    </div> -->
+    <div class="song-controller">
       <div class="control-bar">
         <div class="flex items-center gap-4 max-lg:hidden">
           <Icon
@@ -232,7 +192,7 @@ onUnmounted(() => {
           }}</span>
           <div
             ref="progressBar"
-            class="flex items-center justify-center gap-2 w-full lg:w-96 cursor-pointer"
+            class="flex items-center justify-center gap-2 w-full lg:max-w-96 cursor-pointer"
             @mousedown="handleMouseDown"
           >
             <Progress v-model="progress" class="w-full" />
@@ -246,16 +206,16 @@ onUnmounted(() => {
           class="lg:hidden flex items-center h-10 gap-2.5 absolute left-4 top-2"
         >
           <img
-            v-lazy="songStore.currentSong.anh"
+            v-lazy="roomQueueStore.currentSong.anh"
             alt=""
             class="w-10 h-10 rounded-lg object-cover"
           >
           <div class="song-meta w-full max-w-32">
             <p class="title text-sm truncate font-semibold">
-              {{ songStore.currentSong.ten_bai_hat }}
+              {{ roomQueueStore.currentSong.ten_bai_hat }}
             </p>
             <p class="artist text-xs truncate text-secondary-foreground">
-              {{ songStore.currentSong.ten_ca_si }}
+              {{ roomQueueStore.currentSong.ten_ca_si }}
             </p>
           </div>
         </div>
@@ -272,47 +232,28 @@ onUnmounted(() => {
           <Icon name="IconNext" class="icon-button" @click="nextSong" />
         </div>
       </div>
-      <div class="flex max-lg:hidden gap-2 absolute right-8 items-center">
-        <Icon
-          name="IconQueue" class=" w-8 h-8 p-1 cursor-pointer"
-          :class="{ 'text-primary': props.isVisibleQueueDrawer }"
-          @click="toggleOpenDrawer"
-        />
-        <VolumeControl
-          v-model="volume"
-          :muted="isMuted"
-          @toggle-muted="toggleMuted"
-        />
-      </div>
       <audio ref="audio" controls class="hidden">
-        <source :src="songStore.currentSong.lien_ket" type="audio/mpeg">
+        <source :src="roomQueueStore.currentSong.lien_ket" type="audio/mpeg">
       </audio>
     </div>
-    <BottomNavigationBar
-      class="lg:hidden absolute bottom-0 left-4 w-[calc(100%-2rem)]"
-    />
   </div>
 </template>
 
 <style scoped>
-.well-come-bar {
-  @apply flex justify-between items-center lg:p-4 p-2 gap-4 max-lg:h-[4.25rem];
-  background: linear-gradient(90deg, #af2896 0%, #509bf5 100%);
-}
 .button-play {
   @apply text-center text-sm font-bold bg-[#f2f2f2] bg-secondary-foreground text-background hover:opacity-100 opacity-75 cursor-pointer flex p-2 rounded-full w-8 h-8;
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif;
   border-radius: 500px;
 }
 .song-controller {
-  @apply bg-secondary flex lg:p-4 lg:items-center justify-center gap-14 relative max-lg:bg-muted max-lg:px-4;
+  @apply bg-secondary flex pb-2 lg:items-center gap-14 relative w-full;
+
   .icon-button {
     @apply cursor-pointer w-4 h-4 hover:opacity-100 opacity-75;
   }
 }
 .control-bar {
-  @apply flex flex-col relative lg:justify-start justify-end items-center gap-2 px-4 h-[4.25rem] lg:p-0 w-full lg:w-[35rem] max-lg:bg-chart3 lg:h-16 max-lg:rounded-md;
+  @apply flex flex-col relative lg:justify-start justify-end items-center gap-2 px-4 h-[4.25rem] lg:p-0 w-full max-lg:bg-chart3 lg:h-16 max-lg:rounded-md;
 }
 .thumbnail {
   @apply w-14 h-14 rounded-lg object-cover;

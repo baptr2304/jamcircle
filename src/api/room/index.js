@@ -1,6 +1,5 @@
 import { useUserStore } from '@/stores/user'
 import { v4 as uuidv4 } from 'uuid'
-import { songsData } from '../mock/songs'
 
 const roomsData = [
   {
@@ -99,12 +98,7 @@ const roomsData = [
         createdAt: new Date().toISOString(),
       },
     ],
-    queue: [
-      // add song to queue
-      songsData[0],
-      songsData[1],
-    ],
-    createdAt: new Date().toISOString(),
+    edAt: new Date().toISOString(),
     inviteLink: 'https://www.youtube.com/watch?v=6n3pFFPSlW4',
   },
   {
@@ -125,11 +119,6 @@ const roomsData = [
         content: 'Hello',
         createdAt: new Date().toISOString(),
       },
-    ],
-    queue: [
-      songsData[0],
-      songsData[1],
-      songsData[2],
     ],
     createdAt: new Date().toISOString(),
   },
@@ -165,60 +154,28 @@ export function getAll() {
 export function getById(id) {
   return Promise.resolve({ data: roomsData.find(room => room.id === id) })
 }
-export function addToQueue(roomId, songId) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const songStore = useSongStore()
-      const song = await songStore.getSongById(songId)
-      if (!song) {
-        reject(new Error('Song not found'))
-        return
-      }
-      const room = roomsData.find(room => room.id === roomId)
-      if (!room) {
-        reject(new Error('Room not found'))
-
-        return
-      }
-      const songWithUniqueKey = {
-        ...song,
-        uniqueKey: uuidv4(),
-      }
-      room.queue.push(songWithUniqueKey)
-      const updatedRoom = roomsData.find(r => r.id === roomId)
-      resolve({ data: updatedRoom })
-    }
-    catch (error) {
-      reject(error)
-    }
-  })
+export async function addToQueue(roomId, song) {
+  const room = roomsData.find(room => room.id === roomId)
+  if (!room)
+    return
+  room.queue.push(song)
+  const updatedRoom = roomsData.find(r => r.id === roomId)
+  resolve({ data: updatedRoom })
 }
-// export function removeSong(roomId, uniqueKey){
-//     return new Promise ((resolve,reject)=>{
-//         const room = roomsData.find(room => room.id === roomId);
-//         if(!room){
-//             reject(new Error("Room not found"));
-//             return;
-//         }
-//         room.queue = room.queue.filter(song => song.uniqueKey !== uniqueKey);
-//         resolve({data: room});
-//     })
-// }
+
 export function addMessage(roomId, message) {
-  return new Promise((resolve, reject) => {
-    const room = roomsData.find(room => room.id === roomId)
-    if (!room) {
-      reject(new Error('Room not found'))
-      return
-    }
-    const newMessage = {
-      id: message.id || uuidv4(),
-      senderId: message.senderId,
-      content: message.content,
-      username: message.username,
-      createdAt: new Date().toISOString(),
-    }
-    room.messages.push(newMessage)
-    resolve(newMessage)
-  })
+  const room = roomsData.find(room => room.id === roomId)
+  if (!room) {
+    reject(new Error('Room not found'))
+    return
+  }
+  const newMessage = {
+    id: message.id || uuidv4(),
+    senderId: message.senderId,
+    content: message.content,
+    username: message.username,
+    createdAt: new Date().toISOString(),
+  }
+  room.messages.push(newMessage)
+  return newMessage
 }
