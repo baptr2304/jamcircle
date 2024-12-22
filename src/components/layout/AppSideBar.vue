@@ -1,7 +1,6 @@
 <script setup>
 import AppSideBarGroup from '@/components/layout/SideBar/AppSideBarGroup.vue'
 import AppSideBarItem from '@/components/layout/SideBar/AppSideBarItem.vue'
-import AppSideBarItemRoom from '@/components/layout/SideBar/AppSideBarItemRoom.vue'
 import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
 import router from '@/router'
 import { useRoomStore } from '@/stores/room'
@@ -52,22 +51,12 @@ const data = ref({
       content: 'Login to view your favorite songs',
       requiredAuthen: true,
     },
-  ],
-  groupC: [
     {
       id: 6,
       icon: 'IconJam',
       title: 'Jam',
-      type: 'button',
+      url: '/jam',
       content: 'Login to start a jam',
-      requiredAuthen: true,
-    },
-    {
-      id: 7,
-      icon: 'IconJoin',
-      title: 'Join room',
-      type: 'button',
-      content: 'Login to join room',
       requiredAuthen: true,
     },
   ],
@@ -131,7 +120,6 @@ async function handleRoomCreation(roomName) {
           </template>
         </AppSideBarGroup>
       </div>
-      <AppSideBarItemRoom class="pl-2 h-[20rem]" />
     </ScrollArea>
   </div>
 </template>

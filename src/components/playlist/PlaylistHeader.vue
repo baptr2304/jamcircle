@@ -10,7 +10,7 @@ const props = defineProps({
 
 <template>
   <div
-    class="w-full h-[15rem] bg-gradient-to-t from-accent to-gray-600 flex items-center mb-4"
+    class="w-full sm:h-[15rem] h-40 bg-gradient-to-t from-accent to-gray-600 flex items-center mb-4"
   >
     <div
       class="lg:w-[11.25rem] lg:h-[11.25rem] w-[8rem] h-[8rem] bg-gradient-to-t from-accent to-gray-700 flex justify-center items-center ml-8 rounded-xs"

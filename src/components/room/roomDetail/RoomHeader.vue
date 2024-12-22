@@ -48,19 +48,19 @@ function handleButtonClick(tab) {
         </div>
       </div>
       <div class="btn-sidebar min-w-24">
-        <button class="btn-music-list" :class="{ 'text-primary': props.activeTab === 'queue' && isSidebarVisible }" @click="handleButtonClick('queue')">
+        <button class="p-2 btn-music-list" :class="{ 'text-primary': props.activeTab === 'queue' && isSidebarVisible }" @click="handleButtonClick('queue')">
           <Icon name="IconQueue" class="btn btn-music-list" />
         </button>
-        <button class="btn-music-list" :class="{ 'text-primary': props.activeTab === 'music' && isSidebarVisible }" @click="handleButtonClick('music')">
+        <button class="p-2 btn-music-list" :class="{ 'text-primary': props.activeTab === 'music' && isSidebarVisible }" @click="handleButtonClick('music')">
           <Icon name="IconMusic" class="btn btn-music-list" />
         </button>
-        <button class="btn-room-friends" :class="{ 'text-primary': props.activeTab === 'friends' && isSidebarVisible }" @click="handleButtonClick('friends')">
+        <button class="p-2 btn-room-friends" :class="{ 'text-primary': props.activeTab === 'friends' && isSidebarVisible }" @click="handleButtonClick('friends')">
           <Icon name="IconListFriend" class="btn" />
         </button>
       </div>
     </div>
     <div
-      class="w-full"
+      class="w-full px-2 bg-secondary"
     >
       <MusicPlayer />
     </div>
