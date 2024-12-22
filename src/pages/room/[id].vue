@@ -17,10 +17,14 @@ import FriendList from '@/components/room/roomDetail/sidebarDetail/FriendList.vu
 import MusicList from '@/components/room/roomDetail/sidebarDetail/MusicList.vue'
 import SearchInRoom from '@/components/room/roomDetail/sidebarDetail/SearchInRoom.vue'
 import { useRoomStore } from '@/stores/room'
+import { useRoomQueue } from '@/stores/room-queue'
 import { useUserStore } from '@/stores/user'
+import listEvents from '@/utils/enumEventBus'
+import emitter from '@/utils/eventBus'
 import { useRoute } from 'vue-router'
 
 const roomStore = useRoomStore()
+const roomQueueStore = useRoomQueue()
 const route = useRoute()
 const currentUser = useUserStore()
 const user = currentUser.user
@@ -30,9 +34,15 @@ const isSidebarVisible = ref(true)
 const activeTab = ref('friends')
 const roomId = computed(() => route.params.id)
 const roomData = computed(() => roomStore.currentRoom)
+
 function toggleSidebar() {
   isSidebarVisible.value = !isSidebarVisible.value
 }
+
+function closeSidebar() {
+  isSidebarVisible.value = false
+}
+
 function setActiveTab(tab) {
   activeTab.value = tab
 }
@@ -68,6 +78,12 @@ async function handleMessage(messageContent) {
     console.error('Error sending message:', error)
   }
 }
+onMounted(() => {
+  emitter.on(listEvents.closeQueueDrawer, closeSidebar)
+})
+onUnmounted(() => {
+  emitter.off(listEvents.closeQueueDrawer, closeSidebar)
+})
 </script>
 
 <template>
@@ -86,7 +102,7 @@ async function handleMessage(messageContent) {
     </template>
     <Chat
       :messages="messages"
-      class="pt-36"
+      :class="roomQueueStore.currentSong ? 'pt-36' : 'pt-16'"
       :is-sidebar-visible="isSidebarVisible"
       :user-id="userId"
       @message="handleMessage"

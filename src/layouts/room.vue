@@ -1,4 +1,5 @@
 <script setup>
+import KeyboardShortcuts from '@/components/common/KeyboardShortcuts.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppSideBar from '@/components/layout/AppSideBar.vue'
 import BottomNavigationBar from '@/components/layout/BottomNavigationBar.vue'
@@ -9,6 +10,7 @@ import BottomNavigationBar from '@/components/layout/BottomNavigationBar.vue'
     <div
       class="flex w-full"
     >
+      <KeyboardShortcuts />
       <AppSideBar class="max-lg:hidden" />
       <div class="flex flex-col h-full w-full relative lg:[width:calc(100%-15rem)]">
         <header class="absolute left-0 top-0 w-full flex h-16 items-center">

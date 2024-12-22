@@ -5,8 +5,8 @@ import { useUserStore } from '@/stores/user'
 import listEvents from '@/utils/enumEventBus'
 import emitter from '@/utils/eventBus'
 import { formatTime } from '@/utils/format'
+import { nextTick } from 'vue'
 
-defineExpose({ resetControl })
 const userStore = useUserStore()
 const roomQueueStore = useRoomQueue()
 
@@ -16,9 +16,8 @@ const audio = ref(null)
 const isPlaying = ref(false)
 const isDragging = ref(false)
 const songCurrentTime = ref(0)
-const songDuration = ref(0)
 const isMuted = ref(false)
-
+let interval
 function updateProgress(event) {
   const rect = progressBar.value.getBoundingClientRect()
   if (event.clientX < rect.left) {
@@ -54,6 +53,8 @@ function handleMouseDown(event) {
 }
 
 function handlePlay() {
+  if (!roomQueueStore.currentSong)
+    return
   isPlaying.value = !isPlaying.value
   if (isPlaying.value) {
     audio.value.play()
@@ -75,12 +76,13 @@ function updateTime() {
   }
   progress.value = (currentTime / duration) * 100
   songCurrentTime.value = Math.floor(currentTime)
-  songDuration.value = Math.floor(duration)
   if (currentTime === duration) {
     nextSong()
   }
 }
 function changeCurrentTime(time, type) {
+  if (!roomQueueStore.currentSong)
+    return
   switch (type) {
     case 'backward':
       audio.value.currentTime -= time
@@ -95,31 +97,34 @@ function changeCurrentTime(time, type) {
   }
   updateTime()
 }
-onMounted(() => {
-  if (audio.value) {
-    setInterval(updateTime, 1000)
-  }
-})
-onUnmounted(() => {
-  clearInterval(updateTime)
-})
 async function resetControl() {
+  if (!roomQueueStore.currentSong)
+    return
   isPlaying.value = true
   progress.value = 0
+  await nextTick()
   await audio.value.load()
+  if (!interval)
+    interval = setInterval(updateTime, 1000)
   audio.value.play()
   songCurrentTime.value = 0
   changeCurrentTime(0)
 }
 function nextSong() {
+  if (!roomQueueStore.currentSong)
+    return
   roomQueueStore.nextSong()
   resetControl()
 }
 function prevSong() {
+  if (!roomQueueStore.currentSong)
+    return
   roomQueueStore.prevSong()
   resetControl()
 }
 function toggleMuted() {
+  if (!roomQueueStore.currentSong)
+    return
   audio.value.muted = !audio.value.muted
   isMuted.value = audio.value.muted
 }
@@ -139,6 +144,7 @@ onMounted(() => {
   emitter.on(listEvents.seekBackward, seekBackward)
 })
 onUnmounted(() => {
+  clearInterval(interval)
   emitter.off(listEvents.playSong, resetControl)
   emitter.off(listEvents.togglePlay, handlePlay)
   emitter.off(listEvents.nextSong, nextSong)
@@ -150,18 +156,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="grid w-full h-full select-none relative bg-secondary">
-    <!-- <div class="song max-w-80 lg:pl-10">
-      <img v-lazy="roomQueueStore.currentSong.anh" alt="" class="thumbnail">
-      <div class="song-meta w-full">
-        <div class="title truncate font-semibold">
-          {{ roomQueueStore.currentSong.ten_bai_hat }}
-        </div>
-        <div class="artist truncate text-secondary-foreground">
-          {{ roomQueueStore.currentSong.ten_ca_si }}
-        </div>
-      </div>
-    </div> -->
+  <div
+    v-if="roomQueueStore.currentSong"
+    class="grid w-full h-full select-none relative bg-secondary"
+  >
     <div class="song-controller">
       <div class="control-bar">
         <div class="flex items-center gap-4 max-lg:hidden">
@@ -198,7 +196,7 @@ onUnmounted(() => {
             <Progress v-model="progress" class="w-full" />
           </div>
           <span class="w-14 text-center max-lg:hidden">{{
-            formatTime(songDuration)
+            formatTime(roomQueueStore.currentSong.thoi_luong)
           }}</span>
         </div>
 
