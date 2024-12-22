@@ -47,7 +47,10 @@ onMounted(async () => {
           </div>
         </RouterLink>
       </div>
-      <div v-else-if="!loading && !error">
+      <div
+        v-else-if="!loading && !error"
+        class="font-medium text-xl text-center p-5"
+      >
         Không có playlist nào
       </div>
     </div>

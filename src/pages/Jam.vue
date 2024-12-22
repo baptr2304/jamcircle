@@ -55,8 +55,11 @@ function handleRoomClick(roomId) {
 
 <template>
   <div class="relative">
-    <PlaylistHeader icon="IconMusicSolid" title="Jam" />
-    <div class="flex gap-2 px-4 py-2">
+    <PlaylistHeader
+      class="max-sm:hidden"
+      icon="IconMusicSolid" title="Jam"
+    />
+    <div class="flex gap-2 px-4 py-2 justify-center">
       <Button
         variant="secondary"
         class="text-foreground rounded-full"
@@ -91,18 +94,16 @@ function handleRoomClick(roomId) {
       </span>
       <Separator class="my-2" />
     </div>
-    <ScrollArea class="w-full h-36">
-      <div class="flex flex-col gap-2">
-        <template v-for="room in listRoom" :key="room.id">
-          <div
-            class="rounded-md border px-4 py-3 font-mono text-sm cursor-pointer"
-            @click="handleRoomClick(room.id)"
-          >
-            {{ room.name }}
-          </div>
-        </template>
-      </div>
-    </ScrollArea>
+    <div class="flex flex-col gap-2 w-full h-56 overflow-y-auto scrollbar">
+      <template v-for="room in listRoom" :key="room.id">
+        <div
+          class="rounded-md border px-4 py-3 font-mono text-sm cursor-pointer"
+          @click="handleRoomClick(room.id)"
+        >
+          {{ room.name }}
+        </div>
+      </template>
+    </div>
   </div>
 
   <CreateRoomDialog

@@ -5,15 +5,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useRoomStore } from '@/stores/room'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 
 const roomStore = useRoomStore()
 const room = roomStore.currentRoom
-const qrcode = useQRCode(roomStore.currentRoom.inviteLink)
-
+const link = window.location.href
+const qrcode = useQRCode(link)
 function copyInviteLink(value) {
   navigator.clipboard.writeText(value)
 }
@@ -32,16 +31,16 @@ function copyInviteLink(value) {
         <Icon name="IconPen" class="w-4 h-4" />
       </div>
 
-      <Tabs default-value="room-id" class="w-full">
+      <Tabs default-value="room-link" class="w-full">
         <TabsList class="w-full">
-          <TabsTrigger value="room-id">
-            Room ID
-          </TabsTrigger>
           <TabsTrigger value="room-link">
             Room Link
           </TabsTrigger>
           <TabsTrigger value="room-qr">
             Room QR
+          </TabsTrigger>
+          <TabsTrigger value="room-id">
+            Room ID
           </TabsTrigger>
         </TabsList>
         <TabsContent value="room-id">
@@ -68,7 +67,7 @@ function copyInviteLink(value) {
             <input
               type="text"
               class="w-full border-input rounded-md p-2 bg-border opacity-50 mr-2 text-sm border-0 focus:outline-none focus:ring-0"
-              :value="room.inviteLink"
+              :value="link"
               readonly
               @focus="$event.target.select()"
             >
