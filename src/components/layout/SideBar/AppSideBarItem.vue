@@ -1,7 +1,5 @@
 <script setup>
 import UnauthenPopover from '@/components/common/UnauthenPopover.vue'
-import CreateRoomDialog from '@/components/room/CreateRoomDialog.vue'
-import JoinRoomDialog from '@/components/room/JoinRoomDialog.vue'
 import { useUserStore } from '@/stores/user'
 
 const props = defineProps({
@@ -21,11 +19,9 @@ const props = defineProps({
   },
   requiredAuthen: Boolean,
 })
-const emit = defineEmits(['create-room', 'toggleQueue'])
+const emit = defineEmits(['toggleQueue'])
 const userStore = useUserStore()
 const route = useRoute()
-const isCreateRoomOpen = ref(false)
-const isJoinRoomOpen = ref(false)
 const isActive = computed(() => props.url === route.path)
 const component = computed(() => {
   if (userStore.isAuthenticated)
@@ -40,23 +36,10 @@ function handleClick() {
     return
 
   switch (props.title) {
-    case 'Jam':
-      isCreateRoomOpen.value = true
-      break
-    case 'Join room':
-      isJoinRoomOpen.value = true
-      break
     case 'Queue':
       emit('toggleQueue')
       break
   }
-}
-
-function handleCreateRoom(roomName) {
-  emit('create-room', roomName)
-}
-function handleJoinRoom(roomId) {
-  emit('join-room', roomId)
 }
 </script>
 
@@ -79,15 +62,5 @@ function handleJoinRoom(roomId) {
 
       <span class="font-bold" :class="props.textStyle">{{ props.title }}</span>
     </component>
-    <CreateRoomDialog
-      v-if="props.type === 'button' && props.title === 'Jam'"
-      v-model:open="isCreateRoomOpen"
-      @create="handleCreateRoom"
-    />
-    <JoinRoomDialog
-      v-if="props.type === 'button' && props.title === 'Join room'"
-      v-model:open="isJoinRoomOpen"
-      @join="handleJoinRoom"
-    />
   </UnauthenPopover>
 </template>
