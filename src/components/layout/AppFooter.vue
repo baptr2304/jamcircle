@@ -12,7 +12,6 @@ import Button from '../ui/button/Button.vue'
 const props = defineProps({
   isVisibleQueueDrawer: Boolean,
 })
-defineExpose({ resetControl })
 const userStore = useUserStore()
 const songStore = useSongStore()
 
@@ -25,6 +24,7 @@ const songCurrentTime = ref(0)
 const songDuration = ref(0)
 const volume = ref(100)
 const isMuted = ref(false)
+let intervalId
 
 watch(volume, (val) => {
   audio.value.volume = val / 100
@@ -65,6 +65,8 @@ function handleMouseDown(event) {
 }
 
 function handlePlay() {
+  if (!songStore.currentSong)
+    return
   isPlaying.value = !isPlaying.value
   if (isPlaying.value) {
     audio.value.play()
@@ -74,7 +76,7 @@ function handlePlay() {
   }
 }
 function updateTime() {
-  if (!audio.value || isDragging.value)
+  if (!audio.value || isDragging.value || !isPlaying.value || !songStore.currentSong)
     return
   const { currentTime, duration } = audio.value
   if (audio.value) {
@@ -92,6 +94,8 @@ function updateTime() {
   }
 }
 function changeCurrentTime(time, type) {
+  if (!songStore.currentSong)
+    return
   switch (type) {
     case 'backward':
       audio.value.currentTime -= time
@@ -106,31 +110,34 @@ function changeCurrentTime(time, type) {
   }
   updateTime()
 }
-onMounted(() => {
-  if (audio.value) {
-    setInterval(updateTime, 1000)
-  }
-})
-onUnmounted(() => {
-  clearInterval(updateTime)
-})
 async function resetControl() {
+  if (!songStore.currentSong)
+    return
   isPlaying.value = true
   progress.value = 0
+  await nextTick()
   await audio.value.load()
+  if (!intervalId)
+    intervalId = setInterval(updateTime, 1000)
   audio.value.play()
   songCurrentTime.value = 0
   changeCurrentTime(0)
 }
 function nextSong() {
+  if (!songStore.currentSong)
+    return
   songStore.nextSong()
   resetControl()
 }
 function prevSong() {
+  if (!songStore.currentSong)
+    return
   songStore.prevSong()
   resetControl()
 }
 function toggleMuted() {
+  if (!songStore.currentSong)
+    return
   audio.value.muted = !audio.value.muted
   isMuted.value = audio.value.muted
 }
@@ -150,6 +157,9 @@ function seekBackward() {
   changeCurrentTime(15, 'backward')
 }
 onMounted(() => {
+  if (audio.value) {
+    intervalId = setInterval(updateTime, 1000)
+  }
   emitter.on(listEvents.playSong, resetControl)
   emitter.on(listEvents.togglePlay, handlePlay)
   emitter.on(listEvents.nextSong, nextSong)
@@ -161,6 +171,8 @@ onMounted(() => {
   emitter.on(listEvents.seekBackward, seekBackward)
 })
 onUnmounted(() => {
+  clearInterval(intervalId)
+
   emitter.off(listEvents.playSong, resetControl)
   emitter.off(listEvents.togglePlay, handlePlay)
   emitter.off(listEvents.nextSong, nextSong)
@@ -191,7 +203,7 @@ onUnmounted(() => {
         </Button>
       </RouterLink>
     </div>
-    <div v-else class="song-controller">
+    <div v-else-if="songStore.currentSong" class="song-controller">
       <div class="song absolute left-8 max-w-44">
         <img v-lazy="songStore.currentSong.anh" alt="" class="thumbnail">
         <div class="song-meta w-full">

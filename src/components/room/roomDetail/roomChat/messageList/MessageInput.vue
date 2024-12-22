@@ -24,6 +24,7 @@ function sendMessage() {
       type="text"
       class="block w-full p-3 text-gray-900  text-sm dark:bg-secondary dark:text-white border-0 focus:outline-none focus:ring-0 " placeholder="Type a message..."
       @keyup.enter="sendMessage"
+      @keydown.stop
     >
     <IconSend class="absolute top-[25%] right-4 cursor-pointer" @click="sendMessage" />
   </div>

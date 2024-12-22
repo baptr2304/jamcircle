@@ -14,7 +14,6 @@ const debouncedKeyPress = useDebounceFn((event) => {
 }, 200)
 const isVisibleDialog = ref(false)
 function handleKeyPress(event) {
-  console.log(event)
   switch (event.code) {
     case 'Space':
       event.preventDefault()

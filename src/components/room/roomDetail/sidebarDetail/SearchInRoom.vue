@@ -116,7 +116,7 @@ function handlePlaySong(song) {
         No results found
       </p>
     </div>
-    <div v-show=" isLoading " class="flex w-full p-8 items-center">
+    <div v-show=" isLoading " class="flex w-full p-8 justify-center">
       <Icon name="IconLoading" />
     </div>
   </div>

@@ -30,6 +30,7 @@ function handleButtonClick(tab) {
         {{ props.name }}
       </div>
       <div
+        v-if="roomQueueStore.currentSong"
         class="max-lg:hidden flex items-center h-10 gap-2.5 -ml-10"
       >
         <img
