@@ -110,15 +110,6 @@ async function handleRoomCreation(roomName) {
             <AppSideBarItem v-bind="item" />
           </template>
         </AppSideBarGroup>
-
-        <span class="pt-2 px-6">
-          <Separator />
-        </span>
-        <AppSideBarGroup class="pt-4">
-          <template v-for="item in data.groupC" :key="item.id">
-            <AppSideBarItem v-bind="item" @create-room="handleRoomCreation" />
-          </template>
-        </AppSideBarGroup>
       </div>
     </ScrollArea>
   </div>

@@ -122,6 +122,69 @@ const roomsData = [
     ],
     createdAt: new Date().toISOString(),
   },
+  {
+    id: '3',
+    name: 'Room 3',
+    hostId: '3',
+    members: [
+      {
+        id: '3',
+        role: 'host',
+        joinedAt: new Date().toISOString(),
+      },
+    ],
+    messages: [
+      {
+        id: '3',
+        senderId: '3',
+        content: 'Hello',
+        createdAt: new Date().toISOString(),
+      },
+    ],
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '4',
+    name: 'Room 4',
+    hostId: '4',
+    members: [
+      {
+        id: '4',
+        role: 'host',
+        joinedAt: new Date().toISOString(),
+      },
+    ],
+    messages: [
+      {
+        id: '4',
+        senderId: '4',
+        content: 'Hello',
+        createdAt: new Date().toISOString(),
+      },
+    ],
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '5',
+    name: 'Room 5',
+    hostId: '5',
+    members: [
+      {
+        id: '5',
+        role: 'host',
+        joinedAt: new Date().toISOString(),
+      },
+    ],
+    messages: [
+      {
+        id: '5',
+        senderId: '5',
+        content: 'Hello',
+        createdAt: new Date().toISOString(),
+      },
+    ],
+    createdAt: new Date().toISOString(),
+  },
 ]
 export function createRoom({ name, hostId }) {
   return new Promise((resolve) => {

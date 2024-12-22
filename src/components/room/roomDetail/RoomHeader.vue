@@ -55,7 +55,7 @@ function handleButtonClick(tab) {
           <Icon name="IconMusic" class="btn btn-music-list" />
         </button>
         <button class="p-2 btn-room-friends" :class="{ 'text-primary': props.activeTab === 'friends' && isSidebarVisible }" @click="handleButtonClick('friends')">
-          <Icon name="IconListFriend" class="btn" />
+          <Icon name="IconInfo" class="btn" />
         </button>
       </div>
     </div>
