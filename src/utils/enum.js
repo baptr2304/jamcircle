@@ -1,4 +1,4 @@
-const listEvents = {
+export const listEvents = {
   playSong: 'PlaySong',
   togglePlay: 'TogglePlay',
   toggleQueueDrawer: 'ToggleQueueDrawer',
@@ -12,4 +12,8 @@ const listEvents = {
   seekBackward: 'SeekBackward',
 }
 
-export default listEvents
+export const listRoles = {
+  chu_phong: 'Host',
+  quan_ly: 'Admin',
+  thanh_vien: 'Member',
+}

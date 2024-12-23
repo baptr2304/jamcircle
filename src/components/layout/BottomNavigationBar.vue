@@ -2,7 +2,7 @@
 import AppSideBarItem from '@/components/layout/SideBar/AppSideBarItem.vue'
 import { useRoomStore } from '@/stores/room'
 import { useUserStore } from '@/stores/user'
-import listEvents from '@/utils/enumEventBus'
+import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 import { useRouter } from 'vue-router'
 

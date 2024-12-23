@@ -4,7 +4,7 @@ import {
   DialogContent,
 } from '@/components/ui/dialog'
 import Separator from '@/components/ui/separator/Separator.vue'
-import listEvents from '@/utils/enumEventBus'
+import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 import listShortcuts from '@/utils/listShortcuts'
 import { useDebounceFn } from '@vueuse/core'

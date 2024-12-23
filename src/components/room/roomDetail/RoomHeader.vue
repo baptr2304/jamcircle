@@ -6,6 +6,7 @@ const props = defineProps({
   name: String,
   isSidebarVisible: Boolean,
   activeTab: String,
+  userInRoom: Object,
 })
 
 const emit = defineEmits(['toggle-sidebar', 'set-active-tab'])
@@ -51,7 +52,10 @@ function handleButtonClick(tab) {
         <button class="p-2 btn-music-list" :class="{ 'text-primary': props.activeTab === 'queue' && isSidebarVisible }" @click="handleButtonClick('queue')">
           <Icon name="IconQueue" class="btn btn-music-list" />
         </button>
-        <button class="p-2 btn-music-list" :class="{ 'text-primary': props.activeTab === 'music' && isSidebarVisible }" @click="handleButtonClick('music')">
+        <button
+          v-if="props.userInRoom?.quyen !== 'thanh_vien'"
+          class="p-2 btn-music-list" :class="{ 'text-primary': props.activeTab === 'music' && isSidebarVisible }" @click="handleButtonClick('music')"
+        >
           <Icon name="IconMusic" class="btn btn-music-list" />
         </button>
         <button class="p-2 btn-room-friends" :class="{ 'text-primary': props.activeTab === 'friends' && isSidebarVisible }" @click="handleButtonClick('friends')">

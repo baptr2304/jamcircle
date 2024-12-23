@@ -9,7 +9,7 @@ import Separator from '@/components/ui/separator/Separator.vue'
 import { usePlaylistStore } from '@/stores/playlist'
 import { useSongStore } from '@/stores/song'
 import { useUserStore } from '@/stores/user'
-import listEvents from '@/utils/enumEventBus'
+import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 // async function addSongToQueue(song) {
 //   console.log('addSongToQueue', song)
