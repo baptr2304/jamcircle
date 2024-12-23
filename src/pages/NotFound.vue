@@ -7,6 +7,10 @@
     }
 </route>
 
+<script setup>
+import Button from '@/components/ui/button/Button.vue'
+</script>
+
 <template>
   <div class="error-page">
     <h1>Page not found.</h1>
@@ -15,7 +19,11 @@
       Workspace member to access it.
     </p>
     <router-link to="/">
-      Back to Home
+      <Button
+        variant="link"
+      >
+        Back to Home
+      </Button>
     </router-link>
   </div>
 </template>

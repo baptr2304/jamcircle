@@ -4,7 +4,7 @@ import QueueDrawer from '@/components/common/QueueDrawer.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppSideBar from '@/components/layout/AppSideBar.vue'
-import listEvents from '@/utils/enumEventBus'
+import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 
 

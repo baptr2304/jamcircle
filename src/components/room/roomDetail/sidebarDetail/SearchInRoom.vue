@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/popover'
 import { useRoomQueue } from '@/stores/room-queue'
 import { useSongStore } from '@/stores/song'
-import listEvents from '@/utils/enumEventBus'
+import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 
 import { useAsyncState, useDebounceFn, useInfiniteScroll } from '@vueuse/core'

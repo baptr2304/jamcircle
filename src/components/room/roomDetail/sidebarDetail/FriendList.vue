@@ -5,16 +5,58 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import Separator from '@/components/ui/separator/Separator.vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useConfirmStore } from '@/stores/confirm'
 import { useRoomStore } from '@/stores/room'
+import { listRoles } from '@/utils/enum'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 
+const { room, members, requests, userInRoom } = defineProps({
+  room: {
+    type: Object,
+    required: true,
+  },
+  members: {
+    type: Array,
+    required: true,
+  },
+  requests: {
+    type: Array,
+    required: true,
+  },
+  userInRoom: {
+    type: Object,
+    required: true,
+  },
+})
+const emit = defineEmits(['fetchData'])
+const confirmStore = useConfirmStore()
 const roomStore = useRoomStore()
-const room = roomStore.currentRoom
 const link = window.location.href
 const qrcode = useQRCode(link)
+
 function copyInviteLink(value) {
   navigator.clipboard.writeText(value)
+}
+async function hanldeAcceptRequest(id, accept) {
+  await roomStore.acceptJoinRoom(id, accept)
+  emit('fetchData')
+}
+async function handleDeleteMember(id) {
+  const result = await confirmStore.showConfirmDialog({
+    title: 'Delete member',
+    message: 'Are you sure you want to delete this member?',
+  })
+  if (!result)
+    return
+  await roomStore.deleteMember(id)
+  emit('fetchData')
+}
+
+async function updateRole(id, role) {
+  await roomStore.updatePermission(id, role)
+  emit('fetchData')
 }
 </script>
 
@@ -26,7 +68,7 @@ function copyInviteLink(value) {
       </h1>
       <div class="flex items-center py-2 mb-2">
         <div class="text-xl mr-2 font-bold">
-          {{ room.name }}
+          {{ room.ten_phong }}
         </div>
         <Icon name="IconPen" class="w-4 h-4" />
       </div>
@@ -73,7 +115,7 @@ function copyInviteLink(value) {
             >
             <Popover>
               <PopoverTrigger>
-                <Icon name="IconCopy" class="w-6 h-6 cursor-pointer" @click="copyInviteLink(room.inviteLink)" />
+                <Icon name="IconCopy" class="w-6 h-6 cursor-pointer" @click="copyInviteLink(link)" />
               </PopoverTrigger>
               <PopoverContent class="w-25 text-muted-foreground" readonly>
                 Copied!
@@ -98,43 +140,62 @@ function copyInviteLink(value) {
         <Tabs default-value="members" class="w-full">
           <TabsList class="w-full">
             <TabsTrigger value="members">
-              Members
+              Members ({{ members.length }})
             </TabsTrigger>
-            <TabsTrigger value="requests">
-              Requests
+            <TabsTrigger
+              v-if="userInRoom?.quyen !== 'thanh_vien'"
+              value="requests"
+            >
+              Requests ({{ requests.length }})
             </TabsTrigger>
           </TabsList>
           <TabsContent value="members">
-            <div class="flex flex-col mt-4 max-h-80 overflow-y-auto scrollbar">
+            <div
+              v-if="members.length"
+              class="flex flex-col mt-4 max-h-80 overflow-y-auto scrollbar"
+            >
               <div
-                v-for="member in room.members"
+                v-for="member in members"
                 :key="member.id"
                 class="flex items-center justify-between border border-input rounded-md p-2 bg-border mb-2"
               >
                 <div class="flex items-center">
                   <img
-                    v-lazy="member.avatar"
+                    v-lazy="member.anh_dai_dien"
                     alt="avatar"
                     class="w-8 h-8 rounded-full"
                   >
                   <div class="ml-2">
-                    {{ member.username }}
+                    {{ member.ho_ten }}
                   </div>
                 </div>
                 <div class="flex items-center">
                   <div class="text-xs text-gray-400 mr-2">
-                    {{ member.role }}
+                    {{ listRoles[member.quyen] }}
                   </div>
-                  <Popover>
+                  <Popover
+                    v-if="userInRoom?.quyen !== 'thanh_vien'"
+                  >
                     <PopoverTrigger>
-                      <Icon name="IconPen" class="w-4 h-4 cursor-pointer" />
+                      <Icon name="IconPen" class="w-8 h-8 p-2 text-white cursor-pointer hover:bg-popover rounded-sm" />
                     </PopoverTrigger>
-                    <PopoverContent class="w-25 text-muted-foreground flex flex-col items-center">
-                      <div class="border-b pb-2">
+                    <PopoverContent class="w-24 p-2 text-muted-foreground text-sm flex flex-col items-center">
+                      <div class="p-2 my-1 cursor-pointer text-center w-full rounded-sm hover:bg-secondary" @click="updateRole(member.id, 'quan_ly')">
                         Admin
                       </div>
-                      <div class="">
+                      <Separator />
+                      <div
+                        class="p-2 my-1 cursor-pointer text-center w-full rounded-sm hover:bg-secondary"
+                        @click="updateRole(member.id, 'thanh_vien')"
+                      >
                         Member
+                      </div>
+                      <Separator />
+                      <div
+                        class="p-2 my-1 cursor-pointer text-center w-full rounded-sm hover:bg-secondary"
+                        @click="handleDeleteMember(member.id)"
+                      >
+                        Delete
                       </div>
                     </PopoverContent>
                   </Popover>
@@ -143,35 +204,45 @@ function copyInviteLink(value) {
             </div>
           </TabsContent>
           <TabsContent value="requests">
-            <div class="flex flex-col mt-4 max-h-80 overflow-y-auto scrollbar">
+            <div
+              v-if="requests.length"
+              class="flex flex-col mt-4 max-h-80 overflow-y-auto scrollbar"
+            >
               <div
-                v-for="member in room.members"
+                v-for="member in requests"
                 :key="member.id"
                 class="flex items-center justify-between border border-input rounded-md p-2 bg-border mb-2"
               >
                 <div class="flex items-center">
                   <img
-                    v-lazy="member.avatar"
+                    v-lazy="member.anh_dai_dien"
                     alt="avatar"
                     class="w-8 h-8 rounded-full"
                   >
                   <div class="ml-2 w-28 truncate">
-                    {{ member.username }}
+                    {{ member.ho_ten }}
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
                   <button
                     class="rounded-full flex items-center justify-center bg-destructive p-2.5"
+                    @click="hanldeAcceptRequest(member.id, false)"
                   >
                     <Icon name="IconCloseBtn" class="w-3 h-3 text-white" />
                   </button>
                   <button
                     class="rounded-full flex items-center justify-center bg-primary p-2.5"
+                    @click="hanldeAcceptRequest(member.id, true)"
                   >
                     <Icon name="IconCheck" class="w-3 h-3 text-white" />
                   </button>
                 </div>
               </div>
+            </div>
+            <div v-else>
+              <p class="text-center text-sm py-4 font-medium">
+                No requests to join room
+              </p>
             </div>
           </TabsContent>
         </Tabs>

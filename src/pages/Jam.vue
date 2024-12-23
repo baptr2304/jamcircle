@@ -5,19 +5,17 @@ import CreateRoomDialog from '@/components/room/CreateRoomDialog.vue'
 import JoinRoomDialog from '@/components/room/JoinRoomDialog.vue'
 import Button from '@/components/ui/button/Button.vue'
 import Input from '@/components/ui/input/Input.vue'
-import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
 import Separator from '@/components/ui/separator/Separator.vue'
-import { usePlaylistStore } from '@/stores/playlist'
+import { toast } from '@/components/ui/toast'
 import { useRoomStore } from '@/stores/room'
 import { useRouter } from 'vue-router'
 
-const playlistStore = usePlaylistStore()
-onMounted(async () => {
-  await playlistStore.getMyPlaylists()
-})
-
+const roomStore = useRoomStore()
+const router = useRouter()
+const rooms = ref([])
 const isCreateRoomOpen = ref(false)
 const isJoinRoomOpen = ref(false)
+const searchValue = ref('')
 function openCreateRoom() {
   isCreateRoomOpen.value = true
 }
@@ -25,31 +23,40 @@ function openJoinRoom() {
   isJoinRoomOpen.value = true
 }
 
-const router = useRouter()
-const isOpen = ref(false)
-const classAnimate = ref('')
-watch(isOpen, (value) => {
-  classAnimate.value = value ? 'animate-rotate-up' : 'animate-rotate-down'
-})
+function handleRoomClick(roomId) {
+  roomStore.getDetailRoom(roomId)
+  router.push(`/room/${roomId}`)
+}
 
-const roomStore = useRoomStore()
-const roomName = ref('')
-
-onMounted(async () => {
-  await roomStore.getAllRooms()
-})
-const rooms = ref([])
-watchEffect(() => {
-  rooms.value = roomStore.rooms
-})
 const listRoom = computed(() => {
   return rooms.value.filter((room) => {
-    return room.name.toLowerCase().includes(roomName.value.toLowerCase())
+    return room.ten_phong.toLowerCase().includes(searchValue.value.toLowerCase())
   })
 })
-function handleRoomClick(roomId) {
-  roomStore.getRoomById(roomId)
-  router.push(`/room/${roomId}`)
+
+onMounted(async () => {
+  rooms.value = await roomStore.listRoom()
+})
+
+async function handleCreateRoom(roomName) {
+  const { phong_nghe_nhac } = await roomStore.createRoom(roomName)
+  toast({
+    title: 'Room created!',
+    description: 'You have successfully created a room.',
+    duration: 5000,
+  })
+  router.push(`/room/${phong_nghe_nhac.id}`)
+  isCreateRoomOpen.value = false
+}
+
+async function handleJoinRoom(roomId) {
+  await roomStore.requestJoinRoom(roomId)
+  toast({
+    title: 'Request sent!',
+    description: 'Your request to join the room has been sent.',
+    duration: 5000,
+  })
+  isJoinRoomOpen.value = false
 }
 </script>
 
@@ -77,11 +84,14 @@ function handleRoomClick(roomId) {
       </Button>
     </div>
   </div>
-  <div class="flex flex-col gap-2 px-4">
+  <div
+    v-if="rooms.length !== 0"
+    class="flex flex-col gap-2 px-4"
+  >
     <div class="relative w-full max-w-sm">
       <Input
         id="find"
-        v-model="roomName"
+        v-model="searchValue"
         type="text"
         placeholder="Search..."
         class="pl-10"
@@ -94,16 +104,29 @@ function handleRoomClick(roomId) {
       </span>
       <Separator class="my-2" />
     </div>
-    <div class="flex flex-col gap-2 w-full h-56 overflow-y-auto scrollbar">
+    <div
+      v-if="listRoom.length !== 0"
+      class="flex flex-col gap-2 w-full h-56 overflow-y-auto scrollbar"
+    >
       <template v-for="room in listRoom" :key="room.id">
         <div
           class="rounded-md border px-4 py-3 font-mono text-sm cursor-pointer"
           @click="handleRoomClick(room.id)"
         >
-          {{ room.name }}
+          {{ room.ten_phong }}
         </div>
       </template>
     </div>
+    <div v-else>
+      <p class="text-center">
+        No rooms found.
+      </p>
+    </div>
+  </div>
+  <div v-else>
+    <p class="text-center">
+      No rooms found.
+    </p>
   </div>
 
   <CreateRoomDialog

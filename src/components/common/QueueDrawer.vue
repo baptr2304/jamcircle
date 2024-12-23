@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useSongStore } from '@/stores/song'
-import listEvents from '@/utils/enumEventBus'
+import { listEvents } from '@/utils/enum'
 
 import emitter from '@/utils/eventBus'
 

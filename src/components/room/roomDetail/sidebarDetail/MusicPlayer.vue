@@ -2,7 +2,7 @@
 import { Progress } from '@/components/ui/progress'
 import { useRoomQueue } from '@/stores/room-queue'
 import { useUserStore } from '@/stores/user'
-import listEvents from '@/utils/enumEventBus'
+import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 import { formatTime } from '@/utils/format'
 import { nextTick } from 'vue'
