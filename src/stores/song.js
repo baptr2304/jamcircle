@@ -76,7 +76,7 @@ export const useSongStore = defineStore('queue', () => {
     currentSong.value = playlist.value[currentIndex.value]
   }
 
-  function playWithoutQueue(song) {
+  function addToQueueAndPlay(song) {
     const alreadySong = addToQueue(song)
     playSongInQueue(alreadySong)
   }
@@ -126,7 +126,7 @@ export const useSongStore = defineStore('queue', () => {
     searchSongs,
     playSongInQueue,
     addToQueue,
-    playWithoutQueue,
+    addToQueueAndPlay,
     handleRemoveFromQueue,
     uploadSongToServer,
   }

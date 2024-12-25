@@ -52,14 +52,16 @@ function handleMouseDown(event) {
   document.addEventListener('mouseup', handleMouseUp)
 }
 
-function handlePlay() {
+async function handlePlay() {
   if (!roomQueueStore.currentSong)
     return
   isPlaying.value = !isPlaying.value
   if (isPlaying.value) {
+    await roomQueueStore.playSongInQueue(roomQueueStore.currentSong, songCurrentTime.value)
     audio.value.play()
   }
   else {
+    await roomQueueStore.pauseSongInQueue(songCurrentTime.value)
     audio.value.pause()
   }
 }
@@ -80,7 +82,7 @@ function updateTime() {
     nextSong()
   }
 }
-function changeCurrentTime(time, type) {
+async function changeCurrentTime(time, type) {
   if (!roomQueueStore.currentSong)
     return
   switch (type) {
@@ -95,6 +97,14 @@ function changeCurrentTime(time, type) {
       audio.value.currentTime = time
       break
   }
+  const payload = {
+    id: roomQueueStore.currentRoom.id,
+    ten_phong: roomQueueStore.currentRoom.ten_phong,
+    trang_thai_phat: isPlaying.value ? 'dang_phat' : 'tam_dung',
+    thoi_gian_hien_tai_bai_hat: audio.value.currentTime,
+    so_thu_tu_bai_hat_dang_phat: roomQueueStore.currentSong.so_thu_tu,
+  }
+  // await roomQueueStore.updateRoom(payload)
   updateTime()
 }
 async function resetControl() {
@@ -107,8 +117,8 @@ async function resetControl() {
   if (!interval)
     interval = setInterval(updateTime, 1000)
   audio.value.play()
-  songCurrentTime.value = 0
-  changeCurrentTime(0)
+  songCurrentTime.value = roomQueueStore.currentSong?.thoi_gian_hien_tai_bai_hat ?? 0
+  changeCurrentTime(songCurrentTime.value)
 }
 function nextSong() {
   if (!roomQueueStore.currentSong)

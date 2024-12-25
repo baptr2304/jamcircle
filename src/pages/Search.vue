@@ -52,7 +52,7 @@ watch(
   },
 )
 function handlePlaySong(song) {
-  songStore.playWithoutQueue(song)
+  songStore.addToQueueAndPlay(song)
   emitter.emit(listEvents.playSong)
 }
 </script>

@@ -17,31 +17,34 @@ import FriendList from '@/components/room/roomDetail/sidebarDetail/FriendList.vu
 import MusicList from '@/components/room/roomDetail/sidebarDetail/MusicList.vue'
 import SearchInRoom from '@/components/room/roomDetail/sidebarDetail/SearchInRoom.vue'
 import { toast } from '@/components/ui/toast'
+import { useConfirmStore } from '@/stores/confirm'
 import { useRoomStore } from '@/stores/room'
 import { useRoomQueue } from '@/stores/room-queue'
 import { useUserStore } from '@/stores/user'
 import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 
+const confirmStore = useConfirmStore()
 const roomStore = useRoomStore()
 const roomQueueStore = useRoomQueue()
 const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
-if (!userStore.isAuthenticated) {
-  router.push('/home')
-}
 
+watch(() => userStore.isAuthenticated, (value) => {
+  if (!value) {
+    router.push('/home')
+  }
+}, { immediate: true })
 const messages = ref([])
 const isSidebarVisible = ref(true)
 const activeTab = ref('friends')
-const roomData = ref(null)
 const members = ref([])
 const requests = ref([])
 const roomId = route.params.id
 
 const userInRoom = computed(() => {
-  return members.value.find(member => member.nguoi_dung_id === userStore.user.id)
+  return members.value.find(member => member.nguoi_dung_id === userStore.user?.id)
 })
 
 function toggleSidebar() {
@@ -50,7 +53,7 @@ function toggleSidebar() {
 
 async function fetchRoomData() {
   try {
-    roomData.value = await roomStore.getDetailRoom(roomId)
+    await roomQueueStore.getDetailRoom(roomId)
   }
   catch (error) {
     const message = error.response.data.detail || 'An error occurred while fetching room details.'
@@ -62,6 +65,10 @@ async function fetchRoomData() {
     })
     router.push('/jam')
   }
+}
+const roomData = computed(() => roomQueueStore.currentRoom)
+async function fetchPlaylistData() {
+  await roomQueueStore.setPlaylist(roomData.value.danh_sach_phat_id)
 }
 
 async function fetchMembersData() {
@@ -108,8 +115,15 @@ async function handleMessage(messageContent) {
   }
 }
 onMounted(async () => {
+  const confirm = await confirmStore.showConfirmDialog({
+    title: 'Welcome to the room',
+    message: 'Confirm to continue to the room',
+  })
+  if (!confirm)
+    router.push('/jam')
   await fetchRoomData()
   fetchMembersData()
+  fetchPlaylistData()
   emitter.on(listEvents.closeQueueDrawer, closeSidebar)
 })
 onUnmounted(() => {
@@ -129,9 +143,9 @@ onUnmounted(() => {
       @toggle-sidebar="toggleSidebar"
       @set-active-tab="setActiveTab"
     />
-    <template v-else>
-      <p>Loading room details...</p>
-    </template>
+    <div v-else class="flex w-full p-8 justify-center items-center">
+      <Icon name="IconLoading" />
+    </div>
     <!-- <Chat
       :messages="messages"
       :class="roomQueueStore.currentSong ? 'pt-36' : 'pt-16'"
@@ -145,15 +159,16 @@ onUnmounted(() => {
     v-model="isSidebarVisible"
   >
     <MusicList
-      v-if="activeTab === 'queue'"
+      v-show="activeTab === 'queue'"
       :room-id="roomId"
+      @remove-song="fetchPlaylistData"
     />
     <SearchInRoom
-      v-else-if="activeTab === 'music' && userInRoom?.quyen !== 'thanh_vien'"
-      :room-id="roomId"
+      v-show="activeTab === 'music' && userInRoom?.quyen !== 'thanh_vien'"
+      @add-song-to-queue="fetchPlaylistData"
     />
     <FriendList
-      v-else-if="activeTab === 'friends'"
+      v-show="activeTab === 'friends'"
       :user-in-room="userInRoom"
       :requests="requests"
       :members="members"

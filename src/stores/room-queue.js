@@ -1,96 +1,105 @@
+import {
+  addSong,
+  getPlaylistSongs,
+  removeSong,
+} from '@/api/playlist'
+import * as apiRoom from '@/api/room'
 import { toast } from '@/components/ui/toast'
+import { listEvents } from '@/utils/enum'
+import emitter from '@/utils/eventBus'
 import { defineStore } from 'pinia'
 
 export const useRoomQueue = defineStore('room-queue', () => {
   const playlist = ref([])
-  const currentSong = ref(playlist.value[0])
-  const currentIndex = ref(0)
+  const playlistId = ref(null)
+  const currentRoom = ref(null)
+  const currentIndex = computed(() => currentRoom.value?.so_thu_tu_bai_hat_dang_phat)
+  const currentSong = computed(() => playlist.value.find(item => item.so_thu_tu === currentIndex.value))
+
+  watch(currentRoom, handlePlaySong)
+
   // Song
-  function addSong(song) {
-    const index = playlist.value.findIndex(item => item.id === song.id)
-    if (index !== -1) {
-      return
-    }
-    playlist.value.push(song)
-    toast({
-      ten_bai_hat: 'Success',
-      description: 'Added to playlist',
-    })
-  }
-  function removeSong(index) {
-    playlist.value.splice(index, 1)
-  }
   function nextSong() {
-    currentIndex.value++
-    if (currentIndex.value >= playlist.value.length) {
-      currentIndex.value = 0
-    }
-    currentSong.value = playlist.value[currentIndex.value]
   }
+
   function prevSong() {
-    currentIndex.value--
-    if (currentIndex.value < 0) {
-      currentIndex.value = playlist.value.length - 1
+  }
+
+  function handlePlaySong() {
+    if (currentRoom.value.trang_thai_phat === 'dang_phat') {
+      emitter.emit(listEvents.playSong)
     }
-    currentSong.value = playlist.value[currentIndex.value]
+  }
+
+  async function updateRoom(payload) {
+    currentRoom.value = await apiRoom.apiUpdateRoom(payload)
+  }
+
+  async function getDetailRoom(id) {
+    currentRoom.value = await apiRoom.apiGetDetailRoom(id)
   }
 
   // Playlist
   function clearPlaylist() {
     playlist.value = []
-    currentIndex.value = 0
+    playlistId.value = null
     currentSong.value = null
+    currentRoom.value = null
   }
 
-  function setPlaylist(newPlaylist) {
-    playlist.value = newPlaylist
-    currentIndex.value = 0
-    currentSong.value = playlist.value[currentIndex.value]
+  async function setPlaylist(danh_sach_phat_id) {
+    const data = await getPlaylistSongs(danh_sach_phat_id)
+    playlist.value = data
+    playlistId.value = danh_sach_phat_id
+    handlePlaySong()
   }
 
-  function playWithoutQueue(song) {
-    const alreadySong = addToQueue(song)
-    playSongInQueue(alreadySong)
+  async function addToQueueAndPlay(song) {
+    const alreadySong = await addToQueue(song)
   }
 
-  // API
-
-  function playSongInQueue(song) {
-    const index = playlist.value.findIndex(item => item.so_thu_tu === song.so_thu_tu)
-    if (index === -1) {
-      return
+  async function playSongInQueue(song, currentTime) {
+    const payload = {
+      id: currentRoom.value.id,
+      ten_phong: currentRoom.value.ten_phong,
+      trang_thai_phat: 'dang_phat',
+      thoi_gian_hien_tai_bai_hat: currentTime,
+      so_thu_tu_bai_hat_dang_phat: song.so_thu_tu,
     }
-    currentIndex.value = index
-    currentSong.value = playlist.value[currentIndex.value]
+    currentRoom.value = await apiRoom.apiUpdateRoom(payload)
   }
 
-  function handleRemoveFromQueue(song) {
-    const index = playlist.value.findIndex(item => item.so_thu_tu === song.so_thu_tu)
-    if (index === -1) {
-      return
+  async function pauseSongInQueue(currentTime) {
+    const payload = {
+      id: currentRoom.value.id,
+      ten_phong: currentRoom.value.ten_phong,
+      trang_thai_phat: 'tam_dung',
+      thoi_gian_hien_tai_bai_hat: currentTime,
+      so_thu_tu_bai_hat_dang_phat: currentRoom.value.so_thu_tu_bai_hat_dang_phat,
     }
-    playlist.value.splice(index, 1)
+    currentRoom.value = await apiRoom.apiUpdateRoom(payload)
   }
 
-  function addToQueue(song) {
-    const lastIndex = playlist.value[playlist.value.length - 1]?.so_thu_tu || 0
-    const newSong = {
-      ...song,
-      so_thu_tu: lastIndex + 1,
-    }
-    playlist.value.push(newSong)
+  async function handleRemoveFromQueue(song) {
+    await removeSong(playlistId.value, song.so_thu_tu)
+  }
+
+  async function addToQueue(song) {
+    const data = await addSong(playlistId.value, song.id)
+    playlist.value.push(data)
     toast({
       title: 'Success',
       description: 'Added to queue',
     })
-    return newSong
+    return data
   }
 
   return {
     // State
-    playlist,
+    currentRoom,
     currentSong,
-    currentIndex,
+    playlist,
+    playlistId,
     setPlaylist,
     clearPlaylist,
     addSong,
@@ -100,6 +109,9 @@ export const useRoomQueue = defineStore('room-queue', () => {
     playSongInQueue,
     addToQueue,
     handleRemoveFromQueue,
-    playWithoutQueue,
+    addToQueueAndPlay,
+    updateRoom,
+    getDetailRoom,
+    pauseSongInQueue,
   }
 })

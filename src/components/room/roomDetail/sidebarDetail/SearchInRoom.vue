@@ -10,17 +10,13 @@ import { useRoomQueue } from '@/stores/room-queue'
 import { useSongStore } from '@/stores/song'
 import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
-
 import { useAsyncState, useDebounceFn, useInfiniteScroll } from '@vueuse/core'
 import { Search } from 'lucide-vue-next'
 
-const props = defineProps({
-  roomId: String,
-})
-
-const searchQuery = ref('')
+const emit = defineEmits(['addSongToQueue'])
 const songStore = useSongStore()
 const roomQueue = useRoomQueue()
+const searchQuery = ref('')
 const data = ref([])
 const query = ref({
   offset: 0,
@@ -56,9 +52,14 @@ const handleSearch = useDebounceFn(async () => {
   query.value.offset = 0
   await execute()
 }, 300)
-function handlePlaySong(song) {
-  roomQueue.playWithoutQueue(song)
-  emitter.emit(listEvents.playSong)
+async function handlePlaySong(song) {
+  await roomQueue.addToQueueAndPlay(song)
+  emit('addSongToQueue')
+  // emitter.emit(listEvents.playSong)
+}
+async function handleAddSongToQueue(song) {
+  await roomQueue.addToQueue(song)
+  emit('addSongToQueue')
 }
 </script>
 
@@ -101,7 +102,7 @@ function handlePlaySong(song) {
                   />
                 </PopoverTrigger>
                 <PopoverContent class="w-25">
-                  <button @click="roomQueue.addToQueue(song)">
+                  <button @click="handleAddSongToQueue(song)">
                     Add to queue
                   </button>
                 </PopoverContent>
