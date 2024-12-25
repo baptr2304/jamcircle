@@ -23,11 +23,6 @@ function openJoinRoom() {
   isJoinRoomOpen.value = true
 }
 
-function handleRoomClick(roomId) {
-  roomStore.getDetailRoom(roomId)
-  router.push(`/room/${roomId}`)
-}
-
 const listRoom = computed(() => {
   return rooms.value.filter((room) => {
     return room.ten_phong.toLowerCase().includes(searchValue.value.toLowerCase())
@@ -109,12 +104,12 @@ async function handleJoinRoom(roomId) {
       class="flex flex-col gap-2 w-full h-56 overflow-y-auto scrollbar"
     >
       <template v-for="room in listRoom" :key="room.id">
-        <div
+        <RouterLink
+          :to="`/room/${room.id}`"
           class="rounded-md border px-4 py-3 font-mono text-sm cursor-pointer"
-          @click="handleRoomClick(room.id)"
         >
           {{ room.ten_phong }}
-        </div>
+        </RouterLink>
       </template>
     </div>
     <div v-else>

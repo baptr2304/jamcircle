@@ -70,7 +70,6 @@ async function updateRole(id, role) {
         <div class="text-xl mr-2 font-bold">
           {{ room.ten_phong }}
         </div>
-        <Icon name="IconPen" class="w-4 h-4" />
       </div>
 
       <Tabs default-value="room-link" class="w-full">

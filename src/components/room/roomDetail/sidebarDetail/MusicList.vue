@@ -5,30 +5,35 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-
-import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
-import { useRoomStore } from '@/stores/room'
 import { useRoomQueue } from '@/stores/room-queue'
 
-const props = defineProps({
-  roomId: String,
+const { roomId } = defineProps({
+  roomId: {
+    type: String,
+    required: true,
+  },
 })
-const roomStore = useRoomStore()
+const emit = defineEmits(['removeSong'])
 const roomQueueStore = useRoomQueue()
-function removeSong(id) {
-  roomStore.removeSongFromQueue(id)
+async function handleRemoveSong(song) {
+  await roomQueueStore.handleRemoveFromQueue(song)
+  emit('removeSong')
+}
+
+async function handlePlaySong(song) {
+  await roomQueueStore.playSongInQueue(song, 0)
 }
 </script>
 
 <template>
-  <div class="w-full flex items-center justify-center">
+  <div class="w-full h-[calc(100%-3rem)] flex justify-center">
     <div class="w-full flex flex-col">
-      <h3 class="mx-4 mt-3 text-xl">
+      <h3 class="mx-4 mt-3 py-2 text-xl">
         Queue
       </h3>
 
-      <ScrollArea
-        class="w-full h-[30rem]"
+      <div
+        class="w-full h-[calc(100%-3rem)] overflow-y-auto scrollbar"
       >
         <SongListItem
           v-for="song in roomQueueStore.playlist"
@@ -47,7 +52,7 @@ function removeSong(id) {
                   />
                 </PopoverTrigger>
                 <PopoverContent class="w-25">
-                  <button @click="roomQueueStore.handleRemoveFromQueue(song)">
+                  <button @click="handleRemoveSong(song)">
                     Remove from queue
                   </button>
                 </PopoverContent>
@@ -55,7 +60,7 @@ function removeSong(id) {
             </div>
           </template>
         </SongListItem>
-      </ScrollArea>
+      </div>
     </div>
   </div>
 </template>

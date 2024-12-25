@@ -10,10 +10,6 @@ export const useRoomStore = defineStore('room', () => {
     return apiRoom.apiListRoom()
   }
 
-  async function getDetailRoom(id) {
-    return apiRoom.apiGetDetailRoom(id)
-  }
-
   async function getRoomMembers(id) {
     return apiRoom.apiGetRoomMembers(id)
   }
@@ -28,10 +24,6 @@ export const useRoomStore = defineStore('room', () => {
 
   async function acceptJoinRoom(id, accept) {
     return apiRoom.apiAcceptJoinRoom(id, accept)
-  }
-
-  async function updateRoom(data) {
-    return apiRoom.apiUpdateRoom(data)
   }
 
   async function updatePermission(id, role) {
@@ -49,14 +41,12 @@ export const useRoomStore = defineStore('room', () => {
   return {
     createRoom,
     listRoom,
-    getDetailRoom,
     getRoomMembers,
     getListRequestJoinRoom,
     requestJoinRoom,
     acceptJoinRoom,
-    updateRoom,
     updatePermission,
     leaveRoom,
-    deleteMember,
+    deleteMember
   }
 })
