@@ -1,4 +1,4 @@
-import { apiGetAllUsers, apiGetUserById, apiSearch } from '@/api/admin'
+import { apiGetAllUsers, apiGetUserById, apiSearch, apiUpdateUser } from '@/api/admin'
 import { defineStore } from 'pinia'
 
 export const useAdminStore = defineStore('admin', () => {
@@ -8,9 +8,16 @@ export const useAdminStore = defineStore('admin', () => {
   const totalUsers = computed(() => allUsers.value.length)
   const currentUser = ref(null)
   async function getAllUser() {
-    const response = await apiGetAllUsers()
-    allUsers.value = response
-    updatePaginatedUsers(1)
+    try {
+      const response = await apiGetAllUsers()
+      allUsers.value = response
+      updatePaginatedUsers(1)
+    }
+    catch (error) {
+      if (error.response.status === 403) {
+        window.location.reload()
+      }
+    }
   }
   function updatePaginatedUsers(page, itemPerPage = 8) {
     const startIndex = (page - 1) * itemPerPage
@@ -36,12 +43,21 @@ export const useAdminStore = defineStore('admin', () => {
     try {
       const response = await apiGetUserById(id)
       currentUser.value = response
-      console.log('currentUser:', currentUser.value)
       return response
     }
     catch (error) {
       console.error('Error fetching user data:', error)
     }
+  }
+
+  async function updateRole(id, quyen) {
+    const payload = { quyen }
+    return await apiUpdateUser(id, payload)
+  }
+
+  async function updateStatus(id, trang_thai) {
+    const payload = { trang_thai }
+    return await apiUpdateUser(id, payload)
   }
   return {
     allUsers,
@@ -52,5 +68,7 @@ export const useAdminStore = defineStore('admin', () => {
     updatePaginatedUsers,
     searchUser,
     getUserById,
+    updateRole,
+    updateStatus,
   }
 })

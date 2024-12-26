@@ -1,4 +1,5 @@
 import { getUser } from '@/api/user'
+import { toast } from '@/components/ui/toast'
 import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
 
@@ -13,14 +14,16 @@ export async function middlewareAuth(to, from, next) {
       userStore.setUser(response)
     }
     catch (error) {
-      console.error('Error fetching user data:', error)
       authStore.logout()
-    }
-  }
-  if (accessToken && userStore.isAuthenticated) {
-    if (to.path === '/home' && userStore.user?.role === 'quan_tri_vien') {
-
-      return next('/admin')
+      const errorMessage = error?.response?.data?.detail || 'There was a problem with your request.'
+      if (errorMessage) {
+        toast({
+          title: 'Error',
+          description: errorMessage === 'Inactive nguoi_dung' ? 'Your account has been deactivated' : errorMessage,
+          variant: 'destructive',
+          duration: 5000,
+        })
+      }
     }
   }
   return next()

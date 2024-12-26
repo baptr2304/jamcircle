@@ -5,7 +5,6 @@ export const useUserStore = defineStore('user', () => {
   const user = ref(null)
   function setUser(newUser) {
     user.value = newUser
-    console.log('newUser:', newUser)
   }
 
   async function getUserAuth() {
@@ -23,9 +22,13 @@ export const useUserStore = defineStore('user', () => {
 
   async function updateUser(updates) {
     try {
-      const response = await update(updates)
+      const { avatar, username } = updates
+      const payload = {
+        anh_dai_dien: avatar,
+        ten_nguoi_dung: username,
+      }
+      const response = await update(payload)
       setUser(response)
-      await getUserAuth()
       return response
     }
     catch (error) {

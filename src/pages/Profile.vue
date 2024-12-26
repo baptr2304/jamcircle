@@ -7,16 +7,15 @@ const userStore = useUserStore()
 onMounted(() => {
   userStore.getUserAuth()
 })
-function handleUpdateUser(user) {
-  userStore.updateUser(user)
+async function handleUpdateUser(user) {
+  await userStore.updateUser(user)
 }
-const user = userStore.user
 </script>
 
 <template>
   <div class="flex flex-col items-center justify-center h-full">
     <ProfileForm
-      :user="user"
+      :user="userStore.user"
       :is-admin="false"
       context="self"
       :on-submit="handleUpdateUser"

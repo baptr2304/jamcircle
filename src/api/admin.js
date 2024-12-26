@@ -1,4 +1,4 @@
-import { $get } from './axios'
+import { $get, $put } from './axios'
 
 export async function apiGetAllUsers() {
   const response = await $get('/quan_tri_vien/nguoi_dung')
@@ -11,4 +11,7 @@ export async function apiSearch(username = '') {
 export async function apiGetUserById(id) {
   const response = await $get(`/quan_tri_vien/nguoi_dung/${id}`)
   return response
+}
+export function apiUpdateUser(id, payload) {
+  return $put(`/quan_tri_vien/nguoi_dung/${id}`, payload)
 }

@@ -48,9 +48,6 @@ const form = useForm({
   initialValues: {
     username: props.user?.username || '',
     email: props.user?.email || '',
-    password: '',
-    confirmPassword: '',
-    role: props.user?.role || '',
   },
 })
 
@@ -139,30 +136,9 @@ function cancelEdit() {
           type="text"
           label="Email Address"
           name="email"
-          :disabled="!isEditing || context === 'editUser'"
+          disabled
           custom="h-[3rem] mb-5 mt-1"
         />
-        <InputValidator
-          v-if="context !== 'editUser'"
-          v-model="form.values.password"
-          type="password"
-          label="Password"
-          name="password"
-          :disabled="!isEditing"
-          custom="h-[3rem] mb-5 mt-1"
-          placeholder="*********"
-        />
-        <div v-if="isEditing && context !== 'editUser'">
-          <InputValidator
-            v-model="form.values.confirmPassword"
-            type="password"
-            label="Confirm Password"
-            name="confirmPassword"
-            :disabled="!isEditing"
-            custom="h-[3rem] mb-5 mt-1"
-            placeholder="*********"
-          />
-        </div>
         <InputValidator
           v-if="isAdmin && context === 'editUser'"
           v-model="form.values.role"

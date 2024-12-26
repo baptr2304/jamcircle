@@ -39,6 +39,10 @@ function redirectProfile() {
     }
   })
 }
+function handleLogout() {
+  authStore.logout()
+  router.push('/')
+}
 </script>
 
 <template>
@@ -55,8 +59,7 @@ function redirectProfile() {
           </AvatarFallback>
         </Avatar>
         <div class="max-lg:hidden grid flex-1 text-left text-sm leading-tight">
-          <span class="truncate font-semibold">{{ userStore.user.name }}</span>
-          <span class="truncate text-xs">{{ userStore.user.email }}</span>
+          <span class="truncate font-semibold">{{ userStore.user.username  || userStore.user.email }}</span>
         </div>
         <Icon name="IconArrowDown" class="ml-4" />
       </Button>
@@ -83,7 +86,7 @@ function redirectProfile() {
         Profile
       </DropdownMenuItem>
       <DropdownMenuSeparator />
-      <DropdownMenuItem @click="authStore.logout()">
+      <DropdownMenuItem @click="handleLogout">
         Log out
       </DropdownMenuItem>
     </DropdownMenuContent>
