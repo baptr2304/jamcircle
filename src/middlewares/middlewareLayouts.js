@@ -9,7 +9,12 @@ export async function middlewareLayout(to, from, next) {
   const userRole = userStore.user?.role
 
   const authenPage = ['Playlist', 'playlist-create', 'song-create', 'Favorite', 'Profile', 'Room']
-  if (isAuthenticated && layout === 'auth' && userRole !== 'quan_tri_vien') {
+
+  if (isAuthenticated && layout !== 'admin' && userRole === 'quan_tri_vien') {
+    return next('/admin')
+  }
+
+  if (isAuthenticated && layout === 'admin' && userRole !== 'quan_tri_vien') {
     return next('/')
   }
 

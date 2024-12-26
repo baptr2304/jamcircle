@@ -1,6 +1,5 @@
 import { apiLogin, apiRegister } from '@/api/auth'
 import { defineStore } from 'pinia'
-
 import { useUserStore } from './user'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -10,17 +9,10 @@ export const useAuthStore = defineStore('auth', () => {
   const router = useRouter()
 
   async function login(credentials) {
-    const userRole = userStore.user?.role
     const data = await apiLogin(credentials)
     localStorage.setItem('accessToken', data.ma_xac_thuc)
     localStorage.setItem('refreshToken', data.ma_lam_moi)
-    if (userRole === 'quan_tri_vien') {
-  
-      return router.push('/admin')
-    }
-    else {
-      return router.push('/')
-    }
+    router.push('/home')
   }
 
   async function logout() {

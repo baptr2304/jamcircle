@@ -1,6 +1,5 @@
 <route>
   {
-    path: '/admin/statistics',
     meta:{
         title: 'Admin',
         layout: 'admin'

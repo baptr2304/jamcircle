@@ -29,7 +29,7 @@ const formSchema = toTypedSchema(
       confirm: passwordSchema,
     })
     .refine(data => data.mat_khau === data.confirm, {
-      message: 'Mật khẩu xác nhận không khớp',
+      message: 'Passwords do not match',
       path: ['confirm'],
     }),
 )
@@ -43,8 +43,8 @@ const onSubmit = form.handleSubmit(async (values) => {
     isLoading.value = true
     await authStore.register(values)
     toast({
-      title: 'Thành công',
-      description: 'Đăng ký thành công',
+      title: 'Success',
+      description: 'Your account has been created successfully.',
       duration: 5000,
     })
     router.push('/auth/login')
@@ -77,17 +77,17 @@ const onSubmit = form.handleSubmit(async (values) => {
 <template>
   <div class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2">
     <h1 class="text-2xl flex justify-center font-semibold">
-      ĐĂNG KÝ
+      REGISTER
     </h1>
     <form class="mt-[1rem]" @submit=" onSubmit ">
       <InputValidator
-        type="text" label="Tên người dùng" name="ten_nguoi_dung"
-        placeholder="Nhập tên người dùng"
+        type="text" label="Username" name="ten_nguoi_dung"
+        placeholder="Enter Username"
       />
-      <InputValidator type="email" label="Địa chỉ email" name="email" placeholder="nguyenvana@gmail.com" />
-      <InputValidator id="mat_khau" type="password" label="Mật khẩu" name="mat_khau" placeholder="******" />
+      <InputValidator type="email" label="Email Address" name="email" placeholder="nguyenvana@gmail.com" />
+      <InputValidator id="mat_khau" type="password" label="Password" name="mat_khau" placeholder="******" />
       <InputValidator
-        id="confirm" type="password" label="Xác nhận mật khẩu" name="confirm"
+        id="confirm" type="password" label="Password confirm" name="confirm"
         placeholder="******"
       />
       <Button
@@ -101,18 +101,18 @@ const onSubmit = form.handleSubmit(async (values) => {
           </div>
         </template>
         <template v-else>
-          ĐĂNG KÝ
+          REGISTER
         </template>
       </Button>
     </form>
     <div class="text-center mt-4 font-medium">
-      Nếu bạn đã có tài khoản
+      Already have an account?
     </div>
     <Button
       type="submit" class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2 h-[2.875rem] rounded-full bg-white text-black duration-300 hover:text-white shadow-inherit border-2 hover:border-0"
       @click="$router.push('/auth/login')"
     >
-      ĐĂNG NHẬP
+      LOGIN
     </Button>
   </div>
 </template>

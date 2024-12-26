@@ -9,21 +9,31 @@
 </route>
 
 <script setup>
+import EditUserModal from '@/components/admin/EditUserModal.vue'
 import Icon from '@/components/base/Icon.vue'
+import Button from '@/components/ui/button/Button.vue'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Switch } from '@/components/ui/switch'
 import { useAdminStore } from '@/stores/admin'
+import { useUserStore } from '@/stores/user'
 import { useDebounceFn } from '@vueuse/core'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
 const adminStore = useAdminStore()
-
-onMounted(async () => {
-  await adminStore.getAllUser()
-})
-
+const userStore = useUserStore()
 const paginatedUsers = computed(() => adminStore.paginatedUsers)
 const totalUsers = computed(() => adminStore.totalUsers)
 const itemsPerPage = ref(8)
+const modal = ref({
+  isOpen: false,
+  user: {},
+})
 const currentPage = computed(() => adminStore.currentPage)
 const totalPages = computed(() => Math.ceil(totalUsers.value / itemsPerPage.value))
 
@@ -42,8 +52,34 @@ const debouncedSearch = useDebounceFn(async () => {
     await adminStore.searchUser(searchQuery.value)
   }
 }, 500)
+
+async function save(id, role) {
+  modal.value.isOpen = false
+  const quyen = role === 'admin' ? 'quan_tri_vien' : 'nguoi_dung'
+  await adminStore.updateRole(id, quyen)
+  await adminStore.getAllUser()
+}
+function cancel() {
+  modal.value.isOpen = false
+  modal.value.user = {}
+}
+function editUser(user) {
+  modal.value.isOpen = true
+  modal.value.user = user
+}
+
+async function udpateStatusUser(id, value) {
+  const status = value ? 'hoat_dong' : 'khong_hoat_dong'
+  await adminStore.updateStatus(id, status)
+  await adminStore.getAllUser()
+}
+
 watch(searchQuery, () => {
   debouncedSearch()
+})
+
+onMounted(async () => {
+  await adminStore.getAllUser()
 })
 </script>
 
@@ -81,7 +117,7 @@ watch(searchQuery, () => {
             <tbody>
               <tr v-for="user in paginatedUsers" :key="user.id" class="border-b">
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                  <img class="w-10 h-10 rounded-full" v-lazy="user.anh_dai_dien" alt="Jese image">
+                  <img v-lazy="user.anh_dai_dien" class="w-10 h-10 rounded-full" alt="Jese image">
                   <div class="ps-3">
                     <div class="text-base font-semibold">
                       {{ user.ten_nguoi_dung }}
@@ -92,20 +128,36 @@ watch(searchQuery, () => {
                   </div>
                 </th>
                 <td class="px-6 py-4">
-                  {{ user.quyen }}
+                  {{ user.quyen === 'quan_tri_vien' ? 'ADMIN' : 'USER' }}
                 </td>
                 <td class="px-6 py-4">
                   <div class="flex items-center">
-                    <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />  {{ user.trang_thai }}
+                    <Switch :checked="user.trang_thai === 'hoat_dong'" @update:checked="(value) => udpateStatusUser(user.id, value)" />
                   </div>
                 </td>
                 <td class="px-6 py-4">
-                  <button
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    @click="router.push(`/admin/edit/${user.id}`)"
-                  >
-                    Edit User
-                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      class="cursor-pointer"
+                      as-child
+                    >
+                      <Button
+                        :disabled="user.id === userStore?.user?.id"
+                        variant="outline" class="w-24 p-0"
+                      >
+                        Open menu
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent class="">
+                      <DropdownMenuLabel class="text-center">
+                        Actions
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem class="cursor-pointer" @click="editUser(user)">
+                        Edit Role
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </td>
               </tr>
             </tbody>
@@ -133,4 +185,10 @@ watch(searchQuery, () => {
       </div>
     </div>
   </div>
+  <EditUserModal
+    v-if="modal.isOpen"
+    :user="modal.user"
+    @cancel="cancel"
+    @save="save"
+  />
 </template>

@@ -44,7 +44,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     await authStore.login(values)
   }
   catch (error) {
-    const errorMessage = error?.response?.data?.detail || 'There was a problem with your request.'
+    const errorMessage = error?.response?.data?.detail || 'Something went wrong.'
     if (errorMessage) {
       toast({
         title: 'Error',
@@ -56,7 +56,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     }
     toast({
       title: 'Uh oh! Something went wrong.',
-      description: 'There was a problem with your request.',
+      description: 'Something went wrong.',
       variant: 'destructive',
       duration: 5000,
     })
@@ -70,12 +70,12 @@ const onSubmit = form.handleSubmit(async (values) => {
 <template>
   <div class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2">
     <h1 class="text-2xl flex justify-center font-semibold">
-      ĐĂNG NHẬP
+      LOGIN
     </h1>
     <form class="mt-[2.25rem]" @submit=" onSubmit ">
       <FormField v-slot=" { componentField } " name="email" class="gap-2.5">
         <FormItem>
-          <Label class="font-semibold">Địa chỉ Email</Label>
+          <Label class="font-semibold">Email Address</Label>
           <FormControl>
             <Input
               type="text" placeholder="Email address" class="rounded-[0.25rem] h-[2.875rem]"
@@ -87,7 +87,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       </FormField>
       <FormField v-slot=" { componentField } " name="mat_khau">
         <FormItem class="mt-4">
-          <Label class="font-semibold">Mật khẩu</Label>
+          <Label class="font-semibold">Password</Label>
           <FormControl>
             <Input
               type="password" placeholder="Password" class="rounded-[0.25rem] h-[2.875rem]"
@@ -108,18 +108,18 @@ const onSubmit = form.handleSubmit(async (values) => {
           </div>
         </template>
         <template v-else>
-          ĐĂNG NHẬP
+          LOGIN
         </template>
       </Button>
     </form>
     <div class="text-center mt-4 font-medium">
-      Bạn đã đăng ký tài khoản chưa?
+      Don't have an account?
     </div>
     <Button
       type="submit" class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2 h-[2.875rem] rounded-full bg-white text-black duration-300 hover:text-white shadow-inherit border-2 hover:border-0"
       @click="$router.push('/auth/register')"
     >
-      ĐĂNG KÝ
+      REGISTER
     </Button>
   </div>
 </template>
