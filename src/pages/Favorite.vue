@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast/use-toast.js'
 
 const { toast } = useToast()
-console.log(toast)
 </script>
 
 <template>

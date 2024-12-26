@@ -18,11 +18,17 @@ onMounted(() => {
   if (Object.keys(route.query).includes('q'))
     inputSearch.value.focus()
 })
+const role = computed(() => userStore.user?.role)
 </script>
 
 <template>
-  <div class="flex items-center justify-between w-full h-full gap-2 p-2 lg:pr-8 bg-card">
-    <div class="relative w-full max-w-sm items-center ml-3 lg:ml-8">
+  <div
+    class="flex items-center w-full h-full gap-2 p-2 lg:pr-8 bg-card" :class="{
+      'justify-between': role !== 'quan_tri_vien',
+      'justify-end': role === 'quan_tri_vien',
+    }"
+  >
+    <div v-if="role !== 'quan_tri_vien'" class="relative w-full max-w-sm items-center ml-3 lg:ml-8">
       <input
         id="search" ref="input-search" v-model=" searchValue " type="text"
         placeholder="Search..." class="flex h-10 w-full border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10 rounded-full text-black" @focus=" handleNavigate "

@@ -1,3 +1,14 @@
+<route>
+    {
+      name: 'AdminProfile',
+      path: '/admin/profile',
+      meta: {
+        title: 'Edit User',
+        layout: 'admin',
+      },
+    }
+    </route>
+
 <script setup>
 import ProfileForm from '@/components/layout/profile/ProfileForm.vue'
 import { useUserStore } from '@/stores/user'
@@ -7,9 +18,7 @@ const userStore = useUserStore()
 onMounted(() => {
   userStore.getUserAuth()
 })
-function handleUpdateUser(user) {
-  userStore.updateUser(user)
-}
+
 const user = userStore.user
 </script>
 
@@ -17,8 +26,8 @@ const user = userStore.user
   <div class="flex flex-col items-center justify-center h-full">
     <ProfileForm
       :user="user"
-      :is-admin="false"
-      context="self"
+      :is-admin="true"
+      context="admin"
       :on-submit="handleUpdateUser"
     />
   </div>

@@ -61,7 +61,7 @@ export const useSongStore = defineStore('queue', () => {
       searchResults.value = result
       return searchResults.value
     }
-    catch (error) {
+  catch (error) {
       console.error('Error searching songs:', error)
       return []
     }

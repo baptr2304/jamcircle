@@ -6,9 +6,10 @@ export async function middlewareLayout(to, from, next) {
   const authStore = useAuthStore()
   const isAuthenticated = userStore.isAuthenticated
   const layout = to.meta.layout
+  const userRole = userStore.user?.role
 
   const authenPage = ['Playlist', 'playlist-create', 'song-create', 'Favorite', 'Profile', 'Room']
-  if (isAuthenticated && layout === 'auth') {
+  if (isAuthenticated && layout === 'auth' && userRole !== 'quan_tri_vien') {
     return next('/')
   }
 

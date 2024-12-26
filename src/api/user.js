@@ -9,6 +9,8 @@ export function getUser() {
         email: response.email,
         avatar: response.anh_dai_dien,
         // gender: response?.gioi_tinh || 'female'
+        role: response.quyen,
+        
       }
     })
 }
@@ -19,6 +21,7 @@ export function update(data) {
       username: response.ten_nguoi_dung,
       email: response.email,
       avatar: response.anh_dai_dien,
+      password: response.mat_khau,
     }
   })
 }
