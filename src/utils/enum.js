@@ -1,4 +1,5 @@
 export const listEvents = {
+  loadSong: 'LoadSong',
   playSong: 'PlaySong',
   pauseSong: 'PauseSong',
   togglePlay: 'TogglePlay',

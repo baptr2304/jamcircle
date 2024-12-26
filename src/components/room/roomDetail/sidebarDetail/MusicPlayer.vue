@@ -5,7 +5,11 @@ import { useUserStore } from '@/stores/user'
 import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 import { formatTime } from '@/utils/format'
-import { nextTick } from 'vue'
+import { sleep } from '@/utils/helper'
+
+const { userInRoom } = defineProps({
+  userInRoom: Object,
+})
 
 const userStore = useUserStore()
 const roomQueueStore = useRoomQueue()
@@ -17,6 +21,7 @@ const isPlaying = ref(false)
 const isDragging = ref(false)
 const songCurrentTime = ref(0)
 const isMuted = ref(false)
+const isLoadingSong = ref(false)
 let interval
 function updateProgress(event) {
   const rect = progressBar.value.getBoundingClientRect()
@@ -57,12 +62,11 @@ async function handlePlay() {
     return
   isPlaying.value = !isPlaying.value
   if (isPlaying.value) {
-    await roomQueueStore.playSongInQueue(roomQueueStore.currentSong, songCurrentTime.value)
-    audio.value.play()
+    await roomQueueStore.playSongInQueueRoom(roomQueueStore.currentSong, songCurrentTime.value)
   }
   else {
-    await roomQueueStore.pauseSongInQueue(songCurrentTime.value)
-    audio.value.pause()
+    await roomQueueStore.pauseSongInQueueRoom(songCurrentTime.value)
+    await audio.value.pause()
   }
 }
 function updateTime() {
@@ -92,7 +96,6 @@ async function changeCurrentTime(time, type) {
     case 'forward':
       audio.value.currentTime += time
       break
-
     default:
       audio.value.currentTime = time
       break
@@ -101,36 +104,44 @@ async function changeCurrentTime(time, type) {
     id: roomQueueStore.currentRoom.id,
     ten_phong: roomQueueStore.currentRoom.ten_phong,
     trang_thai_phat: isPlaying.value ? 'dang_phat' : 'tam_dung',
-    thoi_gian_hien_tai_bai_hat: audio.value.currentTime,
+    thoi_gian_hien_tai_bai_hat: Math.ceil(audio.value.currentTime),
     so_thu_tu_bai_hat_dang_phat: roomQueueStore.currentSong.so_thu_tu,
   }
-  // await roomQueueStore.updateRoom(payload)
+  await roomQueueStore.updateRoom(payload)
   updateTime()
 }
 async function resetControl() {
-  if (!roomQueueStore.currentSong)
+  if (!roomQueueStore.currentSong || userInRoom?.quyen === 'thanh_vien')
     return
-  isPlaying.value = true
-  progress.value = 0
   await nextTick()
-  await audio.value.load()
+  await sleep(300)
+  isPlaying.value = roomQueueStore.currentRoom?.trang_thai_phat === 'dang_phat'
+  songCurrentTime.value = roomQueueStore.currentRoom?.thoi_gian_hien_tai_bai_hat ?? 0
+  if (audio.value.readyState > 0) {
+    audio.value.currentTime = audio.value.currentTime = songCurrentTime.value
+  }
+  else {
+    audio.value.addEventListener('loadedmetadata', () => {
+      audio.value.currentTime = audio.value.currentTime = songCurrentTime.value
+    })
+  }
+  updateTime()
   if (!interval)
     interval = setInterval(updateTime, 1000)
-  audio.value.play()
-  songCurrentTime.value = roomQueueStore.currentSong?.thoi_gian_hien_tai_bai_hat ?? 0
-  changeCurrentTime(songCurrentTime.value)
+  if (isPlaying.value) {
+    await audio.value.play()
+    console.log('audio.value.play() - end')
+  }
 }
 function nextSong() {
   if (!roomQueueStore.currentSong)
     return
   roomQueueStore.nextSong()
-  resetControl()
 }
 function prevSong() {
   if (!roomQueueStore.currentSong)
     return
   roomQueueStore.prevSong()
-  resetControl()
 }
 function toggleMuted() {
   if (!roomQueueStore.currentSong)
@@ -144,7 +155,15 @@ function seekForward() {
 function seekBackward() {
   changeCurrentTime(15, 'backward')
 }
+async function loadSong() {
+  if (!roomQueueStore.currentSong)
+    return
+  isLoadingSong.value = true
+  await audio.value.load()
+  isLoadingSong.value = false
+}
 onMounted(() => {
+  emitter.on(listEvents.loadSong, loadSong)
   emitter.on(listEvents.playSong, resetControl)
   emitter.on(listEvents.togglePlay, handlePlay)
   emitter.on(listEvents.nextSong, nextSong)
@@ -155,6 +174,7 @@ onMounted(() => {
 })
 onUnmounted(() => {
   clearInterval(interval)
+  emitter.off(listEvents.loadSong, loadSong)
   emitter.off(listEvents.playSong, resetControl)
   emitter.off(listEvents.togglePlay, handlePlay)
   emitter.off(listEvents.nextSong, nextSong)
@@ -170,7 +190,10 @@ onUnmounted(() => {
     v-if="roomQueueStore.currentSong"
     class="grid w-full h-full select-none relative bg-secondary"
   >
-    <div class="song-controller">
+    <div v-if=" isLoadingSong " class="flex w-full p-8 justify-center items-center">
+      <Icon name="IconLoading" />
+    </div>
+    <div v-else class="song-controller">
       <div class="control-bar">
         <div class="flex items-center gap-4 max-lg:hidden">
           <Icon

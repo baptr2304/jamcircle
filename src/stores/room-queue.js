@@ -16,23 +16,39 @@ export const useRoomQueue = defineStore('room-queue', () => {
   const currentIndex = computed(() => currentRoom.value?.so_thu_tu_bai_hat_dang_phat)
   const currentSong = computed(() => playlist.value.find(item => item.so_thu_tu === currentIndex.value))
 
-  watch(currentRoom, handlePlaySong)
-
   // Song
-  function nextSong() {
+  async function nextSong() {
+    const nextIndex = currentIndex.value + 1
+    let nextSong = playlist.value.find(item => item.so_thu_tu === nextIndex)
+    if (!nextSong) {
+      nextSong = playlist.value[0]
+    }
+    await playSongInQueueRoom(nextSong, 0)
+    handleLoadSong()
   }
 
   function prevSong() {
+    const prevIndex = currentIndex.value - 1
+    let prevSong = playlist.value.find(item => item.so_thu_tu === prevIndex)
+    if (!prevSong) {
+      prevSong = playlist.value[playlist.value.length - 1]
+    }
+    playSongInQueueRoom(prevSong, 0)
+    handleLoadSong()
   }
 
   function handlePlaySong() {
-    if (currentRoom.value.trang_thai_phat === 'dang_phat') {
-      emitter.emit(listEvents.playSong)
-    }
+    emitter.emit(listEvents.playSong)
+  }
+
+  function handleLoadSong() {
+    emitter.emit(listEvents.loadSong)
+    handlePlaySong()
   }
 
   async function updateRoom(payload) {
     currentRoom.value = await apiRoom.apiUpdateRoom(payload)
+    handlePlaySong()
   }
 
   async function getDetailRoom(id) {
@@ -48,17 +64,26 @@ export const useRoomQueue = defineStore('room-queue', () => {
   }
 
   async function setPlaylist(danh_sach_phat_id) {
-    const data = await getPlaylistSongs(danh_sach_phat_id)
-    playlist.value = data
     playlistId.value = danh_sach_phat_id
-    handlePlaySong()
+    await fetchPlaylistSongs()
+    handleLoadSong()
+  }
+
+  async function fetchPlaylistSongs() {
+    if (playlistId.value) {
+      playlist.value = await getPlaylistSongs(playlistId.value)
+    }
   }
 
   async function addToQueueAndPlay(song) {
-    const alreadySong = await addToQueue(song)
+    await addToQueue(song)
+    await fetchPlaylistSongs()
+    const lastSong = playlist.value[playlist.value.length - 1]
+    await playSongInQueueRoom(lastSong, 0)
+    handleLoadSong()
   }
 
-  async function playSongInQueue(song, currentTime) {
+  async function playSongInQueueRoom(song, currentTime) {
     const payload = {
       id: currentRoom.value.id,
       ten_phong: currentRoom.value.ten_phong,
@@ -67,9 +92,10 @@ export const useRoomQueue = defineStore('room-queue', () => {
       so_thu_tu_bai_hat_dang_phat: song.so_thu_tu,
     }
     currentRoom.value = await apiRoom.apiUpdateRoom(payload)
+    handlePlaySong()
   }
 
-  async function pauseSongInQueue(currentTime) {
+  async function pauseSongInQueueRoom(currentTime) {
     const payload = {
       id: currentRoom.value.id,
       ten_phong: currentRoom.value.ten_phong,
@@ -78,6 +104,7 @@ export const useRoomQueue = defineStore('room-queue', () => {
       so_thu_tu_bai_hat_dang_phat: currentRoom.value.so_thu_tu_bai_hat_dang_phat,
     }
     currentRoom.value = await apiRoom.apiUpdateRoom(payload)
+    handlePlaySong()
   }
 
   async function handleRemoveFromQueue(song) {
@@ -91,7 +118,7 @@ export const useRoomQueue = defineStore('room-queue', () => {
       title: 'Success',
       description: 'Added to queue',
     })
-    return data
+    playlist.value = await getPlaylistSongs(playlistId.value)
   }
 
   return {
@@ -101,17 +128,20 @@ export const useRoomQueue = defineStore('room-queue', () => {
     playlist,
     playlistId,
     setPlaylist,
+    fetchPlaylistSongs,
     clearPlaylist,
+    handlePlaySong,
+    handleLoadSong,
     addSong,
     removeSong,
     nextSong,
     prevSong,
-    playSongInQueue,
+    playSongInQueueRoom,
     addToQueue,
     handleRemoveFromQueue,
     addToQueueAndPlay,
     updateRoom,
     getDetailRoom,
-    pauseSongInQueue,
+    pauseSongInQueueRoom,
   }
 })

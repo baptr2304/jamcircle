@@ -66,7 +66,9 @@ function handleButtonClick(tab) {
     <div
       class="w-full px-2 bg-secondary"
     >
-      <MusicPlayer />
+      <MusicPlayer 
+        :user-in-room="userInRoom"
+      />
     </div>
   </div>
 </template>

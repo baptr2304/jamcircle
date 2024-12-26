@@ -35,6 +35,7 @@ const confirmStore = useConfirmStore()
 const roomStore = useRoomStore()
 const link = window.location.href
 const qrcode = useQRCode(link)
+const router = useRouter()
 
 function copyInviteLink(value) {
   navigator.clipboard.writeText(value)
@@ -58,6 +59,16 @@ async function updateRole(id, role) {
   await roomStore.updatePermission(id, role)
   emit('fetchData')
 }
+async function leaveRoom() {
+  const result = await confirmStore.showConfirmDialog({
+    title: 'Leave room',
+    message: 'Are you sure you want to leave this room?',
+  })
+  if (!result)
+    return
+  await roomStore.leaveRoom(room.id)
+  router.push('/jam')
+}
 </script>
 
 <template>
@@ -66,9 +77,12 @@ async function updateRole(id, role) {
       <h1 class="text-primary text-2xl font-bold">
         Information
       </h1>
-      <div class="flex items-center py-2 mb-2">
-        <div class="text-xl mr-2 font-bold">
+      <div class="flex items-center py-2 mb-2 justify-between">
+        <div class="text-xl mr-2 font-bold max-w-48 truncate">
           {{ room.ten_phong }}
+        </div>
+        <div class="flex" @click="leaveRoom">
+          <Icon name="IconLogOut" class="w-8 h-8 cursor-pointer p-1" />
         </div>
       </div>
 
@@ -158,13 +172,13 @@ async function updateRole(id, role) {
                 :key="member.id"
                 class="flex items-center justify-between border border-input rounded-md p-2 bg-border mb-2"
               >
-                <div class="flex items-center">
+                <div class="flex items-center truncate">
                   <img
                     v-lazy="member.anh_dai_dien"
                     alt="avatar"
                     class="w-8 h-8 rounded-full"
                   >
-                  <div class="ml-2">
+                  <div class="ml-2 w-[calc(100%-2.5rem)] truncate">
                     {{ member.ho_ten }}
                   </div>
                 </div>
