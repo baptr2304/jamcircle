@@ -16,7 +16,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const authStore = useAuthStore()
 const userStore = useUserStore()
-
+const role = userStore.user?.role
 const isDarkMode = ref(localStorage.getItem('dark') === 'true')
 function handleChange(value) {
   isDarkMode.value = value
@@ -33,6 +33,9 @@ function redirectProfile() {
   nextTick(() => {
     if (router.currentRoute.value.path !== '/profile') {
       router.push('/profile')
+    }
+    if (role === 'quan_tri_vien') {
+      router.push('/admin/profile')
     }
   })
 }
@@ -70,7 +73,7 @@ function redirectProfile() {
         </div>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
-      <DropdownMenuItem>
+      <DropdownMenuItem v-if="role !== 'quan_tri_vien'">
         <RouterLink to="/song/create">
           Create Song
         </RouterLink>

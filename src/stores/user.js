@@ -5,6 +5,7 @@ export const useUserStore = defineStore('user', () => {
   const user = ref(null)
   function setUser(newUser) {
     user.value = newUser
+    console.log('newUser:', newUser)
   }
 
   async function getUserAuth() {
@@ -32,6 +33,7 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   const isAuthenticated = computed(() => !!user.value)
+
   return {
     user,
     setUser,

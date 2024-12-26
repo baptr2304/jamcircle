@@ -75,7 +75,7 @@ function toggleOpenDrawer() {
 </script>
 
 <template>
-  <div class="flex justify-around h-20">
+  <div class="flex justify-around h-20 ">
     <AppSideBarItem
       v-for="item in data"
       :key="item.id"

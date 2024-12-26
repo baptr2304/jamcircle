@@ -18,7 +18,10 @@ export async function middlewareAuth(to, from, next) {
     }
   }
   if (accessToken && userStore.isAuthenticated) {
-    return next()
+    if (to.path === '/home' && userStore.user?.role === 'quan_tri_vien') {
+
+      return next('/admin')
+    }
   }
   return next()
 }
