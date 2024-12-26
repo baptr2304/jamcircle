@@ -59,7 +59,7 @@ export function addSong(playlistId, songId) {
 }
 // get my playlists
 export async function getMy() {
-  return await $get('/danh_sach_phat/tim_kiem?loai=yeu_thich')
+  return await $get('/danh_sach_phat/tim_kiem?loai=danh_sach_phat_cua_toi')
 }
 
 export function removeSong(playlistId, index) {

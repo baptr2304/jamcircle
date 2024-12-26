@@ -24,7 +24,7 @@ export const usePlaylistStore = defineStore('playlist', () => {
       const response = await createPlaylist({
         ten_danh_sach_phat,
         nguoi_dung_id,
-        loai: 'yeu_thich',
+        loai: 'danh_sach_phat_cua_toi',
         anh,
       })
       return response
