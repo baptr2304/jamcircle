@@ -43,14 +43,14 @@ const data = ref({
       content: 'Login to create and share song',
       requiredAuthen: true,
     },
-    {
-      id: 5,
-      icon: 'IconFavorite',
-      title: 'Favorite',
-      url: '/favorite',
-      content: 'Login to view your favorite songs',
-      requiredAuthen: true,
-    },
+    // {
+    //   id: 5,
+    //   icon: 'IconFavorite',
+    //   title: 'Favorite',
+    //   url: '/favorite',
+    //   content: 'Login to view your favorite songs',
+    //   requiredAuthen: true,
+    // },
     {
       id: 6,
       icon: 'IconJam',
