@@ -7,21 +7,15 @@ import {
 } from '@/components/ui/popover'
 import { useRoomQueue } from '@/stores/room-queue'
 
-const { roomId } = defineProps({
-  roomId: {
-    type: String,
-    required: true,
-  },
-})
-const emit = defineEmits(['removeSong'])
 const roomQueueStore = useRoomQueue()
 async function handleRemoveSong(song) {
   await roomQueueStore.handleRemoveFromQueue(song)
-  emit('removeSong')
+  await roomQueueStore.fetchPlaylistSongs()
 }
 
 async function handlePlaySong(song) {
-  await roomQueueStore.playSongInQueue(song, 0)
+  await roomQueueStore.playSongInQueueRoom(song, 0)
+  roomQueueStore.handleLoadSong()
 }
 </script>
 
@@ -39,7 +33,7 @@ async function handlePlaySong(song) {
           v-for="song in roomQueueStore.playlist"
           :key="song.so_thu_tu"
           :song="song"
-          :is-playing="song.so_thu_tu === roomQueueStore.currentSong.so_thu_tu"
+          :is-playing="song.so_thu_tu === roomQueueStore.currentSong?.so_thu_tu"
           @handle-click="handlePlaySong(song)"
         >
           <template #action>

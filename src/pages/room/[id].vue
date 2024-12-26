@@ -128,13 +128,14 @@ onMounted(async () => {
 })
 onUnmounted(() => {
   emitter.off(listEvents.closeQueueDrawer, closeSidebar)
+  roomQueueStore.clearPlaylist()
 })
 </script>
 
 <template>
   <div class="h-full relative overflow-y-hidden">
     <RoomHeader
-      v-if="roomData"
+      v-if="roomData && userInRoom"
       class="absolute left-0 top-0 w-full z-10"
       :name="roomData.ten_phong"
       :is-sidebar-visible="isSidebarVisible"
@@ -161,11 +162,9 @@ onUnmounted(() => {
     <MusicList
       v-show="activeTab === 'queue'"
       :room-id="roomId"
-      @remove-song="fetchPlaylistData"
     />
     <SearchInRoom
       v-show="activeTab === 'music' && userInRoom?.quyen !== 'thanh_vien'"
-      @add-song-to-queue="fetchPlaylistData"
     />
     <FriendList
       v-show="activeTab === 'friends'"

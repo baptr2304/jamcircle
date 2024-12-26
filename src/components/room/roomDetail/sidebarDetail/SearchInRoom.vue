@@ -8,12 +8,9 @@ import {
 } from '@/components/ui/popover'
 import { useRoomQueue } from '@/stores/room-queue'
 import { useSongStore } from '@/stores/song'
-import { listEvents } from '@/utils/enum'
-import emitter from '@/utils/eventBus'
 import { useAsyncState, useDebounceFn, useInfiniteScroll } from '@vueuse/core'
 import { Search } from 'lucide-vue-next'
 
-const emit = defineEmits(['addSongToQueue'])
 const songStore = useSongStore()
 const roomQueue = useRoomQueue()
 const searchQuery = ref('')
@@ -54,12 +51,9 @@ const handleSearch = useDebounceFn(async () => {
 }, 300)
 async function handlePlaySong(song) {
   await roomQueue.addToQueueAndPlay(song)
-  emit('addSongToQueue')
-  // emitter.emit(listEvents.playSong)
 }
 async function handleAddSongToQueue(song) {
   await roomQueue.addToQueue(song)
-  emit('addSongToQueue')
 }
 </script>
 
