@@ -16,8 +16,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Switch } from '@/components/ui/switch'
@@ -87,30 +85,30 @@ onMounted(async () => {
   <div class="h-full flex justify-between flex-col mt-10 mb-20">
     <div class="">
       <div class="flex items-center justify-between flex-col flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 ml-2">
-        <label for="table-search" class="sr-only">Search</label>
+        <label for="table-search" class="sr-only">Tìm kiếm</label>
         <div class="relative">
           <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
             <Icon name="IconSearch" class="w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
-          <input v-model="searchQuery" type="text" class="block p-2 ps-10 text-sm border rounded-lg w-80 dark:text-white bg-background  focus:outline-none focus:ring-0" placeholder="Search for users">
+          <input v-model="searchQuery" type="text" class="block p-2 ps-10 text-sm border rounded-lg w-80 dark:text-white bg-background focus:outline-none focus:ring-0" placeholder="Tìm kiếm người dùng">
         </div>
       </div>
       <div class="flex flex-col">
-        <div class="relative overflow-auto shadow-md ">
+        <div class="relative overflow-auto shadow-md scrollbar">
           <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-6 py-3">
-                  Name
+                  Tên
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Role
+                  Quyền
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Status
+                  Trạng thái
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Action
+                  Phân quyền
                 </th>
               </tr>
             </thead>
@@ -145,16 +143,12 @@ onMounted(async () => {
                         :disabled="user.id === userStore?.user?.id"
                         variant="outline" class="w-24 p-0"
                       >
-                        Open menu
+                        Chỉnh sửa
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent class="">
-                      <DropdownMenuLabel class="text-center">
-                        Actions
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
+                    <DropdownMenuContent>
                       <DropdownMenuItem class="cursor-pointer" @click="editUser(user)">
-                        Edit Role
+                        Quyền
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -165,7 +159,7 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-    <div class="flex justify-center">
+    <div class="flex justify-center fixed bottom-0 left-[50%] transform ">
       <div class="flex justify-center items-center mt-4">
         <Icon
           name="IconPrev"
@@ -174,7 +168,7 @@ onMounted(async () => {
           @click="handlePageChange(currentPage - 1)"
         />
         <span class="px-4">
-          Page {{ currentPage }} of {{ totalPages }}
+          Trang {{ currentPage }} / {{ totalPages }}
         </span>
         <Icon
           name="IconPrev"
