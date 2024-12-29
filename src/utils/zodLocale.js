@@ -6,23 +6,23 @@ export function errorMap(issue, _ctx) {
   switch (issue.code) {
     case ZodIssueCode.invalid_type:
       if (issue.received === 'undefined') {
-        return { message: 'This field is required' }
+        return { message: 'Trường này là bắt buộc' }
       }
-      return { message: `Invalid data type. Expected ${issue.expected}, received ${issue.received}` }
+      return { message: `Loại dữ liệu không hợp lệ. Mong đợi ${issue.expected}, nhận được ${issue.received}` }
     case ZodIssueCode.invalid_string:
       if (issue.validation === 'email') {
-        return { message: 'Invalid email' }
+        return { message: 'Email không hợp lệ' }
       }
       if (issue.validation === 'url') {
-        return { message: 'Invalid URL' }
+        return { message: 'URL không hợp lệ' }
       }
-      return { message: 'Invalid string' }
+      return { message: 'Chuỗi không hợp lệ' }
     case ZodIssueCode.too_small:
-      return { message: `Value must be greater than or equal to ${issue.minimum}` }
+      return { message: `Giá trị phải lớn hơn hoặc bằng ${issue.minimum}` }
     case ZodIssueCode.too_big:
-      return { message: `Value must be less than or equal to ${issue.maximum}` }
+      return { message: `Giá trị phải nhỏ hơn hoặc bằng ${issue.maximum}` }
     default:
-      return { message: 'Invalid value' }
+      return { message: 'Giá trị không hợp lệ' }
   }
 }
 

@@ -97,8 +97,8 @@ export const useSongStore = defineStore('queue', () => {
     }
     playlist.value.push(newSong)
     toast({
-      title: 'Success',
-      description: 'Added to queue',
+      title: 'Thành công',
+      description: 'Đã thêm vào hàng đợi',
     })
     return newSong
   }

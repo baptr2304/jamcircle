@@ -12,11 +12,11 @@ onMounted(async () => {
 
 <template>
   <div class="relative">
-    <PlaylistHeader icon="IconMusicSolid" title="My Playlist" />
+    <PlaylistHeader icon="IconMusicSolid" title="Danh sách phát của tôi" />
     <RouterLink class="absolute right-2 lg:right-8 top-44" to="/playlist/create">
       <Button class="text-foreground rounded-full">
         <Icon name="IconAddPlaylist" class="w-6 h-6" />
-        Create playlist
+        Tạo danh sách phát
       </Button>
     </RouterLink>
     <div class="overflow-y-auto scrollbar max-h-[50%]">

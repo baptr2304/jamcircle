@@ -24,14 +24,14 @@ function handlePlaySong(song) {
   <Drawer v-model="isVisible">
     <div class="p-2 w-full">
       <h1 class="text-2xl font-bold">
-        Queue
+        Hàng đợi
       </h1>
       <div class="grid gap-4 mt-4 h-full max-h-[calc(100%-2rem)] overflow-y-auto scrollbar pb-44 lg:pb-24 pr-4">
         <SongListItem
           v-for="song in songStore.playlist"
           :key="song.so_thu_tu"
           :song="song"
-          :is-playing="song.so_thu_tu === songStore.currentSong.so_thu_tu"
+          :is-playing="song.so_thu_tu === songStore.currentSong?.so_thu_tu"
           @handle-click="handlePlaySong(song)"
         >
           <template #action>
@@ -45,7 +45,7 @@ function handlePlaySong(song) {
                 </PopoverTrigger>
                 <PopoverContent class="w-25">
                   <button @click="songStore.handleRemoveFromQueue(song)">
-                    Remove from queue
+                    Xóa khỏi hàng đợi
                   </button>
                 </PopoverContent>
               </Popover>

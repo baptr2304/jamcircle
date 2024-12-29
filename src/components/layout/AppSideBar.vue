@@ -2,27 +2,21 @@
 import AppSideBarGroup from '@/components/layout/SideBar/AppSideBarGroup.vue'
 import AppSideBarItem from '@/components/layout/SideBar/AppSideBarItem.vue'
 import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
-import router from '@/router'
-import { useRoomStore } from '@/stores/room'
-import { useUserStore } from '@/stores/user'
-import Separator from '../ui/separator/Separator.vue'
 
-const isLoading = ref(false)
-const roomStore = useRoomStore()
 const data = ref({
   groupA: [
     {
       id: 1,
       icon: 'IconHome',
-      title: 'Home',
+      title: 'Trang chủ',
       url: '/home',
     },
     {
       id: 2,
       icon: 'IconLibrary',
-      title: 'Your Playlist',
+      title: 'Danh sách phát của tôi',
       url: '/playlist',
-      content: 'Login to view your playlist',
+      content: 'Đăng nhập để sử dụng tín năng này',
       requiredAuthen: true,
     },
   ],
@@ -30,17 +24,17 @@ const data = ref({
     {
       id: 3,
       icon: 'IconAdd',
-      title: 'Create Playlist',
+      title: 'Tạo danh sách phát',
       url: '/playlist/create',
-      content: 'Login to create and share playlists',
+      content: 'Đăng nhập để sử dụng tín năng này',
       requiredAuthen: true,
     },
     {
       id: 4,
       icon: 'IconMusic',
-      title: 'Create Song',
+      title: 'Đăng bài hát',
       url: '/song/create',
-      content: 'Login to create and share song',
+      content: 'Đăng nhập để sử dụng tín năng này',
       requiredAuthen: true,
     },
     // {
@@ -54,36 +48,13 @@ const data = ref({
     {
       id: 6,
       icon: 'IconJam',
-      title: 'Jam',
+      title: 'Phòng nghe nhạc',
       url: '/jam',
-      content: 'Login to start a jam',
+      content: 'Đăng nhập để sử dụng tín năng này',
       requiredAuthen: true,
     },
   ],
 })
-
-async function handleRoomCreation(roomName) {
-  isLoading.value = true
-  const userStore = useUserStore()
-  try {
-    await roomStore.createNewRoom({
-      name: roomName,
-      hostId: userStore.user?.id,
-    })
-    if (roomStore.currentRoom?.id) {
-      router.push(`/room/${roomStore.currentRoom.id}`)
-    }
-    else {
-      console.error('Failed to create room')
-    }
-  }
-  catch (err) {
-    console.error(err)
-  }
-  finally {
-    isLoading.value = false
-  }
-}
 </script>
 
 <template>
@@ -93,7 +64,7 @@ async function handleRoomCreation(roomName) {
       @click="$router.push('/home')"
     >
       <Icon name="IconLogo" class="w-9 text-foreground" />
-      <span class="text-secondary-foreground text-3xl font-mono">JamCirle</span>
+      <span class="text-secondary-foreground text-3xl">JamCirle</span>
     </div>
     <ScrollArea class="w-full" style="height: calc(100% - 6rem)">
       <div

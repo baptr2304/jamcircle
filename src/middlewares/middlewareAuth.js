@@ -15,11 +15,11 @@ export async function middlewareAuth(to, from, next) {
     }
     catch (error) {
       authStore.logout()
-      const errorMessage = error?.response?.data?.detail || 'There was a problem with your request.'
+      const errorMessage = error?.response?.data?.detail || 'Có lỗi xảy ra'
       if (errorMessage) {
         toast({
-          title: 'Error',
-          description: errorMessage === 'Inactive nguoi_dung' ? 'Your account has been deactivated' : errorMessage,
+          title: 'Lỗi',
+          description: errorMessage === 'Inactive nguoi_dung' ? 'Tài khoản của bạn đã bị vô hiệu hóa' : errorMessage,
           variant: 'destructive',
           duration: 5000,
         })

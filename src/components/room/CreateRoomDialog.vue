@@ -35,17 +35,17 @@ function handleCreate() {
   <Dialog :open="open" @update:open="(value) => emit('update:open', value)">
     <DialogContent class="sm:max-w-[425px] p-4">
       <DialogHeader>
-        <DialogTitle>Start a Jam!</DialogTitle>
+        <DialogTitle>Tạo phòng nghe nhạc</DialogTitle>
         <DialogDescription>
-          Enter a name for your jam room. Click start when you're ready.
+            Nhập tên cho phòng nghe nhạc của bạn. Nhấn "Tạo" khi bạn sẵn sàng.
         </DialogDescription>
       </DialogHeader>
       <div class="grid grid-cols-4 items-center gap-2">
-        <Label for="room-name" class="text-right"> Room Name </Label>
+        <Label for="room-name" class="text-right"> Tên phòng </Label>
         <Input
           id="room-name"
           v-model="roomName"
-          placeholder="Enter room name"
+          placeholder="Nhập tên phòng"
           class="col-span-3"
           autocomplete="off"
         />
@@ -56,7 +56,7 @@ function handleCreate() {
           :disabled="!roomName.trim()"
           @click="handleCreate"
         >
-          Start
+          Tạo
         </Button>
       </DialogFooter>
     </DialogContent>

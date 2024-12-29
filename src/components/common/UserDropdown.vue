@@ -51,15 +51,15 @@ function handleLogout() {
       <Button variant="ghost" class="relative lg:px-6 py-6 lg:w-60">
         <Avatar class="h-8 w-8 rounded-lg">
           <AvatarImage
-            :src="userStore.user.avatar"
+            :src="userStore.user.anh_dai_dien"
             :alt="userStore.user.name"
           />
           <AvatarFallback class="rounded-lg">
-            CN
+            JS
           </AvatarFallback>
         </Avatar>
         <div class="max-lg:hidden grid flex-1 text-left text-sm leading-tight">
-          <span class="truncate font-semibold">{{ userStore.user.username || userStore.user.email }}</span>
+          <span class="truncate font-semibold">{{ userStore.user.ten_nguoi_dung  || userStore.user.email }}</span>
         </div>
         <Icon name="IconArrowDown" class="ml-4" />
       </Button>
@@ -72,22 +72,22 @@ function handleLogout() {
     >
       <DropdownMenuItem>
         <div class="flex justify-between item-centers w-full">
-          <span>Dark mode</span><Switch :checked="isDarkMode" @update:checked="handleChange" />
+          <span>Giao diện tối</span><Switch :checked="isDarkMode" @update:checked="handleChange" />
         </div>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem v-if="role !== 'quan_tri_vien'">
         <RouterLink to="/song/create">
-          Create Song
+          Đăng bài hát
         </RouterLink>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem @click="redirectProfile">
-        Profile
+        Thông tin cá nhân
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem @click="handleLogout">
-        Log out
+        Đăng xuất
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>

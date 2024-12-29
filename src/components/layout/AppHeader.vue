@@ -31,9 +31,10 @@ const role = computed(() => userStore.user?.role)
     <div v-if="role !== 'quan_tri_vien'" class="relative w-full max-w-sm items-center ml-3 lg:ml-8">
       <input
         id="search" ref="input-search" v-model=" searchValue " type="text"
-        placeholder="Search..." class="flex h-10 w-full border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10 rounded-full text-black" @focus=" handleNavigate "
+        placeholder="Tìm kiếm..." class="flex h-10 w-full border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10 rounded-full text-black" @focus=" handleNavigate "
         @keydown.stop
-        @change=" handleUpdateQuery "
+        @change="handleUpdateQuery"
+        autocomplete="off"
       >
       <span class="absolute start-0 inset-y-0 flex items-center justify-center h-10" style="left: 0.75rem">
         <Icon name="IconSearch" class="w-4 text-black" />
@@ -44,12 +45,12 @@ const role = computed(() => userStore.user?.role)
       <template v-else>
         <router-link to="/auth/register">
           <Button class="rounded-full px-6" variant="ghost">
-            Sign up
+            Đăng ký
           </Button>
         </router-link>
         <router-link to="/auth/login">
           <Button class="rounded-full px-6 bg-foreground">
-            Log in
+            Đăng nhập
           </Button>
         </router-link>
       </template>

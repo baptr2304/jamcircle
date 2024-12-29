@@ -73,11 +73,11 @@ async function playPlaylist() {
         :current-playlist-owner="currentPlaylist?.nguoi_dung_id"
       />
       <p v-else>
-        No songs available in this playlist.
+        Không có bài hát nào trong danh sách phát này.
       </p>
     </div>
     <div v-else class="ml-10">
-      <p>Playlist not found. Please try again.</p>
+      <p>Không tìm thấy danh sách phát. Vui lòng thử lại.</p>
     </div>
     <PlaylistSearch
       v-if="user?.id === currentPlaylist?.nguoi_dung_id"

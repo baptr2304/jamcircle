@@ -54,14 +54,14 @@ const debouncedSearch = useDebounceFn(() => {
 <template>
   <div class="ml-6">
     <div class="mb-2 font-medium">
-      Let's find something for your playlist
+      Hãy tìm bài hát để thêm vào danh sách phát của bạn
     </div>
-    <div class="relative w-full max-w-sm items-center">
+    <div class="relative w-full max-w-sm items-center mt-4">
       <input
         id="search"
         v-model="searchQuery"
         type="text"
-        placeholder="Search..."
+        placeholder="Tìm kiếm..."
         class="flex h-10 w-[20rem] border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-card-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 pl-10 text-white rounded-full bg-background placeholder:opacity-50"
         @input="debouncedSearch"
         @keydown.stop
@@ -86,7 +86,7 @@ const debouncedSearch = useDebounceFn(() => {
           v-else-if="searchQuery.trim() !== ''"
           class="text-center text-gray-500"
         >
-          Not found any songs.
+          Không tìm thấy bài hát nào
         </div>
       </template>
     </div>

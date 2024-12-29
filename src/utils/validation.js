@@ -1,26 +1,26 @@
 import { z } from 'zod'
 
-export const emailSchema = z.string().min(1, { message: 'This field is required' }).email()
+export const emailSchema = z.string().min(1, { message: 'Không được để trống' }).email()
 export const genderSchema = z.enum(['Male', 'Female'], {
-  required_error: 'Please select a gender',
+  required_error: 'Vui lòng chọn giới tính',
 })
-export const requiredStringSchema = z.string().min(1, { message: 'This field is required' })
+export const requiredStringSchema = z.string().min(1, { message: 'Không được để trống' })
 
 export const nameSchema = z
   .string()
-  .min(2, { message: 'Name must be at least 2 characters long' })
-  .max(50, { message: 'Name cannot exceed 50 characters' })
+  .min(2, { message: 'Tên phải có ít nhất 2 ký tự' })
+  .max(50, { message: 'Tên không được vượt quá 50 ký tự' })
 
 export const passwordSchema = z
   .string()
-  .min(1, { message: 'This field is required' })
-  .min(8, { message: 'Password must be at least 8 characters long' })
-  .max(32, { message: 'Password cannot exceed 32 characters' })
+  .min(1, { message: 'Không được để trống' })
+  .min(8, { message: 'Mật khẩu phải có ít nhất 8 ký tự' })
+  .max(32, { message: 'Mật khẩu không được vượt quá 32 ký tự' })
 
 export const userSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
-  age: z.number().min(18, { message: 'You must be over 18 years old' }),
+  age: z.number().min(18, { message: 'Bạn phải trên 18 tuổi' }),
 })
 
 export function validateUser(data) {

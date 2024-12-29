@@ -29,7 +29,7 @@ const formSchema = toTypedSchema(
       confirm: passwordSchema,
     })
     .refine(data => data.mat_khau === data.confirm, {
-      message: 'Passwords do not match',
+      message: 'Mật khẩu không khớp.',
       path: ['confirm'],
     }),
 )
@@ -43,18 +43,17 @@ const onSubmit = form.handleSubmit(async (values) => {
     isLoading.value = true
     await authStore.register(values)
     toast({
-      title: 'Success',
-      description: 'Your account has been created successfully.',
+      title: 'Thành công',
+      description: 'Đăng ký thành công.',
       duration: 5000,
     })
     router.push('/auth/login')
   }
   catch (error) {
-    console.log(error?.response?.data?.detail)
-    const errorMessage = error?.response?.data?.detail || 'There was a problem with your request.'
+    const errorMessage = error?.response?.data?.detail || 'Có lỗi xảy ra.'
     if (errorMessage) {
       toast({
-        title: 'Error',
+        title: 'Thất bại',
         description: errorMessage,
         variant: 'destructive',
         duration: 5000,
@@ -62,8 +61,8 @@ const onSubmit = form.handleSubmit(async (values) => {
       return
     }
     toast({
-      title: 'Uh oh! Something went wrong.',
-      description: 'There was a problem with your request.',
+      title: 'Thất bại',
+      description: 'Có lỗi xảy ra',
       variant: 'destructive',
       duration: 5000,
     })
@@ -77,19 +76,27 @@ const onSubmit = form.handleSubmit(async (values) => {
 <template>
   <div class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2">
     <h1 class="text-2xl flex justify-center font-semibold">
-      REGISTER
+      Đăng ký tài khoản
     </h1>
     <form class="mt-[1rem]" @submit=" onSubmit ">
-      <InputValidator
-        type="text" label="Username" name="ten_nguoi_dung"
-        placeholder="Enter Username"
-      />
-      <InputValidator type="email" label="Email Address" name="email" placeholder="nguyenvana@gmail.com" />
-      <InputValidator id="mat_khau" type="password" label="Password" name="mat_khau" placeholder="******" />
-      <InputValidator
-        id="confirm" type="password" label="Password confirm" name="confirm"
-        placeholder="******"
-      />
+      <div class="mb-4">
+        <InputValidator
+          type="text" label="Tên người dùng" name="ten_nguoi_dung"
+          placeholder="Nhập tên người dùng"
+        />
+      </div>
+      <div class="mb-4">
+        <InputValidator type="email" label="Địa chỉ email" name="email" placeholder="nguyenvana@gmail.com" />
+      </div>
+      <div class="mb-4">
+        <InputValidator id="mat_khau" type="password" label="Mật khẩu" name="mat_khau" placeholder="******" />
+      </div>
+      <div class="mb-4">
+        <InputValidator
+          id="confirm" type="password" label="Xác nhận mật khẩu" name="confirm"
+          placeholder="******"
+        />
+      </div>
       <Button
         type="submit"
         class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-6 h-[2.875rem] rounded-full"
@@ -97,22 +104,22 @@ const onSubmit = form.handleSubmit(async (values) => {
         <template v-if="isLoading">
           <div v-show=" isLoading " class="flex w-full p-8 justify-center gap-2 items-center">
             <Icon name="IconLoading" />
-            Please wait...
+            Vui lòng chờ...
           </div>
         </template>
         <template v-else>
-          REGISTER
+          Đăng ký
         </template>
       </Button>
     </form>
     <div class="text-center mt-4 font-medium">
-      Already have an account?
+      Đã có tài khoản?
     </div>
     <Button
       type="submit" class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2 h-[2.875rem] rounded-full bg-white text-black duration-300 hover:text-white shadow-inherit border-2 hover:border-0"
       @click="$router.push('/auth/login')"
     >
-      LOGIN
+      Đăng nhập
     </Button>
   </div>
 </template>
