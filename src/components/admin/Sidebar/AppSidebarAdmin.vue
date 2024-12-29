@@ -8,13 +8,13 @@ const data = ref({
     {
       id: 1,
       icon: 'IconUser',
-      title: 'User Management',
+      title: 'Quản lý người dùng',
       url: '/admin',
     },
     {
       id: 2,
       icon: 'IconChart',
-    title: 'Statistics',
+      title: 'Thống kê',
       url: '/admin/statistics',
       content: 'Login to view your playlist',
       requiredAuthen: true,

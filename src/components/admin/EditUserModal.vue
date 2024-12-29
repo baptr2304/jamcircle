@@ -26,7 +26,7 @@ function cancel() {
       <h1
         class="font-medium text-3xl"
       >
-        Edit Role
+        Chỉnh sửa quyền
       </h1>
       <X class="w-4 h-4 absolute right-8 top-8 cursor-pointer" @click="cancel" />
       <form>
@@ -39,10 +39,10 @@ function cancel() {
                   class="p-2 rounded-sm bg-background text-foreground cursor-pointer border border-primary"
                 >
                   <option value="ADMIN">
-                    ADMIN
+                    Quản trị viên
                   </option>
                   <option value="USER">
-                    USER
+                    Người dùng
                   </option>
                 </select>
               </div>
@@ -54,12 +54,12 @@ function cancel() {
             variant="outline"
             @click="cancel"
           >
-            Cancel
+            Hủy
           </Button>
           <Button
             @click="save"
           >
-            Save
+            Lưu
           </Button>
         </div>
       </form>

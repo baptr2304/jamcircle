@@ -59,7 +59,7 @@ function handleLogout() {
           </AvatarFallback>
         </Avatar>
         <div class="max-lg:hidden grid flex-1 text-left text-sm leading-tight">
-          <span class="truncate font-semibold">{{ userStore.user.username  || userStore.user.email }}</span>
+          <span class="truncate font-semibold">{{ userStore.user.username || userStore.user.email }}</span>
         </div>
         <Icon name="IconArrowDown" class="ml-4" />
       </Button>
