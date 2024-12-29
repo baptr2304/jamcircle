@@ -15,8 +15,8 @@ export const useSongStore = defineStore('queue', () => {
     }
     playlist.value.push(song)
     toast({
-      ten_bai_hat: 'Success',
-      description: 'Added to playlist',
+      ten_bai_hat: 'Thành công',
+      description: 'Đã thêm vào hàng đợi',
     })
   }
   function removeSong(index) {

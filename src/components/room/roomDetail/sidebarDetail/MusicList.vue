@@ -23,7 +23,7 @@ async function handlePlaySong(song) {
   <div class="w-full h-[calc(100%-3rem)] flex justify-center">
     <div class="w-full flex flex-col">
       <h3 class="mx-4 mt-3 py-2 text-xl">
-        Queue
+        Hàng đợi
       </h3>
 
       <div
@@ -47,7 +47,7 @@ async function handlePlaySong(song) {
                 </PopoverTrigger>
                 <PopoverContent class="w-25">
                   <button @click="handleRemoveSong(song)">
-                    Remove from queue
+                    Xóa khỏi hàng đợi
                   </button>
                 </PopoverContent>
               </Popover>

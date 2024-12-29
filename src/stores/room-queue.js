@@ -115,8 +115,8 @@ export const useRoomQueue = defineStore('room-queue', () => {
     const data = await addSong(playlistId.value, song.id)
     playlist.value.push(data)
     toast({
-      title: 'Success',
-      description: 'Added to queue',
+      title: 'Thành công',
+      description: 'Thêm bài hát vào danh sách phát thành công',
     })
     playlist.value = await getPlaylistSongs(playlistId.value)
   }

@@ -20,10 +20,10 @@ const confirmStore = useConfirmStore()
       </div>
       <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-x-2">
         <Button variant="outline" @click="confirmStore.cancel">
-          Cancel
+          {{ confirmStore.cancelText }}
         </Button>
         <Button @click="confirmStore.confirm">
-          Continue
+          {{ confirmStore.confirmText }}
         </Button>
       </div>
     </div>

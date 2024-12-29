@@ -64,7 +64,7 @@ async function handleAddSongToQueue(song) {
         id="search"
         v-model="searchQuery"
         type="text"
-        placeholder="Search..."
+        placeholder="Tìm kiếm..."
         autocomplete="off"
         class="pl-10 rounded-[99px]"
         @input="handleSearch"
@@ -108,7 +108,7 @@ async function handleAddSongToQueue(song) {
     </div>
     <div v-else-if="!isLoading" class="flex justify-center h-[50vh] pt-4">
       <p class=" opacity-50">
-        No results found
+        Không có kết quả
       </p>
     </div>
     <div v-show=" isLoading " class="flex w-full p-8 justify-center">

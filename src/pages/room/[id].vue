@@ -116,8 +116,8 @@ async function handleMessage(messageContent) {
 }
 onMounted(async () => {
   const confirm = await confirmStore.showConfirmDialog({
-    title: 'Welcome to the room',
-    message: 'Confirm to continue to the room',
+    title: 'Xác nhận',
+    message: 'Chào mừng đến với phòng nghe nhạc. Xác nhận để vào phòng.'
   })
   if (!confirm)
     router.push('/jam')
