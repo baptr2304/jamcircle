@@ -190,16 +190,15 @@ onUnmounted(() => {
     <div v-if="!userStore.isAuthenticated" class="well-come-bar">
       <div class="flex flex-col h-full justify-center">
         <div class="title text-sm font-medium max-lg:hidden">
-          REVIEW FOR JAMCIRCLE
+          Chào mừng đến với JamCircle
         </div>
         <div class="description text-sm max-lg:line-clamp-2">
-          Sign up to get unlimited songs and podcasts with occasional ads. No
-          credit card needed.
+          Đăng nhập để nghe không giới hạn các bài hát và podcast với không quảng cáo thỉnh thoảng. Hoàn toàn miễn phí.
         </div>
       </div>
-      <RouterLink to="/auth/login">
+      <RouterLink to="/auth/register">
         <Button class="flex h-12 py-4 lg:px-8 px-4 bg-foreground rounded-full">
-          Sign up free
+          Đăng nhập
         </Button>
       </RouterLink>
     </div>

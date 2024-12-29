@@ -51,8 +51,8 @@ const onSubmit = form.handleSubmit(async (values) => {
   try {
     if (!imageFile.value) {
       toast({
-        title: 'Error',
-        description: 'Please upload thumbnail for your song',
+        title: 'Thất bại',
+        description: 'Vui lòng tải lên ảnh bìa cho bài hát của bạn',
         variant: 'destructive',
         duration: 5000,
       })
@@ -63,14 +63,14 @@ const onSubmit = form.handleSubmit(async (values) => {
     const data = {
       ten_bai_hat: values.name,
       anh: url,
-      ten_ca_si: userStore.user?.username ?? 'Unknown',
+      ten_ca_si: userStore.user?.ten_nguoi_dung ?? 'Vô danh',
       file: audioFile.value,
     }
 
     await songStore.uploadSongToServer(data)
     toast({
-      title: 'Success',
-      description: 'Your song has been uploaded successfully',
+      title: 'Thành công',
+      description: 'Bài hát của bạn đã được tải lên thành công',
       duration: 5000,
     })
     router.push('/home')
@@ -122,8 +122,8 @@ function hanldeUploadThumbnail(event) {
       >
         <div class="flex flex-col gap-2 items-center justify-center p-2">
           <Icon name="IconUploadCloud" class="w-10 h-10" />
-          <span class="text-lg font-semibold text-center">Drag and drop your files here</span>
-          <span>Supported format: audio file</span>
+          <span class="text-lg font-semibold text-center">Kéo và thả tệp của bạn vào đây</span>
+          <span>Định dạng hỗ trợ: âm thanh</span>
         </div>
       </div>
       <audio
@@ -141,8 +141,8 @@ function hanldeUploadThumbnail(event) {
       <InputValidator
         :model-value="nameSong ?? null"
         type="text"
-        label="Song name"
-        placeholder="Enter song name"
+        label="Tên bài hát"
+        placeholder="Nhập tên bài hát"
         name="name"
         custom="h-[3rem] mb-5 mt-1"
         @keydown.stop
@@ -155,19 +155,19 @@ function hanldeUploadThumbnail(event) {
           class="grid w-full max-w-sm items-center gap-1.5 col-span-2"
           :class="imageFile ? 'col-span-2' : ''"
         >
-          <label for="picture" class="mb-2">Song thumbnail</label>
+          <label for="picture" class="mb-2">Ảnh bìa bài hát</label>
           <Button
             variant="secondary"
             type="button"
             @click="imageRef.click()"
           >
             <Icon name="IconUpload" class="w-8 h-8" />
-            Select image
+            Chọn ảnh
           </Button>
           <input
             id="picture"
             ref="imageRef"
-            placeholder="Select image"
+            placeholder="Chọn ảnh"
             type="file"
             accept="image/*"
             class="cursor-pointer hidden"
@@ -189,11 +189,11 @@ function hanldeUploadThumbnail(event) {
           <template v-if="isUploading">
             <div class="flex w-full p-8 justify-center gap-2 items-center">
               <Icon name="IconLoading" />
-              Please wait...
+              Vui lòng chờ...
             </div>
           </template>
           <template v-else>
-            Upload files
+            Tải lên
           </template>
         </Button>
       </div>

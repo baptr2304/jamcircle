@@ -39,12 +39,10 @@ function handleAddSong(song) {
 
         <div class="col-span-1">
           <div
-            class="w-16 h-8 border-2 border-foreground rounded-[10rem] text-xs
-                   flex items-center justify-center cursor-pointer
-                  "
+            class="w-16 h-8 border-2 border-foreground rounded-[10rem] text-xs flex items-center justify-center cursor-pointer"
             @click="handleAddSong(song)"
           >
-            ADD
+            Thêm
           </div>
         </div>
       </div>

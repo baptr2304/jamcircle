@@ -27,7 +27,7 @@ async function addToPlaylist(song) {
 </script>
 
 <template>
-  <div>
-    <PlaylistSearch @add-song="addToPlaylist" />
+  <div class="mt-4">
+    <PlaylistSearch @add-song="addToPlaylist"/>
   </div>
 </template>

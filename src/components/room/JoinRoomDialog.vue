@@ -32,12 +32,12 @@ function handleJoin() {
   <Dialog :open="open" @update:open="(value) => emit('update:open', value)">
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Join Room by ID</DialogTitle>
+        <DialogTitle>Tham gia bằng mã</DialogTitle>
       </DialogHeader>
       <div class="space-y-4 py-4">
-        <Input v-model="roomId" placeholder="@RoomID" class="w-full" />
+        <Input v-model="roomId" placeholder="Nhập mã phòng nghe nhạc" class="w-full" />
         <Button class="w-full" :disabled="!roomId.trim()" @click="handleJoin">
-          Join
+          Gửi yêu cầu tham gia
         </Button>
       </div>
     </DialogContent>

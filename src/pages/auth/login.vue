@@ -11,13 +11,7 @@
 
 <script setup>
 import { Button } from '@/components/ui/button'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import InputValidator from '@/components/ui/form/InputValidator.vue'
 import { toast } from '@/components/ui/toast'
 import { useAuthStore } from '@/stores/auth'
 import { emailSchema, requiredStringSchema } from '@/utils/validation'
@@ -44,10 +38,10 @@ const onSubmit = form.handleSubmit(async (values) => {
     await authStore.login(values)
   }
   catch (error) {
-    const errorMessage = error?.response?.data?.detail || 'Something went wrong.'
+    const errorMessage = error?.response?.data?.detail || 'Có lỗi xảy ra'
     if (errorMessage) {
       toast({
-        title: 'Error',
+        title: 'Thất bại',
         description: errorMessage,
         variant: 'destructive',
         duration: 5000,
@@ -55,8 +49,8 @@ const onSubmit = form.handleSubmit(async (values) => {
       return
     }
     toast({
-      title: 'Uh oh! Something went wrong.',
-      description: 'Something went wrong.',
+      title: 'Thất bại',
+      description: 'Có lỗi xảy ra',
       variant: 'destructive',
       duration: 5000,
     })
@@ -73,30 +67,12 @@ const onSubmit = form.handleSubmit(async (values) => {
       LOGIN
     </h1>
     <form class="mt-[2.25rem]" @submit=" onSubmit ">
-      <FormField v-slot=" { componentField } " name="email" class="gap-2.5">
-        <FormItem>
-          <Label class="font-semibold">Email Address</Label>
-          <FormControl>
-            <Input
-              type="text" placeholder="Email address" class="rounded-[0.25rem] h-[2.875rem]"
-              v-bind=" componentField "
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
-      <FormField v-slot=" { componentField } " name="mat_khau">
-        <FormItem class="mt-4">
-          <Label class="font-semibold">Password</Label>
-          <FormControl>
-            <Input
-              type="password" placeholder="Password" class="rounded-[0.25rem] h-[2.875rem]"
-              v-bind=" componentField "
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
+      <div class="mb-4">
+        <InputValidator type="email" label="Địa chỉ email" name="email" placeholder="nguyenvana@gmail.com" />
+      </div>
+      <div class="mb-4">
+        <InputValidator id="mat_khau" type="password" label="Mật khẩu" name="mat_khau" placeholder="******" />
+      </div>
       <Button
         type="submit"
         class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-6 h-[2.875rem] rounded-full"
@@ -104,22 +80,22 @@ const onSubmit = form.handleSubmit(async (values) => {
         <template v-if="isLoading">
           <div class="flex w-full p-8 justify-center gap-2 items-center">
             <Icon name="IconLoading" />
-            Please wait...
+            Vui lòng chờ...
           </div>
         </template>
         <template v-else>
-          LOGIN
+          Đăng nhập
         </template>
       </Button>
     </form>
     <div class="text-center mt-4 font-medium">
-      Don't have an account?
+      Chưa có tài khoản?
     </div>
     <Button
       type="submit" class="lg:w-[26.375rem] md:w-[26.375rem] sm:w-[20rem] w-[17rem] mt-2 h-[2.875rem] rounded-full bg-white text-black duration-300 hover:text-white shadow-inherit border-2 hover:border-0"
       @click="$router.push('/auth/register')"
     >
-      REGISTER
+      Đăng ký ngay
     </Button>
   </div>
 </template>

@@ -102,7 +102,7 @@ async function handleMessage(messageContent) {
       const newMessage = {
         senderId: user.id,
         content: messageContent,
-        username: user.username,
+        username: user.ten_nguoi_dung,
         createdAt: new Date(),
         id: Date.now().toString(),
       }

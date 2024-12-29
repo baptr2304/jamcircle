@@ -11,8 +11,6 @@ import { useSongStore } from '@/stores/song'
 import { useUserStore } from '@/stores/user'
 import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
-// async function addSongToQueue(song) {
-//   console.log('addSongToQueue', song)
 import { formatTime } from '@/utils/format'
 import IconEllipsis from '../../icons/IconEllipsis.vue'
 
@@ -49,16 +47,16 @@ function handlePlaySong(song) {
     <div class="w-full text-left pr-2">
       <div class="grid grid-cols-4 sm:grid-cols-6 gap-4 py-4 text-md text-muted-foreground pr-2.5">
         <div class="col-span-3 pl-10">
-          # Title
+          # Bài hát
         </div>
         <span class="text-center max-sm:hidden">
-          Date added
+          Ngày đăng
         </span>
         <span class="text-center max-sm:hidden">
-          Duration
+          Thời lượng
         </span>
         <span class="text-center">
-          Action
+          Hành động
         </span>
       </div>
       <Separator class="bg-muted-foreground/50 mb-4" />
@@ -86,11 +84,11 @@ function handlePlaySong(song) {
                 </PopoverTrigger>
                 <PopoverContent class="w-25 flex flex-col">
                   <button class="mb-2 " @click="songStore.addToQueue(song)">
-                    Add to queue
+                    Thêm vào hàng đợi
                   </button>
                   <hr class="border-1">
                   <button @click="removeSong(index)">
-                    Remove
+                    Xóa
                   </button>
                 </PopoverContent>
               </Popover>

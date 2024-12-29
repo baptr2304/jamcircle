@@ -68,14 +68,14 @@ async function handleJoinRoom(roomId) {
         @click="openJoinRoom"
       >
         <Icon name="IconJoin" class="w-6 h-6" />
-        Join a room
+        Tham gia phòng nghe nhạc
       </Button>
       <Button
         class="text-foreground rounded-full"
         @click="openCreateRoom"
       >
         <Icon name="IconJam" class="w-6 h-6" />
-        Create a room
+        Tạo phòng nghe nhạc
       </Button>
     </div>
   </div>
@@ -88,7 +88,7 @@ async function handleJoinRoom(roomId) {
         id="find"
         v-model="searchValue"
         type="text"
-        placeholder="Search..."
+        placeholder="Tìm kiếm..."
         class="pl-10"
         autocomplete="off"
       />
@@ -114,13 +114,13 @@ async function handleJoinRoom(roomId) {
     </div>
     <div v-else>
       <p class="text-center">
-        No rooms found.
+        Không tìm thấy phòng nào.
       </p>
     </div>
   </div>
   <div v-else>
     <p class="text-center">
-      No rooms found.
+      Không có phòng nào.
     </p>
   </div>
 

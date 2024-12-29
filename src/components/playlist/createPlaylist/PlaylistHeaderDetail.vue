@@ -41,7 +41,7 @@ const user = userStore.user
             </h1>
           </div>
           <h5 class="font-semibold">
-            {{ user?.username }}
+            {{ user?.ten_nguoi_dung }}
           </h5>
         </div>
       </div>

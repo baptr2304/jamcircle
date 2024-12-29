@@ -52,13 +52,13 @@ function isCurrentUserSender(message) {
             isCurrentUserSender(message) ? 'sent' : 'received',
           ]"
         >
-          {{ !isCurrentUserSender(message) ? (message.username?.[0] || "U") : 'You' }}
+          {{ !isCurrentUserSender(message) ? (message.ten_nguoi_dung?.[0] || "U") : 'You' }}
         </div>
       </div>
 
       <div class="message-content">
         <div class="sender-name">
-          {{ message.username || "User" }}
+          {{ message.ten_nguoi_dung || "User" }}
         </div>
 
         <div class="message-bubble">

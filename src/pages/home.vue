@@ -52,7 +52,7 @@ function handleDetailPlaylist(playlistId) {
 <template>
   <div ref="container" class="p-6 space-y-6 h-full overflow-y-auto scrollbar">
     <h1 class="text-2xl font-bold">
-      Albums
+      Danh sách phát hàng đầu
     </h1>
 
     <div class="grid gap-6 justify-center md:grid-cols-4 sm:grid-cols-3 grid-cols-2 xl:grid-cols-5 2xl:grid-cols-6">

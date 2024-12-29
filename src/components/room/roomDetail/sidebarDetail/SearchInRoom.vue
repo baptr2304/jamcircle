@@ -97,7 +97,7 @@ async function handleAddSongToQueue(song) {
                 </PopoverTrigger>
                 <PopoverContent class="w-25">
                   <button @click="handleAddSongToQueue(song)">
-                    Add to queue
+                    Thêm vào hàng đợi
                   </button>
                 </PopoverContent>
               </Popover>

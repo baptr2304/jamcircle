@@ -59,7 +59,7 @@ function handlePlaySong(song) {
 
 <template>
   <h1>
-    <PlaylistHeader icon="IconMusicSolid" title="Top Result" />
+    <PlaylistHeader icon="IconMusicSolid" title="Kết quả hàng đầu" />
   </h1>
   <div v-if="data && data.length" ref="container" class="mt-4 px-2 overflow-y-auto scrollbar w-[calc(100%-1rem)]">
     <div
@@ -83,7 +83,7 @@ function handlePlaySong(song) {
               </PopoverTrigger>
               <PopoverContent class="w-25">
                 <button @click="songStore.addToQueue(song)">
-                  Add to queue
+                  Thêm vào hàng đợi
                 </button>
               </PopoverContent>
             </Popover>
@@ -94,7 +94,7 @@ function handlePlaySong(song) {
   </div>
   <div v-else-if="!isLoading" class="flex justify-center items-center h-[50vh]">
     <p class=" opacity-50">
-      No results found
+      Không tìm thấy kết quả nào
     </p>
   </div>
   <div v-show=" isLoading " class="flex w-full p-8 justify-center items-center">
