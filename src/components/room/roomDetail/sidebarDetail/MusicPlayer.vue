@@ -2,6 +2,7 @@
 import { Progress } from '@/components/ui/progress'
 import { useRoomQueue } from '@/stores/room-queue'
 import { useUserStore } from '@/stores/user'
+import { useWebSocketStore } from '@/stores/websocket'
 import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 import { formatTime } from '@/utils/format'
@@ -13,6 +14,7 @@ const { userInRoom } = defineProps({
 
 const userStore = useUserStore()
 const roomQueueStore = useRoomQueue()
+const webSocketStore = useWebSocketStore()
 
 const progress = ref(0)
 const progressBar = ref(null)
@@ -62,11 +64,38 @@ async function handlePlay() {
     return
   isPlaying.value = !isPlaying.value
   if (isPlaying.value) {
-    await roomQueueStore.playSongInQueueRoom(roomQueueStore.currentSong, songCurrentTime.value)
+    webSocketStore.socket.send(
+      JSON.stringify(
+        {
+          type: 'trang_thai_phat',
+          action: 'phat_bai_hat',
+          data: {
+            thanh_vien_phong_id: userInRoom.id,
+            trang_thai_phat: 'DangPhat',
+            bai_hat_id: roomQueueStore.currentSong.id,
+            so_thu_tu: roomQueueStore.currentSong.so_thu_tu,
+            thoi_gian_bat_dau: songCurrentTime.value,
+          },
+        },
+      ),
+    )
   }
   else {
-    await roomQueueStore.pauseSongInQueueRoom(songCurrentTime.value)
-    await audio.value.pause()
+    webSocketStore.socket.send(
+      JSON.stringify(
+        {
+          type: 'trang_thai_phat',
+          action: 'phat_bai_hat',
+          data: {
+            thanh_vien_phong_id: userInRoom.id,
+            trang_thai_phat: 'TamDung',
+            bai_hat_id: roomQueueStore.currentSong.id,
+            so_thu_tu: roomQueueStore.currentSong.so_thu_tu,
+            thoi_gian_bat_dau: songCurrentTime.value,
+          },
+        },
+      ),
+    )
   }
 }
 function updateTime() {
@@ -89,34 +118,52 @@ function updateTime() {
 async function changeCurrentTime(time, type) {
   if (!roomQueueStore.currentSong)
     return
+  let udpateTime = audio.value.currentTime
   switch (type) {
     case 'backward':
-      audio.value.currentTime -= time
+      udpateTime -= time
       break
     case 'forward':
-      audio.value.currentTime += time
+      udpateTime += time
       break
     default:
-      audio.value.currentTime = time
+      udpateTime = time
       break
   }
   const payload = {
     id: roomQueueStore.currentRoom.id,
     ten_phong: roomQueueStore.currentRoom.ten_phong,
-    trang_thai_phat: isPlaying.value ? 'dang_phat' : 'tam_dung',
-    thoi_gian_hien_tai_bai_hat: Math.ceil(audio.value.currentTime),
+    trang_thai_phat: 'DangPhat',
+    thoi_gian_hien_tai_bai_hat: Math.floor(udpateTime),
     so_thu_tu_bai_hat_dang_phat: roomQueueStore.currentSong.so_thu_tu,
   }
   await roomQueueStore.updateRoom(payload)
-  updateTime()
+  
+  webSocketStore.socket.send(
+    JSON.stringify(
+      {
+        type: 'trang_thai_phat',
+        action: 'phat_bai_hat',
+        data: {
+          thanh_vien_phong_id: userInRoom.id,
+          trang_thai_phat: 'DangPhat',
+          bai_hat_id: roomQueueStore.currentSong.id,
+          so_thu_tu: roomQueueStore.currentSong.so_thu_tu,
+          thoi_gian_bat_dau: udpateTime,
+        },
+      },
+    ),
+  )
 }
+
 async function resetControl() {
   if (!roomQueueStore.currentSong || userInRoom?.quyen === 'thanh_vien')
     return
   await nextTick()
   await sleep(300)
-  isPlaying.value = roomQueueStore.currentRoom?.trang_thai_phat === 'dang_phat'
+  isPlaying.value = roomQueueStore.currentRoom?.trang_thai_phat === 'DangPhat'
   songCurrentTime.value = roomQueueStore.currentRoom?.thoi_gian_hien_tai_bai_hat ?? 0
+  console.log('update thời gian:', songCurrentTime.value)
   if (audio.value.readyState > 0) {
     audio.value.currentTime = audio.value.currentTime = songCurrentTime.value
   }
@@ -130,18 +177,20 @@ async function resetControl() {
     interval = setInterval(updateTime, 1000)
   if (isPlaying.value) {
     await audio.value.play()
-    console.log('audio.value.play() - end')
+  }
+  else {
+    await audio.value.pause()
   }
 }
 function nextSong() {
   if (!roomQueueStore.currentSong)
     return
-  roomQueueStore.nextSong()
+  roomQueueStore.nextSong(userInRoom.id)
 }
 function prevSong() {
   if (!roomQueueStore.currentSong)
     return
-  roomQueueStore.prevSong()
+  roomQueueStore.prevSong(userInRoom.id)
 }
 function toggleMuted() {
   if (!roomQueueStore.currentSong)

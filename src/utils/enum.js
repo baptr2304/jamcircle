@@ -12,6 +12,7 @@ export const listEvents = {
   toggleMute: 'ToggleMute',
   seekForward: 'SeekForward',
   seekBackward: 'SeekBackward',
+  localChangeTime: 'LocalChangeTime',
 }
 
 export const listRoles = {

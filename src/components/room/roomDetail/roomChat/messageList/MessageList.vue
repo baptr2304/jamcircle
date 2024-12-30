@@ -1,13 +1,15 @@
 <script setup>
-import ScrollArea from '@/components/ui/scroll-area/ScrollArea.vue'
-
 const props = defineProps({
   messages: {
     type: Array,
     required: true,
   },
-  userId: {
-    type: String,
+  userInRoom: {
+    type: Object,
+    required: true,
+  },
+  members: {
+    type: Array,
     required: true,
   },
 })
@@ -22,7 +24,7 @@ function formatTime(date) {
 const messagesContainerRef = ref(null)
 watch(
   () => props.messages,
-  (newMessages) => {
+  () => {
     nextTick(() => {
       if (messagesContainerRef.value) {
         messagesContainerRef.value.scrollTop = messagesContainerRef.value.scrollHeight
@@ -32,14 +34,22 @@ watch(
   { deep: true },
 )
 function isCurrentUserSender(message) {
-  return message.senderId === props.userId
+  return message.thanh_vien_phong_id === props.userInRoom?.id
 }
+const allMessages = computed(() => {
+  return props.messages.map((message) => {
+    return {
+      ...message,
+      nguoi_dung: props.members.find(member => member.id === message.thanh_vien_phong_id),
+    }
+  })
+})
 </script>
 
 <template>
   <div ref="messagesContainerRef" class="messages-container overflow-y-auto scrollbar h-[calc(100%-2.5px)] py-2">
     <div
-      v-for="message in messages"
+      v-for="message in allMessages"
       :key="message.id"
       class="message-wrapper" :class="[
         isCurrentUserSender(message) ? 'sent' : 'received',
@@ -52,23 +62,23 @@ function isCurrentUserSender(message) {
             isCurrentUserSender(message) ? 'sent' : 'received',
           ]"
         >
-          {{ !isCurrentUserSender(message) ? (message.ten_nguoi_dung?.[0] || "U") : 'You' }}
+          <img v-lazy="message?.nguoi_dung?.anh_dai_dien" alt="" class="w-8 h-8 rounded-full">
         </div>
       </div>
 
       <div class="message-content">
         <div class="sender-name">
-          {{ message.ten_nguoi_dung || "User" }}
+          {{ message?.nguoi_dung?.ho_ten ?? "Vô danh" }}
         </div>
 
         <div class="message-bubble">
           <p class="message-text">
-            {{ message.content }}
+            {{ message.noi_dung }}
           </p>
         </div>
 
         <div class="timestamp">
-          {{ formatTime(message.createdAt) }}
+          {{ formatTime(message.thoi_gian_tao) }}
         </div>
       </div>
     </div>
@@ -122,11 +132,9 @@ function isCurrentUserSender(message) {
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  color: #333;
 }
 
 .avatar-circle.sent {
-  background: hsl(var(--primary));
   color: hsl(var(--foreground));
 }
 
@@ -150,7 +158,6 @@ function isCurrentUserSender(message) {
 }
 
 .sent .message-bubble {
-  background: #e3f2fd;
   margin-left: auto;
 }
 

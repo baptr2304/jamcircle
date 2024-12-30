@@ -8,8 +8,12 @@ const props = defineProps({
     required: true,
   },
   isSidebarVisible: Boolean,
-  userId: {
-    type: String,
+  userInRoom: {
+    type: Object,
+    required: true,
+  },
+  members: {
+    type: Array,
     required: true,
   },
 })
@@ -24,8 +28,19 @@ function handleMessage(messageContent) {
     class="chat flex flex-col h-full w-full pb-4"
     :class="[{ 'chat-expanded': !isSidebarVisible }]"
   >
-    <MessageList :messages="messages" :user-id="userId" />
-    <MessageInput :is-sidebar-visible="props.isSidebarVisible" @message="handleMessage" />
+    <MessageList :messages="messages" :members="props.members" :user-in-room="props.userInRoom" />
+    <MessageInput
+      v-if="props.userInRoom?.quyen !== 'thanh_vien'"
+      :is-sidebar-visible="props.isSidebarVisible" @message="handleMessage"
+    />
+    <div
+      v-else
+      class="relative h-10"
+    >
+      <div class="w-full p-3  text-sm bg-secondary border-0 focus:outline-none focus:ring-0">
+        Bạn không thể soạn tin nhắn
+      </div>
+    </div>
   </div>
 </template>
 

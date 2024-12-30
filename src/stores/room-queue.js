@@ -5,11 +5,13 @@ import {
 } from '@/api/playlist'
 import * as apiRoom from '@/api/room'
 import { toast } from '@/components/ui/toast'
+import { useWebSocketStore } from '@/stores/websocket'
 import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 import { defineStore } from 'pinia'
 
 export const useRoomQueue = defineStore('room-queue', () => {
+  const webSocketStore = useWebSocketStore()
   const playlist = ref([])
   const playlistId = ref(null)
   const currentRoom = ref(null)
@@ -17,24 +19,50 @@ export const useRoomQueue = defineStore('room-queue', () => {
   const currentSong = computed(() => playlist.value.find(item => item.so_thu_tu === currentIndex.value))
 
   // Song
-  async function nextSong() {
+  async function nextSong(thanh_vien_phong_id) {
     const nextIndex = currentIndex.value + 1
     let nextSong = playlist.value.find(item => item.so_thu_tu === nextIndex)
     if (!nextSong) {
       nextSong = playlist.value[0]
     }
-    await playSongInQueueRoom(nextSong, 0)
-    handleLoadSong()
+    webSocketStore.socket.send(
+      JSON.stringify(
+        {
+          type: 'trang_thai_phat',
+          action: 'phat_bai_hat',
+          data: {
+            thanh_vien_phong_id,
+            trang_thai_phat: 'DangPhat',
+            bai_hat_id: nextSong.id,
+            so_thu_tu: nextSong.so_thu_tu,
+            thoi_gian_bat_dau: 0,
+          },
+        },
+      ),
+    )
   }
 
-  function prevSong() {
+  function prevSong(thanh_vien_phong_id) {
     const prevIndex = currentIndex.value - 1
     let prevSong = playlist.value.find(item => item.so_thu_tu === prevIndex)
     if (!prevSong) {
       prevSong = playlist.value[playlist.value.length - 1]
     }
-    playSongInQueueRoom(prevSong, 0)
-    handleLoadSong()
+    webSocketStore.socket.send(
+      JSON.stringify(
+        {
+          type: 'trang_thai_phat',
+          action: 'phat_bai_hat',
+          data: {
+            thanh_vien_phong_id,
+            trang_thai_phat: 'DangPhat',
+            bai_hat_id: prevSong.id,
+            so_thu_tu: prevSong.so_thu_tu,
+            thoi_gian_bat_dau: 0,
+          },
+        },
+      ),
+    )
   }
 
   function handlePlaySong() {
@@ -48,7 +76,7 @@ export const useRoomQueue = defineStore('room-queue', () => {
 
   async function updateRoom(payload) {
     currentRoom.value = await apiRoom.apiUpdateRoom(payload)
-    handlePlaySong()
+    // handlePlaySong()
   }
 
   async function getDetailRoom(id) {
@@ -84,14 +112,14 @@ export const useRoomQueue = defineStore('room-queue', () => {
   }
 
   async function playSongInQueueRoom(song, currentTime) {
-    const payload = {
-      id: currentRoom.value.id,
-      ten_phong: currentRoom.value.ten_phong,
-      trang_thai_phat: 'dang_phat',
-      thoi_gian_hien_tai_bai_hat: currentTime,
-      so_thu_tu_bai_hat_dang_phat: song.so_thu_tu,
-    }
-    currentRoom.value = await apiRoom.apiUpdateRoom(payload)
+    // const payload = {
+    //   id: currentRoom.value.id,
+    //   ten_phong: currentRoom.value.ten_phong,
+    //   trang_thai_phat: 'DangPhat',
+    //   thoi_gian_hien_tai_bai_hat: currentTime,
+    //   so_thu_tu_bai_hat_dang_phat: song.so_thu_tu,
+    // }
+    // currentRoom.value = await apiRoom.apiUpdateRoom(payload)
     handlePlaySong()
   }
 
@@ -99,7 +127,7 @@ export const useRoomQueue = defineStore('room-queue', () => {
     const payload = {
       id: currentRoom.value.id,
       ten_phong: currentRoom.value.ten_phong,
-      trang_thai_phat: 'tam_dung',
+      trang_thai_phat: 'TamDung',
       thoi_gian_hien_tai_bai_hat: currentTime,
       so_thu_tu_bai_hat_dang_phat: currentRoom.value.so_thu_tu_bai_hat_dang_phat,
     }

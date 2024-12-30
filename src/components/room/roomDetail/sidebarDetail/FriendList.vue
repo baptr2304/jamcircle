@@ -171,7 +171,7 @@ async function leaveRoom() {
                 :key="member.id"
                 class="flex items-center justify-between border border-input rounded-md p-2 bg-border mb-2"
               >
-                <div class="flex items-center truncate">
+                <div class="flex items-center truncate w-36">
                   <img
                     v-lazy="member.anh_dai_dien"
                     alt="avatar"
