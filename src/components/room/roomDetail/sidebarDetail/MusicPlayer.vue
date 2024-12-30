@@ -85,7 +85,7 @@ async function handlePlay() {
       JSON.stringify(
         {
           type: 'trang_thai_phat',
-          action: 'phat_bai_hat',
+          action: 'dung_phat',
           data: {
             thanh_vien_phong_id: userInRoom.id,
             trang_thai_phat: 'TamDung',
