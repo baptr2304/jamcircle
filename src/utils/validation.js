@@ -1,10 +1,14 @@
 import { z } from 'zod'
 
 export const emailSchema = z.string().min(1, { message: 'Không được để trống' }).email()
-export const genderSchema = z.enum(['Male', 'Female'], {
+export const genderSchema = z.enum(['Nam', 'Nu', 'Khac'], {
   required_error: 'Vui lòng chọn giới tính',
 })
 export const requiredStringSchema = z.string().min(1, { message: 'Không được để trống' })
+export const dateOfBirthSchema = z.string().refine((value) => {
+  const date = new Date(value)
+  return !Number.isNaN(date.getTime())
+}, { message: 'Ngày sinh không hợp lệ' })
 
 export const nameSchema = z
   .string()
@@ -20,7 +24,8 @@ export const passwordSchema = z
 export const userSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
-  age: z.number().min(18, { message: 'Bạn phải trên 18 tuổi' }),
+  dateOfBirth: dateOfBirthSchema,
+  gender: genderSchema,
 })
 
 export function validateUser(data) {

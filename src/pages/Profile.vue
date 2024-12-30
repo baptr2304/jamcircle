@@ -22,6 +22,8 @@ const profileSchema = toTypedSchema(
       password: passwordSchema.optional(),
       confirmPassword: z.string().optional(),
       role: z.string().optional(),
+      gender: z.string().optional(),
+      dateOfBirth: z.string().optional(),
     })
     .refine(
       (data) => {
