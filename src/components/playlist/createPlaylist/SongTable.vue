@@ -101,7 +101,7 @@ function handlePlaySong(song) {
                   </PopoverTrigger>
                   <PopoverContent class="w-25">
                     <button @click="addSongToQueue(song.id)">
-                      Add to queue
+                      Thêm vào hàng đợi
                     </button>
                   </PopoverContent>
                 </Popover>

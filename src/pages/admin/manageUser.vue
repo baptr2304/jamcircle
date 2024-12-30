@@ -126,7 +126,7 @@ onMounted(async () => {
                   </div>
                 </th>
                 <td class="px-6 py-4">
-                  {{ user.quyen === 'quan_tri_vien' ? 'ADMIN' : 'USER' }}
+                  {{ user.quyen === 'quan_tri_vien' ? 'Quản trị viên' : 'Người dùng' }}
                 </td>
                 <td class="px-6 py-4">
                   <div class="flex items-center">
@@ -148,7 +148,7 @@ onMounted(async () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem class="cursor-pointer" @click="editUser(user)">
-                        Quyền
+                        Phân quyền
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

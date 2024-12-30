@@ -46,8 +46,8 @@ async function hanldeAcceptRequest(id, accept) {
 }
 async function handleDeleteMember(id) {
   const result = await confirmStore.showConfirmDialog({
-    title: 'Delete member',
-    message: 'Are you sure you want to delete this member?',
+    title: 'Xóa thành viên',
+    message: 'Bạn có chắc chắn muốn xóa thành viên này khỏi phòng không?',
   })
   if (!result)
     return
@@ -61,8 +61,8 @@ async function updateRole(id, role) {
 }
 async function leaveRoom() {
   const result = await confirmStore.showConfirmDialog({
-    title: 'Leave room',
-    message: 'Are you sure you want to leave this room?',
+    title: 'Rời phòng',
+    message: 'Bạn có chắc chắn muốn rời khỏi phòng này không?',
   })
   if (!result)
     return
@@ -75,7 +75,7 @@ async function leaveRoom() {
   <div class="flex flex-col items-center h-full">
     <div class="w-[90%]">
       <h1 class="text-primary text-2xl font-bold">
-        Information
+        Thông tin phòng
       </h1>
       <div class="flex items-center py-2 mb-2 justify-between">
         <div class="text-xl mr-2 font-bold max-w-48 truncate">
@@ -89,13 +89,13 @@ async function leaveRoom() {
       <Tabs default-value="room-link" class="w-full">
         <TabsList class="w-full">
           <TabsTrigger value="room-link">
-            Room Link
+            Link mời
           </TabsTrigger>
           <TabsTrigger value="room-qr">
-            Room QR
+            Mã QR
           </TabsTrigger>
           <TabsTrigger value="room-id">
-            Room ID
+            Mã phòng
           </TabsTrigger>
         </TabsList>
         <TabsContent value="room-id">
@@ -112,7 +112,7 @@ async function leaveRoom() {
                 <Icon name="IconCopy" class="w-6 h-6 cursor-pointer" @click="copyInviteLink(room.id)" />
               </PopoverTrigger>
               <PopoverContent class="w-25 text-muted-foreground" readonly>
-                Copied!
+                Đã sao chép!
               </PopoverContent>
             </Popover>
           </div>
@@ -131,7 +131,7 @@ async function leaveRoom() {
                 <Icon name="IconCopy" class="w-6 h-6 cursor-pointer" @click="copyInviteLink(link)" />
               </PopoverTrigger>
               <PopoverContent class="w-25 text-muted-foreground" readonly>
-                Copied!
+                Đã sao chép!
               </PopoverContent>
             </Popover>
           </div>
@@ -147,19 +147,18 @@ async function leaveRoom() {
         <div
           class="w-full my-2 text-sm border-input rounded-md p-3 bg-border"
         >
-          By default members that join channel will be admin(can change and
-          play songs). <b style="color: yellowgreen;">Host</b> can demote them to member.
+            Theo mặc định, các thành viên tham gia kênh sẽ là quản trị viên (có thể thay đổi và phát nhạc). <b style="color: yellowgreen;">Chủ phòng</b> có thể hạ cấp họ xuống thành viên.
         </div>
         <Tabs default-value="members" class="w-full">
           <TabsList class="w-full">
             <TabsTrigger value="members">
-              Members ({{ members.length }})
+              Thành viên ({{ members.length }})
             </TabsTrigger>
             <TabsTrigger
               v-if="userInRoom?.quyen !== 'thanh_vien'"
               value="requests"
             >
-              Requests ({{ requests.length }})
+              Yêu cầu tham gia ({{ requests.length }})
             </TabsTrigger>
           </TabsList>
           <TabsContent value="members">
@@ -172,7 +171,7 @@ async function leaveRoom() {
                 :key="member.id"
                 class="flex items-center justify-between border border-input rounded-md p-2 bg-border mb-2"
               >
-                <div class="flex items-center truncate">
+                <div class="flex items-center truncate w-36">
                   <img
                     v-lazy="member.anh_dai_dien"
                     alt="avatar"
@@ -192,23 +191,23 @@ async function leaveRoom() {
                     <PopoverTrigger>
                       <Icon name="IconPen" class="w-8 h-8 p-2 text-white cursor-pointer hover:bg-popover rounded-sm" />
                     </PopoverTrigger>
-                    <PopoverContent class="w-24 p-2 text-muted-foreground text-sm flex flex-col items-center">
+                    <PopoverContent class="w-36 p-2 text-muted-foreground text-sm flex flex-col items-center">
                       <div class="p-2 my-1 cursor-pointer text-center w-full rounded-sm hover:bg-secondary" @click="updateRole(member.id, 'quan_ly')">
-                        Admin
+                        Quản trị viên
                       </div>
                       <Separator />
                       <div
                         class="p-2 my-1 cursor-pointer text-center w-full rounded-sm hover:bg-secondary"
                         @click="updateRole(member.id, 'thanh_vien')"
                       >
-                        Member
+                        Thành viên
                       </div>
                       <Separator />
                       <div
                         class="p-2 my-1 cursor-pointer text-center w-full rounded-sm hover:bg-secondary"
                         @click="handleDeleteMember(member.id)"
                       >
-                        Delete
+                        Xóa khỏi phòng
                       </div>
                     </PopoverContent>
                   </Popover>
@@ -254,7 +253,7 @@ async function leaveRoom() {
             </div>
             <div v-else>
               <p class="text-center text-sm py-4 font-medium">
-                No requests to join room
+                Không có yêu cầu tham gia nào
               </p>
             </div>
           </TabsContent>

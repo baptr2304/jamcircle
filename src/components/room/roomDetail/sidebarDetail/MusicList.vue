@@ -6,16 +6,47 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useRoomQueue } from '@/stores/room-queue'
+import { useWebSocketStore } from '@/stores/websocket'
 
+const props = defineProps({
+  userInRoom: {
+    type: Object,
+    required: true,
+  },
+})
+const webSocketStore = useWebSocketStore()
 const roomQueueStore = useRoomQueue()
 async function handleRemoveSong(song) {
-  await roomQueueStore.handleRemoveFromQueue(song)
-  await roomQueueStore.fetchPlaylistSongs()
+  webSocketStore.socket.send(
+    JSON.stringify({
+      type: 'danh_sach_phat',
+      action: 'xoa_bai_hat',
+      data: {
+        thanh_vien_phong_id: props.userInRoom.id,
+        so_thu_tu: song.so_thu_tu,
+      },
+    }),
+  )
 }
 
 async function handlePlaySong(song) {
-  await roomQueueStore.playSongInQueueRoom(song, 0)
-  roomQueueStore.handleLoadSong()
+  webSocketStore.socket.send(
+    JSON.stringify(
+      {
+        type: 'trang_thai_phat',
+        action: 'phat_bai_hat',
+        data: {
+          thanh_vien_phong_id: props.userInRoom.id,
+          trang_thai_phat: 'DangPhat',
+          bai_hat_id: song.id,
+          so_thu_tu: song.so_thu_tu,
+          thoi_gian_bat_dau: 0,
+        },
+      },
+    ),
+  )
+  // await roomQueueStore.playSongInQueueRoom(song, 0)
+  // roomQueueStore.handleLoadSong()
 }
 </script>
 
@@ -23,7 +54,7 @@ async function handlePlaySong(song) {
   <div class="w-full h-[calc(100%-3rem)] flex justify-center">
     <div class="w-full flex flex-col">
       <h3 class="mx-4 mt-3 py-2 text-xl">
-        Queue
+        Hàng đợi
       </h3>
 
       <div
@@ -47,7 +78,7 @@ async function handlePlaySong(song) {
                 </PopoverTrigger>
                 <PopoverContent class="w-25">
                   <button @click="handleRemoveSong(song)">
-                    Remove from queue
+                    Xóa khỏi hàng đợi
                   </button>
                 </PopoverContent>
               </Popover>

@@ -21,10 +21,12 @@ import { useConfirmStore } from '@/stores/confirm'
 import { useRoomStore } from '@/stores/room'
 import { useRoomQueue } from '@/stores/room-queue'
 import { useUserStore } from '@/stores/user'
+import { useWebSocketStore } from '@/stores/websocket'
 import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
 
 const confirmStore = useConfirmStore()
+const webSocketStore = useWebSocketStore()
 const roomStore = useRoomStore()
 const roomQueueStore = useRoomQueue()
 const userStore = useUserStore()
@@ -36,7 +38,7 @@ watch(() => userStore.isAuthenticated, (value) => {
     router.push('/home')
   }
 }, { immediate: true })
-const messages = ref([])
+const messages = ref(null)
 const isSidebarVisible = ref(true)
 const activeTab = ref('friends')
 const members = ref([])
@@ -65,6 +67,9 @@ async function fetchRoomData() {
     })
     router.push('/jam')
   }
+}
+async function fetchMessages() {
+  messages.value = await roomStore.getMessages(roomId)
 }
 const roomData = computed(() => roomQueueStore.currentRoom)
 async function fetchPlaylistData() {
@@ -96,37 +101,61 @@ function setActiveTab(tab) {
   activeTab.value = tab
 }
 
-async function handleMessage(messageContent) {
-  try {
-    if (messageContent.trim()) {
-      const newMessage = {
-        senderId: user.id,
-        content: messageContent,
-        username: user.ten_nguoi_dung,
-        createdAt: new Date(),
-        id: Date.now().toString(),
-      }
-      // await roomStore.addMessageToRoom(roomId.value, newMessage)
-      messages.value.push(newMessage)
-    }
+async function sendMessage(messageContent) {
+  const payload = {
+    type: 'tin_nhan',
+    action: 'gui_tin_nhan',
+    data: {
+      thanh_vien_phong_id: userInRoom.value?.id,
+      noi_dung: messageContent,
+      tin_nhan_tra_loi_id: null,
+    },
   }
-  catch {
-    console.error('Error sending message:', error)
+  webSocketStore.socket.send(JSON.stringify(payload))
+}
+async function updatePlayStatus(data) {
+  if (data.data.so_thu_tu === roomQueueStore.currentSong?.so_thu_tu) {
+    await fetchRoomData()
+    roomQueueStore.handlePlaySong()
+  }
+  else {
+    await fetchRoomData()
+    roomQueueStore.handlePlaySong()
+    roomQueueStore.handleLoadSong()
   }
 }
 onMounted(async () => {
   const confirm = await confirmStore.showConfirmDialog({
-    title: 'Welcome to the room',
-    message: 'Confirm to continue to the room',
+    title: 'Xác nhận',
+    message: 'Chào mừng đến với phòng nghe nhạc. Xác nhận để vào phòng.',
   })
   if (!confirm)
     router.push('/jam')
   await fetchRoomData()
+  webSocketStore.connect(roomId)
+  fetchMessages()
   fetchMembersData()
   fetchPlaylistData()
   emitter.on(listEvents.closeQueueDrawer, closeSidebar)
+
+  webSocketStore.socket.onmessage = async (event) => {
+    const data = JSON.parse(event.data)
+
+    // console.log(data)
+    switch (data.action) {
+      case 'nhan_tin_nhan':
+        fetchMessages()
+        break
+      case 'cap_nhat_danh_sach_phat':
+        await fetchPlaylistData()
+        break
+      case 'cap_nhat_trang_thai_phat':
+        updatePlayStatus(data)
+    }
+  }
 })
 onUnmounted(() => {
+  webSocketStore.disconnect()
   emitter.off(listEvents.closeQueueDrawer, closeSidebar)
   roomQueueStore.clearPlaylist()
 })
@@ -147,13 +176,15 @@ onUnmounted(() => {
     <div v-else class="flex w-full p-8 justify-center items-center">
       <Icon name="IconLoading" />
     </div>
-    <!-- <Chat
+    <Chat
+      v-if="messages"
       :messages="messages"
+      :members="members"
+      :user-in-room="userInRoom"
       :class="roomQueueStore.currentSong ? 'pt-36' : 'pt-16'"
       :is-sidebar-visible="isSidebarVisible"
-      :user-id="userId"
-      @message="handleMessage"
-    /> -->
+      @message="sendMessage"
+    />
   </div>
   <Drawer
     v-if="roomData"
@@ -162,9 +193,11 @@ onUnmounted(() => {
     <MusicList
       v-show="activeTab === 'queue'"
       :room-id="roomId"
+      :user-in-room="userInRoom"
     />
     <SearchInRoom
       v-show="activeTab === 'music' && userInRoom?.quyen !== 'thanh_vien'"
+      :user-in-room="userInRoom"
     />
     <FriendList
       v-show="activeTab === 'friends'"

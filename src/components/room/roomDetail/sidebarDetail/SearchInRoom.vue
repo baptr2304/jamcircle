@@ -8,10 +8,19 @@ import {
 } from '@/components/ui/popover'
 import { useRoomQueue } from '@/stores/room-queue'
 import { useSongStore } from '@/stores/song'
+import { useWebSocketStore } from '@/stores/websocket'
+import { sleep } from '@/utils/helper'
 import { useAsyncState, useDebounceFn, useInfiniteScroll } from '@vueuse/core'
 import { Search } from 'lucide-vue-next'
 
+const props = defineProps({
+  userInRoom: {
+    type: Object,
+    required: true,
+  },
+})
 const songStore = useSongStore()
+const webSocketStore = useWebSocketStore()
 const roomQueue = useRoomQueue()
 const searchQuery = ref('')
 const data = ref([])
@@ -50,10 +59,38 @@ const handleSearch = useDebounceFn(async () => {
   await execute()
 }, 300)
 async function handlePlaySong(song) {
-  await roomQueue.addToQueueAndPlay(song)
+  handleAddSongToQueue(song)
+  await sleep(1000)
+  const lastSong = roomQueue.playlist[roomQueue.playlist.length - 1]
+  webSocketStore.socket.send(
+    JSON.stringify(
+      {
+        type: 'trang_thai_phat',
+        action: 'phat_bai_hat',
+        data: {
+          thanh_vien_phong_id: props.userInRoom.id,
+          trang_thai_phat: 'DangPhat',
+          bai_hat_id: lastSong.id,
+          so_thu_tu: lastSong.so_thu_tu,
+          thoi_gian_bat_dau: 0,
+        },
+      },
+    ),
+  )
 }
 async function handleAddSongToQueue(song) {
-  await roomQueue.addToQueue(song)
+  webSocketStore.socket.send(
+    JSON.stringify(
+      {
+        type: 'danh_sach_phat',
+        action: 'them_bai_hat',
+        data: {
+          thanh_vien_phong_id: props.userInRoom.id,
+          bai_hat_id: song.id,
+        },
+      },
+    ),
+  )
 }
 </script>
 
@@ -64,7 +101,7 @@ async function handleAddSongToQueue(song) {
         id="search"
         v-model="searchQuery"
         type="text"
-        placeholder="Search..."
+        placeholder="Tìm kiếm..."
         autocomplete="off"
         class="pl-10 rounded-[99px]"
         @input="handleSearch"
@@ -108,7 +145,7 @@ async function handleAddSongToQueue(song) {
     </div>
     <div v-else-if="!isLoading" class="flex justify-center h-[50vh] pt-4">
       <p class=" opacity-50">
-        No results found
+        Không có kết quả
       </p>
     </div>
     <div v-show=" isLoading " class="flex w-full p-8 justify-center">

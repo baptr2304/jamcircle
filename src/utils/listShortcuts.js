@@ -1,54 +1,54 @@
 const listShortcuts = [
   {
-    section: 'Navigation',
+    section: 'Điều hướng',
     list: [
       {
-        description: 'Queue',
+        description: 'Hàng đợi',
         keyboards: ['Ctrl', 'Q'],
       },
       {
-        description: 'Forward in history',
+        description: 'Tiến tới trong lịch sử',
         keyboards: ['Alt', '→'],
       },
       {
-        description: 'Back in history',
+        description: 'Lùi lại trong lịch sử',
         keyboards: ['Alt', '←'],
       },
     ],
   },
   {
-    section: 'Playback',
+    section: 'Phát lại',
     list: [
       {
-        description: 'Play / Pause',
+        description: 'Phát / Tạm dừng',
         keyboards: ['Space'],
       },
       {
-        description: 'Skip to next',
+        description: 'Chuyển tới tiếp theo',
         keyboards: ['Ctrl', '→'],
       },
       {
-        description: 'Skip to previous',
+        description: 'Chuyển tới trước đó',
         keyboards: ['Ctrl', '←'],
       },
       {
-        description: 'Seek forward',
+        description: 'Tua tới',
         keyboards: ['Shift', '→'],
       },
       {
-        description: 'Seek backward',
+        description: 'Tua lùi',
         keyboards: ['Shift', '←'],
       },
       {
-        description: 'Increase volume',
+        description: 'Tăng âm lượng',
         keyboards: ['Ctrl', '↑'],
       },
       {
-        description: 'Decrease volume',
+        description: 'Giảm âm lượng',
         keyboards: ['Ctrl', '↓'],
       },
       {
-        description: 'Mute / Unmute',
+        description: 'Tắt / Bật tiếng',
         keyboards: ['Ctrl', 'M'],
       },
     ],

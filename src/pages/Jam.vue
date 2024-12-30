@@ -36,8 +36,8 @@ onMounted(async () => {
 async function handleCreateRoom(roomName) {
   const { phong_nghe_nhac } = await roomStore.createRoom(roomName)
   toast({
-    title: 'Room created!',
-    description: 'You have successfully created a room.',
+    title: 'Thành công',
+    description: 'Phòng nghe nhạc đã được tạo.',
     duration: 5000,
   })
   router.push(`/room/${phong_nghe_nhac.id}`)

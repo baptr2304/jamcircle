@@ -6,7 +6,7 @@ export async function middlewareLayout(to, from, next) {
   const authStore = useAuthStore()
   const isAuthenticated = userStore.isAuthenticated
   const layout = to.meta.layout
-  const userRole = userStore.user?.role
+  const userRole = userStore.user?.quyen
 
   const authenPage = ['Playlist', 'playlist-create', 'song-create', 'Favorite', 'Profile', 'Room']
 

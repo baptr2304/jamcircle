@@ -38,6 +38,10 @@ export const useRoomStore = defineStore('room', () => {
     return apiRoom.apiDeleteMember(id)
   }
 
+  async function getMessages(id) {
+    return apiRoom.apiGetListMessages(id)
+  }
+
   return {
     createRoom,
     listRoom,
@@ -47,6 +51,7 @@ export const useRoomStore = defineStore('room', () => {
     acceptJoinRoom,
     updatePermission,
     leaveRoom,
-    deleteMember
+    deleteMember,
+    getMessages,
   }
 })

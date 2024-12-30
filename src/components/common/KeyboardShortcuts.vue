@@ -77,10 +77,10 @@ onUnmounted(() => {
       <div class="grid gap-4 py-4">
         <div class="header grid gap-2">
           <h1 class="text-[2rem] font-semibold">
-            Keyboard Shortcuts
+            Phím Tắt
           </h1>
           <p>
-            Press <span class="border p-1 rounded border-foreground">Ctrl</span> <span class="border p-1 rounded border-foreground">/</span> to toggle this modal.
+            Nhấn <span class="border p-1 rounded border-foreground">Ctrl</span> <span class="border p-1 rounded border-foreground">/</span> để bật/tắt hộp thoại này.
           </p>
           <Separator class="my-2" />
         </div>

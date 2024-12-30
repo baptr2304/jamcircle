@@ -12,10 +12,11 @@ export const listEvents = {
   toggleMute: 'ToggleMute',
   seekForward: 'SeekForward',
   seekBackward: 'SeekBackward',
+  localChangeTime: 'LocalChangeTime',
 }
 
 export const listRoles = {
-  chu_phong: 'Host',
-  quan_ly: 'Admin',
-  thanh_vien: 'Member',
+  chu_phong: 'Chủ phòng',
+  quan_ly: 'Quản trị viên',
+  thanh_vien: 'Thành viên',
 }
