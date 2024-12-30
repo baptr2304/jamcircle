@@ -3,7 +3,9 @@
       meta: {
           layout: "admin",
           title: "statistics",
-      }
+      },
+      path: '/admin/statistics',
+      name: 'statistics',
   }
 </route>
 

@@ -193,7 +193,7 @@ onUnmounted(() => {
           Chào mừng đến với JamCircle
         </div>
         <div class="description text-sm max-lg:line-clamp-2">
-          Đăng nhập để nghe không giới hạn các bài hát và podcast với không quảng cáo thỉnh thoảng. Hoàn toàn miễn phí.
+          Đăng nhập để nghe không giới hạn các bài hát và podcast với không quảng cáo. Hoàn toàn miễn phí.
         </div>
       </div>
       <RouterLink to="/auth/register">

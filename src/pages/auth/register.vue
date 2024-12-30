@@ -10,11 +10,12 @@
 <script setup>
 import { Button } from '@/components/ui/button'
 import InputValidator from '@/components/ui/form/InputValidator.vue'
+import { Label } from '@/components/ui/label'
 import { toast } from '@/components/ui/toast'
 import { useAuthStore } from '@/stores/auth'
-import { emailSchema, passwordSchema, requiredStringSchema } from '@/utils/validation'
+import { dateOfBirthSchema, emailSchema, passwordSchema, requiredStringSchema } from '@/utils/validation'
 import { toTypedSchema } from '@vee-validate/zod'
-import { useForm } from 'vee-validate'
+import { Field, useForm } from 'vee-validate'
 import * as z from 'zod'
 
 const router = useRouter()
@@ -27,20 +28,33 @@ const formSchema = toTypedSchema(
       email: emailSchema,
       mat_khau: passwordSchema,
       confirm: passwordSchema,
+      ngay_sinh: dateOfBirthSchema,
+      gioi_tinh: z.string().refine(value => ['Nam', 'Nu', 'Khac'].includes(value), {
+        message: 'Giới tính không hợp lệ.',
+      }),
+
     })
     .refine(data => data.mat_khau === data.confirm, {
       message: 'Mật khẩu không khớp.',
       path: ['confirm'],
     }),
 )
-
 const form = useForm({
   validationSchema: formSchema,
-})
+  initialValues: {
+    ten_nguoi_dung: '',
+    email: '',
+    mat_khau: '',
+    confirm: '',
+    ngay_sinh: '',
+    gioi_tinh: '',
+  },
 
+})
 const onSubmit = form.handleSubmit(async (values) => {
   try {
     isLoading.value = true
+
     await authStore.register(values)
     toast({
       title: 'Thành công',
@@ -78,7 +92,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     <h1 class="text-2xl flex justify-center font-semibold">
       Đăng ký tài khoản
     </h1>
-    <form class="mt-[1rem]" @submit=" onSubmit ">
+    <form class="mt-[1rem]" @submit="onSubmit">
       <div class="mb-4">
         <InputValidator
           type="text" label="Tên người dùng" name="ten_nguoi_dung"
@@ -96,6 +110,30 @@ const onSubmit = form.handleSubmit(async (values) => {
           id="confirm" type="password" label="Xác nhận mật khẩu" name="confirm"
           placeholder="******"
         />
+      </div>
+      <div class="flex justify-between">
+        <div class="mb-4 space-y-2 flex-1 mr-2">
+          <Label for="gioi_tinh">Giới tính</Label>
+          <Field as="select" name="gioi_tinh" class="w-full p-2 border rounded bg-background">
+            <option value="">
+              Chọn giới tính
+            </option>
+            <option value="Nam">
+              Nam
+            </option>
+            <option value="Nu">
+              Nữ
+            </option>
+            <option value="Khac">
+              Khác
+            </option>
+          </Field>
+        </div>
+        <div class="mb-4">
+          <InputValidator
+            id="ngay_sinh" type="date" label="Ngày sinh" name="ngay_sinh"
+          />
+        </div>
       </div>
       <Button
         type="submit"
