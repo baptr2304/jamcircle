@@ -17,6 +17,8 @@ const props = defineProps({
 const webSocketStore = useWebSocketStore()
 const roomQueueStore = useRoomQueue()
 async function handleRemoveSong(song) {
+  if (props.userInRoom?.quyen === 'thanh_vien')
+    return
   webSocketStore.socket.send(
     JSON.stringify({
       type: 'danh_sach_phat',
@@ -30,6 +32,8 @@ async function handleRemoveSong(song) {
 }
 
 async function handlePlaySong(song) {
+  if (props.userInRoom?.quyen === 'thanh_vien')
+    return
   webSocketStore.socket.send(
     JSON.stringify(
       {
@@ -45,8 +49,6 @@ async function handlePlaySong(song) {
       },
     ),
   )
-  // await roomQueueStore.playSongInQueueRoom(song, 0)
-  // roomQueueStore.handleLoadSong()
 }
 </script>
 
@@ -67,7 +69,10 @@ async function handlePlaySong(song) {
           :is-playing="song.so_thu_tu === roomQueueStore.currentSong?.so_thu_tu"
           @handle-click="handlePlaySong(song)"
         >
-          <template #action>
+          <template
+            v-if="props.userInRoom?.quyen !== 'thanh_vien'"
+            #action
+          >
             <div class="w-[20%]">
               <Popover>
                 <PopoverTrigger>

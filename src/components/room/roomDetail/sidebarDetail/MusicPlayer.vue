@@ -1,7 +1,6 @@
 <script setup>
 import { Progress } from '@/components/ui/progress'
 import { useRoomQueue } from '@/stores/room-queue'
-import { useUserStore } from '@/stores/user'
 import { useWebSocketStore } from '@/stores/websocket'
 import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
@@ -12,7 +11,6 @@ const { userInRoom } = defineProps({
   userInRoom: Object,
 })
 
-const userStore = useUserStore()
 const roomQueueStore = useRoomQueue()
 const webSocketStore = useWebSocketStore()
 
@@ -46,6 +44,8 @@ function handleMouseMove(event) {
 }
 
 function handleMouseUp() {
+  if (userInRoom?.quyen === 'thanh_vien')
+    return
   isDragging.value = false
   changeCurrentTime((progress.value / 100) * audio.value.duration)
   document.removeEventListener('mousemove', handleMouseMove)
@@ -53,6 +53,8 @@ function handleMouseUp() {
 }
 
 function handleMouseDown(event) {
+  if (userInRoom?.quyen === 'thanh_vien')
+    return
   isDragging.value = true
   updateProgress(event)
   document.addEventListener('mousemove', handleMouseMove)
@@ -60,6 +62,8 @@ function handleMouseDown(event) {
 }
 
 async function handlePlay() {
+  if (userInRoom?.quyen === 'thanh_vien')
+    return
   if (!roomQueueStore.currentSong)
     return
   isPlaying.value = !isPlaying.value
@@ -116,6 +120,8 @@ function updateTime() {
   }
 }
 async function changeCurrentTime(time, type) {
+  if (userInRoom?.quyen === 'thanh_vien')
+    return
   if (!roomQueueStore.currentSong)
     return
   let udpateTime = audio.value.currentTime
@@ -138,7 +144,7 @@ async function changeCurrentTime(time, type) {
     so_thu_tu_bai_hat_dang_phat: roomQueueStore.currentSong.so_thu_tu,
   }
   await roomQueueStore.updateRoom(payload)
-  
+
   webSocketStore.socket.send(
     JSON.stringify(
       {
@@ -157,37 +163,46 @@ async function changeCurrentTime(time, type) {
 }
 
 async function resetControl() {
-  if (!roomQueueStore.currentSong || userInRoom?.quyen === 'thanh_vien')
-    return
-  await nextTick()
-  await sleep(300)
-  isPlaying.value = roomQueueStore.currentRoom?.trang_thai_phat === 'DangPhat'
-  songCurrentTime.value = roomQueueStore.currentRoom?.thoi_gian_hien_tai_bai_hat ?? 0
-  console.log('update thời gian:', songCurrentTime.value)
-  if (audio.value.readyState > 0) {
-    audio.value.currentTime = audio.value.currentTime = songCurrentTime.value
-  }
-  else {
-    audio.value.addEventListener('loadedmetadata', () => {
+  try {
+    if (!roomQueueStore.currentSong || userInRoom?.quyen === 'thanh_vien')
+      return
+    await nextTick()
+    await sleep(300)
+    isPlaying.value = roomQueueStore.currentRoom?.trang_thai_phat === 'DangPhat'
+    songCurrentTime.value = roomQueueStore.currentRoom?.thoi_gian_hien_tai_bai_hat ?? 0
+    if (audio.value.readyState > 0) {
       audio.value.currentTime = audio.value.currentTime = songCurrentTime.value
-    })
+    }
+    else {
+      audio.value.addEventListener('loadedmetadata', () => {
+        audio.value.currentTime = audio.value.currentTime = songCurrentTime.value
+      })
+    }
+    updateTime()
+    if (!interval)
+      interval = setInterval(updateTime, 1000)
+    if (isPlaying.value) {
+      await audio.value.play()
+    }
+    else {
+      await audio.value.pause()
+    }
   }
-  updateTime()
-  if (!interval)
-    interval = setInterval(updateTime, 1000)
-  if (isPlaying.value) {
-    await audio.value.play()
-  }
-  else {
-    await audio.value.pause()
+  catch (error) {
+    // eslint-disable-next-line no-console
+    console.log('error:', error)
   }
 }
 function nextSong() {
+  if (userInRoom?.quyen === 'thanh_vien')
+    return
   if (!roomQueueStore.currentSong)
     return
   roomQueueStore.nextSong(userInRoom.id)
 }
 function prevSong() {
+  if (userInRoom?.quyen === 'thanh_vien')
+    return
   if (!roomQueueStore.currentSong)
     return
   roomQueueStore.prevSong(userInRoom.id)
