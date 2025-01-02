@@ -9,6 +9,7 @@ import Separator from '@/components/ui/separator/Separator.vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useConfirmStore } from '@/stores/confirm'
 import { useRoomStore } from '@/stores/room'
+import { useWebSocketStore } from '@/stores/websocket'
 import { listRoles } from '@/utils/enum'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 
@@ -31,6 +32,7 @@ const { room, members, requests, userInRoom } = defineProps({
   },
 })
 const emit = defineEmits(['fetchData'])
+const webSocketStore = useWebSocketStore()
 const confirmStore = useConfirmStore()
 const roomStore = useRoomStore()
 const link = window.location.href
@@ -41,8 +43,15 @@ function copyInviteLink(value) {
   navigator.clipboard.writeText(value)
 }
 async function hanldeAcceptRequest(id, accept) {
-  await roomStore.acceptJoinRoom(id, accept)
-  emit('fetchData')
+  const payload = {
+    type: 'yeu_cau_tham_gia_phong',
+    action: 'xu_ly_yeu_cau_tham_gia_phong',
+    data: {
+      yeu_cau_tham_gia_phong_id: id,
+      trang_thai: accept ? 'chap_nhan' : 'tu_choi',
+    },
+  }
+  webSocketStore.socket.send(JSON.stringify(payload))
 }
 async function handleDeleteMember(id) {
   const result = await confirmStore.showConfirmDialog({
@@ -51,8 +60,14 @@ async function handleDeleteMember(id) {
   })
   if (!result)
     return
-  await roomStore.deleteMember(id)
-  emit('fetchData')
+  const payload = {
+    type: 'xoa_thanh_vien_phong',
+    action: 'xoa_thanh_vien_phong',
+    data: {
+      thanh_vien_phong_id: id,
+    },
+  }
+  webSocketStore.socket.send(JSON.stringify(payload))
 }
 
 async function updateRole(id, role) {
@@ -66,7 +81,11 @@ async function leaveRoom() {
   })
   if (!result)
     return
-  await roomStore.leaveRoom(room.id)
+  const payload = {
+    type: 'roi_phong',
+    action: 'roi_phong',
+  }
+  webSocketStore.socket.send(JSON.stringify(payload))
   router.push('/jam')
 }
 </script>
@@ -147,7 +166,7 @@ async function leaveRoom() {
         <div
           class="w-full my-2 text-sm border-input rounded-md p-3 bg-border"
         >
-            Theo mặc định, các thành viên tham gia kênh sẽ là quản trị viên (có thể thay đổi và phát nhạc). <b style="color: yellowgreen;">Chủ phòng</b> có thể hạ cấp họ xuống thành viên.
+          Theo mặc định, các thành viên tham gia kênh sẽ là quản trị viên (có thể thay đổi và phát nhạc). <b style="color: yellowgreen;">Chủ phòng</b> có thể hạ cấp họ xuống thành viên.
         </div>
         <Tabs default-value="members" class="w-full">
           <TabsList class="w-full">

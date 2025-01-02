@@ -95,7 +95,7 @@ async function handlePlay() {
             trang_thai_phat: 'TamDung',
             bai_hat_id: roomQueueStore.currentSong.id,
             so_thu_tu: roomQueueStore.currentSong.so_thu_tu,
-            thoi_gian_bat_dau: Math.floor(songCurrentTime.value),
+            thoi_gian_ket_thuc: Math.floor(songCurrentTime.value),
           },
         },
       ),

@@ -55,5 +55,24 @@
       "noi_dung": "heheh",
       "tin_nhan_tra_loi_id": null
     }
+  },
+  {
+    "type": "roi_phong",
+    "action": "roi_phong"
+  },
+  {
+    "type": "xoa_thanh_vien_phong",
+    "action": "xoa_thanh_vien_phong",
+    "data": {
+      "thanh_vien_phong_id": "4e465a55-756b-417f-944c-2c11f671542e"
+    }
+  },
+  {
+    "type": "yeu_cau_tham_gia_phong",
+    "action": "xu_ly_yeu_cau_tham_gia_phong",
+    "data": {
+      "yeu_cau_tham_gia_phong_id": "9248b915-c82b-40aa-9b0f-a5b5d7f19776",
+      "trang_thai": "chap_nhan"
+    }
   }
 ]

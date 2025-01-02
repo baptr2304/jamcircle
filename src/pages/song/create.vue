@@ -111,7 +111,7 @@ function hanldeUploadThumbnail(event) {
 <template>
   <input ref="inputRef" type="file" class="hidden" accept="audio/*" @input="onDrop($event.target.files)">
   <div class="pb-4">
-    <PlaylistHeader icon="IconUpload" title="Upload Your Music" />
+    <PlaylistHeader icon="IconUpload" title="Đăng tải bài hát" />
   </div>
   <div class="overflow-y-auto scrollbar px-8 grid gap-4 max-w-7xl mx-auto grid-cols-1 md:grid-cols-2">
     <div class="container flex items-center flex-col gap-10 pb-10">
