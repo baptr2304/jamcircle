@@ -36,7 +36,7 @@ function handleClick() {
     return
 
   switch (props.title) {
-    case 'Queue':
+    case 'Hàng đợi':
       emit('toggleQueue')
       break
   }

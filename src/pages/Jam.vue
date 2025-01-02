@@ -61,21 +61,21 @@ async function handleJoinRoom(roomId) {
       class="max-sm:hidden"
       icon="IconMusicSolid" title="Jam"
     />
-    <div class="flex gap-2 px-4 py-2 justify-center">
+    <div class="flex gap-2 px-4 py-2 justify-center flex-wrap">
       <Button
         variant="secondary"
         class="text-foreground rounded-full"
         @click="openJoinRoom"
       >
         <Icon name="IconJoin" class="w-6 h-6" />
-        Tham gia phòng nghe nhạc
+        Tham gia
       </Button>
       <Button
         class="text-foreground rounded-full"
         @click="openCreateRoom"
       >
         <Icon name="IconJam" class="w-6 h-6" />
-        Tạo phòng nghe nhạc
+        Tạo mới
       </Button>
     </div>
   </div>

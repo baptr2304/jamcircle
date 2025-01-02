@@ -44,6 +44,7 @@ const activeTab = ref('friends')
 const members = ref([])
 const requests = ref([])
 const roomId = route.params.id
+const isBreakFetching = ref(false)
 
 const userInRoom = computed(() => {
   return members.value.find(member => member.nguoi_dung_id === userStore.user?.id)
@@ -69,7 +70,19 @@ async function fetchRoomData() {
   }
 }
 async function fetchMessages() {
-  messages.value = await roomStore.getMessages(roomId)
+  try {
+    messages.value = await roomStore.getMessages(roomId)
+  }
+  catch {
+    await roomStore.requestJoinRoom(roomId)
+    isBreakFetching.value = true
+    toast({
+      title: 'Request sent!',
+      description: 'Your request to join the room has been sent.',
+      duration: 5000,
+    })
+    router.push('/jam')
+  }
 }
 const roomData = computed(() => roomQueueStore.currentRoom)
 async function fetchPlaylistData() {
@@ -84,6 +97,7 @@ async function fetchMembersData() {
   }
   catch {
     await roomStore.requestJoinRoom(roomId)
+    isBreakFetching.value = true
     toast({
       title: 'Request sent!',
       description: 'Your request to join the room has been sent.',
@@ -133,15 +147,18 @@ onMounted(async () => {
     router.push('/jam')
   await fetchRoomData()
   webSocketStore.connect(roomId)
-  fetchMessages()
-  fetchMembersData()
-  fetchPlaylistData()
+  await fetchMessages()
+  if (isBreakFetching.value)
+    return
+  await fetchMembersData()
+  if (isBreakFetching.value)
+    return
+  await fetchPlaylistData()
   emitter.on(listEvents.closeQueueDrawer, closeSidebar)
 
   webSocketStore.socket.onmessage = async (event) => {
     const data = JSON.parse(event.data)
-
-    // console.log(data)
+    console.log(data)
     switch (data.action) {
       case 'nhan_tin_nhan':
         fetchMessages()
@@ -151,6 +168,28 @@ onMounted(async () => {
         break
       case 'cap_nhat_trang_thai_phat':
         updatePlayStatus(data)
+        break
+      case 'yeu_cau_tham_gia_phong':
+        await fetchMembersData()
+        break
+      case 'yeu_cau_da_duoc_xu_ly':
+        await fetchMembersData()
+        break
+      case 'thanh_vien_da_bi_xoa':
+        if (userInRoom.value.id === data.data.thanh_vien_vua_bi_xoa.id) {
+          toast({
+            title: 'Thông báo',
+            description: 'Bạn đã bị xóa khỏi phòng.',
+            variant: 'destructive',
+          })
+          router.push('/jam')
+          return
+        }
+        await fetchMembersData()
+        break
+      case 'thanh_vien_roi_phong':
+        await fetchMembersData()
+        break
     }
   }
 })
@@ -205,7 +244,6 @@ onUnmounted(() => {
       :requests="requests"
       :members="members"
       :room="roomData"
-      @fetch-data="fetchMembersData"
     />
   </Drawer>
 </template>

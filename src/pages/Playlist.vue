@@ -49,7 +49,7 @@ onMounted(async () => {
       </div>
       <div
         v-else-if="!loading && !error"
-        class="font-medium text-xl text-center p-5"
+        class="font-medium text-xl text-center p-5 max-sm:mt-10"
       >
         Không có playlist nào
       </div>

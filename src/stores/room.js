@@ -18,8 +18,14 @@ export const useRoomStore = defineStore('room', () => {
     return apiRoom.apiGetListRequestJoinRoom(id)
   }
 
-  async function requestJoinRoom(id) {
-    return apiRoom.apiRequestJoinRoom(id)
+  async function requestJoinRoom(idRoom) {
+    const accessToken = localStorage.getItem('accessToken')
+    const url = `${import.meta.env.VITE_WS_BASE_URL}/request_to_join_room/${idRoom}?access_token=${accessToken}`
+    const socket = new WebSocket(url)
+
+    socket.onopen = () => {
+      socket.close()
+    }
   }
 
   async function acceptJoinRoom(id, accept) {
