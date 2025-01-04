@@ -13,7 +13,7 @@ onMounted(async () => {
 <template>
   <div class="relative">
     <PlaylistHeader icon="IconMusicSolid" title="Danh sách phát của tôi" />
-    <RouterLink class="absolute right-2 lg:right-8 top-44" to="/playlist/create">
+    <RouterLink class="absolute right-2 lg:right-8 lg:top-44 top-[40%]  " to="/playlist/create">
       <Button class="text-foreground rounded-full">
         <Icon name="IconAddPlaylist" class="w-6 h-6" />
         Tạo danh sách phát
@@ -51,7 +51,7 @@ onMounted(async () => {
         v-else-if="!loading && !error"
         class="font-medium text-xl text-center p-5 max-sm:mt-10"
       >
-        Không có playlist nào
+        Không có danh sách phát nào
       </div>
     </div>
   </div>

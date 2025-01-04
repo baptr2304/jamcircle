@@ -10,7 +10,7 @@ const router = useRouter()
 
 async function addToPlaylist(song) {
   try {
-    const defaultName = `My playlist #${randomId()}`
+    const defaultName = `Danh sách phát của tôi #${randomId()}`
     const response = await playlistStore.createNewPlaylist(defaultName, song)
     const playlistId = response?.id
     if (!playlistId) {
@@ -28,6 +28,6 @@ async function addToPlaylist(song) {
 
 <template>
   <div class="mt-4">
-    <PlaylistSearch @add-song="addToPlaylist"/>
+    <PlaylistSearch @add-song="addToPlaylist" />
   </div>
 </template>

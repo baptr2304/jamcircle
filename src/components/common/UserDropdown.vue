@@ -43,6 +43,11 @@ function handleLogout() {
   authStore.logout()
   router.push('/')
 }
+const firstLetter = userStore.user?.ten_nguoi_dung
+  ?.split(' ')
+  .map(name => name.charAt(0))
+  .join('')
+  .slice(-2)
 </script>
 
 <template>
@@ -55,11 +60,11 @@ function handleLogout() {
             :alt="userStore.user.name"
           />
           <AvatarFallback class="rounded-lg">
-            JS
+            <span class="text-white">{{ userStore.user.anh_dai_dien || firstLetter }}</span>
           </AvatarFallback>
         </Avatar>
         <div class="max-lg:hidden grid flex-1 text-left text-sm leading-tight">
-          <span class="truncate font-semibold">{{ userStore.user.ten_nguoi_dung  || userStore.user.email }}</span>
+          <span class="truncate font-semibold">{{ userStore.user.ten_nguoi_dung || userStore.user.email }}</span>
         </div>
         <Icon name="IconArrowDown" class="ml-4" />
       </Button>
