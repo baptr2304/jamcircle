@@ -65,7 +65,9 @@ export async function getMy() {
 export function removeSong(playlistId, index) {
   return $delete(`/danh_sach_phat/${playlistId}/bai_hat?so_thu_tu=${index}`)
 }
-
+export function deletePlaylist(playlistId) {
+  return $delete(`/danh_sach_phat/${playlistId}`)
+}
 export function updatePlaylistName(playlistId, data) {
   // return $patch(`/playlists/${playlistId}`, { name: data.name })
   return new Promise((resolve, reject) => {

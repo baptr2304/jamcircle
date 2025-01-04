@@ -2,6 +2,7 @@ import {
   addSong,
   apiGetPlaylists,
   createPlaylist,
+  deletePlaylist,
   getMy,
   getPlaylistById,
   getPlaylistSongs,
@@ -77,6 +78,19 @@ export const usePlaylistStore = defineStore('playlist', () => {
       throw error
     }
   }
+  async function deleteMyPlaylist(playlistId) {
+    try {
+      await deletePlaylist(playlistId)
+      const index = playlists.value.findIndex(p => p.id === playlistId)
+      if (index !== -1) {
+        playlists.value.splice(index, 1)
+      }
+    }
+    catch (error) {
+      console.error('Error in deleteMyPlaylist:', error)
+      throw error
+    }
+  }
   async function removeSongFromPlaylist(playlistId, index) {
     try {
       await removeSong(playlistId, index)
@@ -130,6 +144,7 @@ export const usePlaylistStore = defineStore('playlist', () => {
     removeSongFromPlaylist,
     updatePlaylist,
     getPlaylists,
+    deleteMyPlaylist,
     setCurrentPlaylist,
     clearCurrentPlaylist,
     reset,
