@@ -77,8 +77,8 @@ async function fetchMessages() {
     await roomStore.requestJoinRoom(roomId)
     isBreakFetching.value = true
     toast({
-      title: 'Request sent!',
-      description: 'Your request to join the room has been sent.',
+      title: 'Yêu cầu đã được gửi!',
+      description: 'Yêu cầu tham gia phòng của bạn đã được gửi.',
       duration: 5000,
     })
     router.push('/jam')
@@ -99,8 +99,8 @@ async function fetchMembersData() {
     await roomStore.requestJoinRoom(roomId)
     isBreakFetching.value = true
     toast({
-      title: 'Request sent!',
-      description: 'Your request to join the room has been sent.',
+      title: 'Yêu cầu đã được gửi!',
+      description: 'Yêu cầu tham gia phòng của bạn đã được gửi.',
       duration: 5000,
     })
     router.push('/jam')
@@ -158,7 +158,7 @@ onMounted(async () => {
 
   webSocketStore.socket.onmessage = async (event) => {
     const data = JSON.parse(event.data)
-    console.log(data)
+    // console.log(data)
     switch (data.action) {
       case 'nhan_tin_nhan':
         fetchMessages()

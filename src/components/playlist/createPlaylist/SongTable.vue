@@ -100,7 +100,7 @@ function handlePlaySong(song) {
                     <IconEllipsis class="w-9 h-9 text-foreground cursor-pointer p-2 hover:bg-muted rounded-sm" />
                   </PopoverTrigger>
                   <PopoverContent class="w-25">
-                    <button @click="addSongToQueue(song.id)">
+                    <button @click="songStore.addToQueue(song)">
                       Thêm vào hàng đợi
                     </button>
                   </PopoverContent>

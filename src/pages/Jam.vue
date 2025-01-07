@@ -47,8 +47,8 @@ async function handleCreateRoom(roomName) {
 async function handleJoinRoom(roomId) {
   await roomStore.requestJoinRoom(roomId)
   toast({
-    title: 'Request sent!',
-    description: 'Your request to join the room has been sent.',
+    title: 'Yêu cầu đã được gửi!',
+    description: 'Yêu cầu tham gia phòng của bạn đã được gửi.',
     duration: 5000,
   })
   isJoinRoomOpen.value = false

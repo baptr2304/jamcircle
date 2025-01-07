@@ -13,7 +13,6 @@ export const useSongStore = defineStore('queue', () => {
     if (index !== -1) {
       return
     }
-    playlist.value.push(song)
     toast({
       ten_bai_hat: 'Thành công',
       description: 'Đã thêm vào hàng đợi',
@@ -61,7 +60,7 @@ export const useSongStore = defineStore('queue', () => {
       searchResults.value = result
       return searchResults.value
     }
-  catch (error) {
+    catch (error) {
       console.error('Error searching songs:', error)
       return []
     }
@@ -96,6 +95,10 @@ export const useSongStore = defineStore('queue', () => {
       so_thu_tu: lastIndex + 1,
     }
     playlist.value.push(newSong)
+    if (playlist.value.length === 1) {
+      currentSong.value = playlist.value[0]
+      currentIndex.value = 0
+    }
     toast({
       title: 'Thành công',
       description: 'Đã thêm vào hàng đợi',

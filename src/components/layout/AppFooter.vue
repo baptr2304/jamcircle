@@ -187,7 +187,7 @@ onUnmounted(() => {
 
 <template>
   <div class="grid w-full h-full select-none relative">
-    <div v-if="!userStore.isAuthenticated" class="well-come-bar">
+    <div v-if="!userStore.isAuthenticated" class="welcome-bar">
       <div class="flex flex-col h-full justify-center">
         <div class="title text-sm font-medium max-lg:hidden">
           Chào mừng đến với JamCircle
@@ -196,7 +196,7 @@ onUnmounted(() => {
           Đăng nhập để nghe không giới hạn các bài hát và podcast với không quảng cáo. Hoàn toàn miễn phí.
         </div>
       </div>
-      <RouterLink to="/auth/register">
+      <RouterLink to="/auth/login">
         <Button class="flex h-12 py-4 lg:px-8 px-4 bg-foreground rounded-full">
           Đăng nhập
         </Button>
@@ -306,7 +306,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.well-come-bar {
+.welcome-bar {
   @apply flex justify-between items-center lg:p-4 p-2 gap-4 max-lg:h-[4.25rem];
   background: linear-gradient(90deg, #af2896 0%, #509bf5 100%);
 }

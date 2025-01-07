@@ -38,8 +38,8 @@ async function handleSearch() {
 async function handleAddSong(song) {
   if (props.songsPlaylist.some(s => s.id === song.id)) {
     const result = await confirmStore.showConfirmDialog({
-      title: 'Already added',
-      message: `Do you want to add ${song.title} to your playlist any way?`,
+      title: 'Đã thêm',
+      message: `Bạn có muốn thêm bài hát ${song.title} vào danh sách phát của bạn không?`,
     })
     if (!result)
       return

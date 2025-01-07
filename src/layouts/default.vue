@@ -5,6 +5,7 @@ import QueueDrawer from '@/components/common/QueueDrawer.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppSideBar from '@/components/layout/AppSideBar.vue'
+import { useSongStore } from '@/stores/song'
 import { useUserStore } from '@/stores/user'
 import { listEvents } from '@/utils/enum'
 import emitter from '@/utils/eventBus'
@@ -25,6 +26,7 @@ onUnmounted(() => {
   emitter.off(listEvents.closeQueueDrawer, closeDrawer)
 })
 const userStore = useUserStore()
+const songStore = useSongStore()
 const role = computed(() => userStore.user?.role)
 </script>
 
@@ -32,7 +34,8 @@ const role = computed(() => userStore.user?.role)
   <KeyboardShortcuts />
   <div class="flex flex-col h-full justify-between">
     <div
-      class="flex w-full lg:[height:calc(100%-5.75rem)] h-[calc(100%-10rem)]"
+      class="flex w-full lg:[height:calc(100%-5.75rem)] overflow-hidden"
+      :class="userStore.isAuthenticated && !songStore.currentSong ? 'h-[calc(100%-5.75rem)]' : 'h-[calc(100%-10rem)]'"
     >
       <AppSidebarAdmin v-if="role === 'quan_tri_vien'" class="max-lg:hidden" />
       <AppSideBar v-else class="max-lg:hidden" />
@@ -46,7 +49,10 @@ const role = computed(() => userStore.user?.role)
       </div>
     </div>
     <QueueDrawer v-model="isVisibleDrawer" />
-    <footer v-if="role !== 'quan_tri_vien'" class="w-full fixed bottom-0 left-0 z-20 h-40 lg:h-[5.75rem]">
+    <footer
+      v-if="role !== 'quan_tri_vien'" class="w-full fixed bottom-0 left-0 z-20 lg:h-[5.75rem] bg-background"
+      :class="userStore.isAuthenticated && !songStore.currentSong ? 'h-20' : 'h-40'"
+    >
       <AppFooter :is-visible-queue-drawer="isVisibleDrawer" />
     </footer>
   </div>
