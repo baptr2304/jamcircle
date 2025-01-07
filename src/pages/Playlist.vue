@@ -19,23 +19,23 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative h-full">
     <PlaylistHeader icon="IconMusicSolid" title="Danh sách phát của tôi" />
-    <RouterLink class="absolute right-2 lg:right-8 lg:top-44 top-[40%]" to="/playlist/create">
+    <RouterLink class="lg:absolute right-8 top-44 ml-5 mb-4 flex" to="/playlist/create">
       <Button class="text-foreground rounded-full">
         <Icon name="IconAddPlaylist" class="w-6 h-6 cursor-pointer" />
         Tạo danh sách phát
       </Button>
     </RouterLink>
-    <div class="overflow-y-auto scrollbar max-h-[50%]">
+    <div class="overflow-y-auto scrollbar max-h-[calc(100%-14rem)] mr-2">
       <div
         v-if="playlistStore.playlists && playlistStore.playlists.length"
-        class="flex flex-wrap gap-5 p-5"
+        class="flex flex-wrap gap-5 p-5 "
       >
         <div
           v-for="playlist in playlistStore.playlists"
           :key="playlist?.id"
-          class="relative p-2 pr-4 bg-secondary border flex items-center rounded-md cursor-pointer"
+          class="relative p-2 pr-4 bg-secondary border flex items-center rounded-md cursor-pointer max-sm:w-full gap-2 justify-between"
         >
           <RouterLink :to="`/playlist/${playlist.id}`" class="flex items-center">
             <div
