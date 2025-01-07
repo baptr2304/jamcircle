@@ -20,6 +20,14 @@ JamCircle is available as a web application, allowing users to access their musi
 <table align="center">
     <tr>
         <td align="center" width="75%">
+            Web view
+        </td>
+        <td align="center" width="75%">
+            Mobile view
+        </td>
+    </tr>
+    <tr>
+        <td align="center" width="75%">
             <img src="https://raw.githubusercontent.com/baptr2304/jamcircle/refs/heads/feat/readme/src/docs/images/desktop/home.png" alt="Web Home" title="Web Home">
         </td>
         <td align="center" width="75%">
