@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    env_file:
+      - ./BE-JamCircle/.env
+    ports:
+      - ${POSTGRES_PORT_PROD:-5432}:5432
+    networks:
+      - jam-circle-network
+
+  be:
+    restart: always
+    build: ./BE-JamCircle/.
+    container_name: be
+    env_file:
+      - ./BE-JamCircle/.env
+    ports:
+      - ${FASTAPI_PORT_PROD:-8000}:8000
+    expose:
+      - 8000
+    networks:
+      - jam-circle-network
+    depends_on:
+      - postgres
+
+  web:
+    image: nginx:1.27.3
+    container_name: fe-jamcircle
+    ports:
+      - 80:80
+    env_file:
+      - ./FE-JamCircle/.env
+    volumes:
+      - ./FE-JamCircle/dist:/usr/share/nginx/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - jam-circle-network
+    depends_on:
+      - be
+
+networks:
+  jam-circle-network:
+    driver: bridge
